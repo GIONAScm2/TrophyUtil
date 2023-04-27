@@ -1,6 +1,6 @@
 import {ParserGamePlayable, TrophyCount, calculateTrophyPoints, sumTrophyCount} from '../../index.js';
 import {ISeriesPageNeutral, Stage} from '../../models/series.interface.js';
-import {BrowserContext, WindowLike} from '../../util/BrowserContext.js';
+import {WindowLike} from '../../util/BrowserContext.js';
 import {PsnpParser} from '../PsnpParser.js';
 
 export class ParserSeriesPageNeutral extends PsnpParser<ISeriesPageNeutral, WindowLike> {

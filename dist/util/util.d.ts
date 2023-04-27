@@ -1,4 +1,4 @@
-import { type StackAbbr } from '../index.js';
+import { type StackAbbr } from '../models/game.interface.js';
 /** Waits a specified number of `ms`. */
 export declare function sleep(ms: number): Promise<void>;
 export declare function extractKeys<T extends object>(keysObj: T): (keyof T)[];

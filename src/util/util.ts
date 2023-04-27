@@ -1,4 +1,4 @@
-import {type StackAbbr, StackLookup} from '../index.js';
+import {type StackAbbr, StackLookup} from '../models/game.interface.js';
 
 /** Waits a specified number of `ms`. */
 export async function sleep(ms: number): Promise<void> {

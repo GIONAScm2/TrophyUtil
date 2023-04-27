@@ -1,4 +1,4 @@
-import { StackLookup } from '../index.js';
+import { StackLookup } from '../models/game.interface.js';
 /** Waits a specified number of `ms`. */
 export async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));

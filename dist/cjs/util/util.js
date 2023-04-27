@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAbbreviation = exports.parseNum = exports.extractKeys = exports.sleep = void 0;
-const index_js_1 = require("../index.js");
+const game_interface_js_1 = require("../models/game.interface.js");
 /** Waits a specified number of `ms`. */
 async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -20,7 +20,7 @@ function parseNum(input) {
 }
 exports.parseNum = parseNum;
 function getAbbreviation(regionName) {
-    for (const [key, value] of Object.entries(index_js_1.StackLookup)) {
+    for (const [key, value] of Object.entries(game_interface_js_1.StackLookup)) {
         if (value === regionName) {
             return key;
         }
