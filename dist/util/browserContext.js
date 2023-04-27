@@ -9,4 +9,4 @@ export class BrowserContext {
         return this.window.document;
     }
 }
-//# sourceMappingURL=browserContext.js.map
+//# sourceMappingURL=BrowserContext.js.map

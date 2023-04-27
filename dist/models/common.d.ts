@@ -1,4 +1,3 @@
-import { ChangeData } from '../util/objCompare.js';
 /** Counts of bronze, silver, gold, and platinum trophies. */
 export interface TrophyCount {
     bronze: number;
@@ -44,6 +43,4 @@ export declare abstract class PsnpEntity implements IPsnpEntity {
     constructor(data: IPsnpEntity);
     toString(): string;
 }
-/** Updates fields and returns a log of changes. */
-export declare function diffUpdate<T extends IPsnpEntity>(oldEntity: T | null | undefined, newEntity: T, update: boolean): ChangeData<T>;
 //# sourceMappingURL=common.d.ts.map

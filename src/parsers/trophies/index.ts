@@ -1,2 +1,2 @@
-export * from './psnpTrophyGroupParser.js';
-export * from './psnpTrophyParser.js';
+export * from './psnpTrophyGroup.js';
+export * from './psnpTrophy.js';

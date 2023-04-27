@@ -46,4 +46,4 @@ class PsnpParser {
     }
 }
 exports.PsnpParser = PsnpParser;
-//# sourceMappingURL=psnpParser.js.map
+//# sourceMappingURL=PsnpParser.js.map

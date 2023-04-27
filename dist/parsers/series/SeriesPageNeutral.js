@@ -1,5 +1,5 @@
 import { ParserGamePlayable, calculateTrophyPoints, sumTrophyCount } from '../../index.js';
-import { PsnpParser } from '../psnpParser.js';
+import { PsnpParser } from '../PsnpParser.js';
 export class ParserSeriesPageNeutral extends PsnpParser {
     type = 'Series Page';
     _parse(_window) {
@@ -64,4 +64,4 @@ function aggregateSeriesTrophyCount(stages) {
     }
     return aggregateTrophyCount;
 }
-//# sourceMappingURL=SeriesPageNeutral.js.map
+//# sourceMappingURL=seriesPageNeutral.js.map

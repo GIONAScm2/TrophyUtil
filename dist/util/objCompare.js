@@ -65,4 +65,20 @@ export function diffAndUpdateSharedProps(target, source, update = false, parentK
     });
     return changes;
 }
+/** Updates `oldEntity` with shared properties of `newEntity` and returns the {@link ChangeData}. */
+export function diffUpdate(oldEntity, newEntity, update) {
+    const commonChanges = { id: newEntity._id, changes: [] };
+    if (!oldEntity) {
+        return { ...commonChanges, operation: 'add' };
+    }
+    if (oldEntity._id !== newEntity._id) {
+        throw new Error(`ID mismatch: Cannot update entity '${oldEntity.toString()}' using entity '${newEntity.toString()}'`);
+    }
+    const changes = diffAndUpdateSharedProps(oldEntity, newEntity, update);
+    return {
+        ...commonChanges,
+        operation: 'update',
+        changes,
+    };
+}
 //# sourceMappingURL=objCompare.js.map

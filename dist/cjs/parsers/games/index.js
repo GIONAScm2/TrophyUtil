@@ -14,7 +14,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./GamePartialTrophyList.js"), exports);
-__exportStar(require("./GamePlayable.js"), exports);
-__exportStar(require("./GameStandard.js"), exports);
+__exportStar(require("./gamePartialTrophyList.js"), exports);
+__exportStar(require("./gamePlayable.js"), exports);
+__exportStar(require("./gameStandard.js"), exports);
 //# sourceMappingURL=index.js.map

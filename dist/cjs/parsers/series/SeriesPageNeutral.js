@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ParserSeriesPageNeutral = void 0;
 const index_js_1 = require("../../index.js");
-const psnpParser_js_1 = require("../psnpParser.js");
-class ParserSeriesPageNeutral extends psnpParser_js_1.PsnpParser {
+const PsnpParser_js_1 = require("../PsnpParser.js");
+class ParserSeriesPageNeutral extends PsnpParser_js_1.PsnpParser {
     type = 'Series Page';
     _parse(_window) {
         const name = _window.document.querySelector(`div.series-info div.ellipsis > span`)?.textContent?.trim();
@@ -68,4 +68,4 @@ function aggregateSeriesTrophyCount(stages) {
     }
     return aggregateTrophyCount;
 }
-//# sourceMappingURL=SeriesPageNeutral.js.map
+//# sourceMappingURL=seriesPageNeutral.js.map

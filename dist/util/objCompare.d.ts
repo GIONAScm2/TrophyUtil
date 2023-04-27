@@ -1,3 +1,4 @@
+import { type IPsnpEntity } from '../models/common.js';
 /** Returns `true` if `x` is a standard POJO (or class instance), otherwise `false` if it's a primitive/null/array/function/Map/Set/etc. */
 export declare function isStandardObj(x: unknown): x is Record<string, unknown>;
 /** Compares shared properties of `obj1` and `obj2` for relative equality. Primitive values - including nested object properties -
@@ -28,4 +29,6 @@ export type ChangeData<T> = {
 /** Finds all shared properties (keys) between `target` and `source` and returns an array of changes.
  *  Setting the `update` flag will also update the shared properties of `source` accordingly. */
 export declare function diffAndUpdateSharedProps<T extends object>(target: T, source: Partial<T>, update?: boolean, parentKey?: string): FieldChanges<T>;
+/** Updates `oldEntity` with shared properties of `newEntity` and returns the {@link ChangeData}. */
+export declare function diffUpdate<T extends IPsnpEntity>(oldEntity: T | null | undefined, newEntity: T, update: boolean): ChangeData<T>;
 //# sourceMappingURL=objCompare.d.ts.map

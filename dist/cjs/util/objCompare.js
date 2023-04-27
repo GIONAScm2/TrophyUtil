@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.diffAndUpdateSharedProps = exports.sharedPropsAreEqual = exports.isStandardObj = void 0;
+exports.diffUpdate = exports.diffAndUpdateSharedProps = exports.sharedPropsAreEqual = exports.isStandardObj = void 0;
 /** Returns `true` if `x` is a standard POJO (or class instance), otherwise `false` if it's a primitive/null/array/function/Map/Set/etc. */
 function isStandardObj(x) {
     return Object.prototype.toString.call(x) === '[object Object]';
@@ -71,4 +71,21 @@ function diffAndUpdateSharedProps(target, source, update = false, parentKey = ''
     return changes;
 }
 exports.diffAndUpdateSharedProps = diffAndUpdateSharedProps;
+/** Updates `oldEntity` with shared properties of `newEntity` and returns the {@link ChangeData}. */
+function diffUpdate(oldEntity, newEntity, update) {
+    const commonChanges = { id: newEntity._id, changes: [] };
+    if (!oldEntity) {
+        return { ...commonChanges, operation: 'add' };
+    }
+    if (oldEntity._id !== newEntity._id) {
+        throw new Error(`ID mismatch: Cannot update entity '${oldEntity.toString()}' using entity '${newEntity.toString()}'`);
+    }
+    const changes = diffAndUpdateSharedProps(oldEntity, newEntity, update);
+    return {
+        ...commonChanges,
+        operation: 'update',
+        changes,
+    };
+}
+exports.diffUpdate = diffUpdate;
 //# sourceMappingURL=objCompare.js.map

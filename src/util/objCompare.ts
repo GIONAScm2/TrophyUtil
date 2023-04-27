@@ -1,3 +1,5 @@
+import {type IPsnpEntity} from '../models/common.js';
+
 /** Returns `true` if `x` is a standard POJO (or class instance), otherwise `false` if it's a primitive/null/array/function/Map/Set/etc. */
 export function isStandardObj(x: unknown): x is Record<string, unknown> {
 	return Object.prototype.toString.call(x) === '[object Object]';
@@ -104,4 +106,30 @@ export function diffAndUpdateSharedProps<T extends object>(
 	});
 
 	return changes;
+}
+
+/** Updates `oldEntity` with shared properties of `newEntity` and returns the {@link ChangeData}. */
+export function diffUpdate<T extends IPsnpEntity>(
+	oldEntity: T | null | undefined,
+	newEntity: T,
+	update: boolean
+): ChangeData<T> {
+	const commonChanges = {id: newEntity._id, changes: []};
+
+	if (!oldEntity) {
+		return {...commonChanges, operation: 'add'};
+	}
+	if (oldEntity._id !== newEntity._id) {
+		throw new Error(
+			`ID mismatch: Cannot update entity '${oldEntity.toString()}' using entity '${newEntity.toString()}'`
+		);
+	}
+
+	const changes = diffAndUpdateSharedProps(oldEntity, newEntity, update);
+
+	return {
+		...commonChanges,
+		operation: 'update',
+		changes,
+	};
 }

@@ -1,6 +1,6 @@
 import {calculateTrophyPoints, parseNum, sumTrophyCount} from '../../index.js';
 import {ISeriesListing} from '../../models/series.interface.js';
-import {PsnpParser} from '../psnpParser.js';
+import {PsnpParser} from '../PsnpParser.js';
 
 export class ParserSeriesListing extends PsnpParser<ISeriesListing, HTMLTableRowElement> {
 	protected readonly type = 'Series Listing';

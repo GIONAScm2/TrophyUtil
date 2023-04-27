@@ -1,0 +1,7 @@
+import { ITrophy } from '../../index.js';
+import { PsnpParser } from '../PsnpParser.js';
+export declare class PsnpTrophyParser extends PsnpParser<ITrophy, HTMLTableRowElement> {
+    protected readonly type = "Trophy";
+    protected _parse(tr: HTMLTableRowElement): ITrophy | null;
+}
+//# sourceMappingURL=psnpTrophy.d.ts.map

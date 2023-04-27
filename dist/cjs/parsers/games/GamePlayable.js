@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ParserGamePlayable = void 0;
-const psnpParser_js_1 = require("../psnpParser.js");
+const PsnpParser_js_1 = require("../PsnpParser.js");
 const index_js_1 = require("../../index.js");
 /** Parses a 'playable' game containing user progress from Profile and Series pages. */
-class ParserGamePlayable extends psnpParser_js_1.PsnpParser {
+class ParserGamePlayable extends PsnpParser_js_1.PsnpParser {
     type = 'Playable Game';
     _parse(tr) {
         const titleAnchorEl = tr.querySelector(`a.title`);
@@ -62,4 +62,4 @@ exports.ParserGamePlayable = ParserGamePlayable;
 function isCompletionStatus(status) {
     return status === 'platinum' || status === 'completed';
 }
-//# sourceMappingURL=GamePlayable.js.map
+//# sourceMappingURL=gamePlayable.js.map

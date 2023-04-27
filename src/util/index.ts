@@ -1,5 +1,4 @@
-export * from './$querySelectable.js';
-export * from './browserContext.js';
+export * from './BrowserContext.js';
 export * from './objCompare.js';
-export * from './selectors.js'
+export * from './Select.js'
 export * from './util.js';

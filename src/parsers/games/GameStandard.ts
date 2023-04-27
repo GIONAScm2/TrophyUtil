@@ -1,4 +1,4 @@
-import {PsnpParser} from '../psnpParser.js';
+import {PsnpParser} from '../PsnpParser.js';
 import {
 	PlatformTag,
 	StackAbbrNullable,

@@ -1,4 +1,4 @@
-import {PsnpParser} from '../psnpParser.js';
+import {PsnpParser} from '../PsnpParser.js';
 import {IGamePlayable, PlatformTag, StackAbbrNullable, PsnpGamePlayable, parseNum} from '../../index.js';
 
 /** Parses a 'playable' game containing user progress from Profile and Series pages. */

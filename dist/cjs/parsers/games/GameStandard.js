@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ParserGameStandard = void 0;
-const psnpParser_js_1 = require("../psnpParser.js");
+const PsnpParser_js_1 = require("../PsnpParser.js");
 const index_js_1 = require("../../models/index.js");
 const util_js_1 = require("../../util/util.js");
 /** Parses a standard game representation from either Games and GameSearch pages. */
-class ParserGameStandard extends psnpParser_js_1.PsnpParser {
+class ParserGameStandard extends PsnpParser_js_1.PsnpParser {
     type = 'Standard Game';
     _parse(tr) {
         const titleAnchorEl = tr.querySelector(`a.title`);
@@ -55,4 +55,4 @@ function parseNumOwners(tr, isGameSearch = false) {
     const numOwners = (0, util_js_1.parseNum)(tr.querySelector(selector));
     return Number.isNaN(numOwners) ? null : numOwners;
 }
-//# sourceMappingURL=GameStandard.js.map
+//# sourceMappingURL=gameStandard.js.map

@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ParserSeriesListing = void 0;
 const index_js_1 = require("../../index.js");
-const psnpParser_js_1 = require("../psnpParser.js");
-class ParserSeriesListing extends psnpParser_js_1.PsnpParser {
+const PsnpParser_js_1 = require("../PsnpParser.js");
+class ParserSeriesListing extends PsnpParser_js_1.PsnpParser {
     type = 'Series Listing';
     _parse(tr) {
         const titleAnchorEl = tr.querySelector(`a.title`);
@@ -36,4 +36,4 @@ class ParserSeriesListing extends psnpParser_js_1.PsnpParser {
     }
 }
 exports.ParserSeriesListing = ParserSeriesListing;
-//# sourceMappingURL=SeriesListing.js.map
+//# sourceMappingURL=seriesListing.js.map

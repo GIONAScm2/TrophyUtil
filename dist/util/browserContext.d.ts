@@ -12,4 +12,4 @@ export declare class BrowserContext {
     });
     get doc(): Document;
 }
-//# sourceMappingURL=browserContext.d.ts.map
+//# sourceMappingURL=BrowserContext.d.ts.map

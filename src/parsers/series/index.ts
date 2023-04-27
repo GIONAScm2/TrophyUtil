@@ -1,2 +1,2 @@
-export * from './SeriesListing.js';
-export * from './SeriesPageNeutral.js';
+export * from './seriesListing.js';
+export * from './seriesPageNeutral.js';

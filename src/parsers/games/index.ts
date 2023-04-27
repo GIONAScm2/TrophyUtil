@@ -1,3 +1,3 @@
-export * from './GamePartialTrophyList.js';
-export * from './GamePlayable.js';
-export * from './GameStandard.js';
+export * from './gamePartialTrophyList.js';
+export * from './gamePlayable.js';
+export * from './gameStandard.js';

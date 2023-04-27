@@ -1,4 +1,4 @@
-import { PsnpParser } from '../psnpParser.js';
+import { PsnpParser } from '../PsnpParser.js';
 import { PsnpGamePlayable, parseNum } from '../../index.js';
 /** Parses a 'playable' game containing user progress from Profile and Series pages. */
 export class ParserGamePlayable extends PsnpParser {
@@ -58,4 +58,4 @@ export class ParserGamePlayable extends PsnpParser {
 function isCompletionStatus(status) {
     return status === 'platinum' || status === 'completed';
 }
-//# sourceMappingURL=GamePlayable.js.map
+//# sourceMappingURL=gamePlayable.js.map

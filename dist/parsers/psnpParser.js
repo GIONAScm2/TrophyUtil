@@ -42,4 +42,4 @@ export class PsnpParser {
         return { bronze, silver, gold, platinum };
     }
 }
-//# sourceMappingURL=psnpParser.js.map
+//# sourceMappingURL=PsnpParser.js.map

@@ -1,4 +1,4 @@
-import { PsnpParser } from '../psnpParser.js';
+import { PsnpParser } from '../PsnpParser.js';
 /** Parses a partial game representation from TrophyList pages. */
 export class ParserGameFromTrophyList extends PsnpParser {
     type = 'Partial Game (TrophyList)';
@@ -28,4 +28,4 @@ export class ParserGameFromTrophyList extends PsnpParser {
         };
     }
 }
-//# sourceMappingURL=GamePartialTrophyList.js.map
+//# sourceMappingURL=gamePartialTrophyList.js.map
