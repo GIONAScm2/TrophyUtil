@@ -1,13 +1,12 @@
-/** Returns true if `x` is a standard POJO (or class instance), otherwise false if it's a primitive/null/array/function/Map/Set. */
+/** Returns `true` if `x` is a standard POJO (or class instance), otherwise `false` if it's a primitive/null/array/function/Map/Set/etc. */
 export function isStandardObj(x: unknown): x is Record<string, unknown> {
 	return Object.prototype.toString.call(x) === '[object Object]';
 }
 
-/** Checks whether all shared properties of `a` and `b` are equal. Useful to check whether an object is up-to-date.
+/** Compares shared properties of `obj1` and `obj2` for relative equality. Primitive values - including nested object properties -
+ * must be equal, and array values must have the same length. Returns `null` if no shared properties exist.
  *
- * Object properties are recursed into. Array properties are compared solely on their length.
- *
- * If there are no shared properties, an error is thrown. */
+ * Useful for verifying if MongoDB documents are up-to-date with freshly-parsed entities. */
 export function sharedPropsAreEqual(obj1: Record<string, unknown>, obj2: Record<string, unknown>): boolean | null {
 	const sharedKeys = Object.keys(obj1).filter(key => key in obj2);
 	if (sharedKeys.length === 0) {
@@ -28,79 +27,34 @@ export function sharedPropsAreEqual(obj1: Record<string, unknown>, obj2: Record<
 	});
 }
 
+/** Represents an object key's change in value. */
 export type FieldChange<T, K extends keyof T> = {
 	key: string;
 	oldValue: T[K] | undefined;
 	newValue: T[K] | undefined;
 };
+/** Represents an object key's change in value length, when the value is an array. */
 export type ArrayLengthChange<K extends string> = {
 	key: K;
 	oldValue: number;
 	newValue: number;
 };
 
+/** An array of {@link FieldChange} and/or {@link ArrayLengthChange} */
 export type FieldChanges<T, K extends Extract<keyof T, string> = Extract<keyof T, string>> = (
 	| FieldChange<T, K>
 	| ArrayLengthChange<K>
 )[];
 
+/** Represents the aggregate change of an object. */
 export type ChangeData<T> = {
 	id: number;
 	operation: 'add' | 'update';
 	changes: FieldChanges<T>;
 };
-/** Finds all shared properties (keys) in `target` and `source` and updates `target` accordingly.
- * Array properties are updated by replacing the entire array if the lengths don't match.
- * Pass `trackChanges` to return a list of changes. */
-export function updateSharedPropsWithChanges<T extends object>(
-	target: T,
-	source: Partial<T>,
-	trackChanges: boolean = false,
-	parentKey: string = ''
-): FieldChanges<T> | undefined {
-	const changes: FieldChanges<T> = [];
 
-	const sharedKeys = Object.keys(target).filter(key => key in source);
-
-	sharedKeys.forEach(key => {
-		const fullKey = parentKey ? `${parentKey}.${key}` : key;
-		const sourceVal = source[key as keyof T];
-		const targetVal = target[key as keyof T];
-
-		if (isStandardObj(sourceVal) && isStandardObj(targetVal)) {
-			const subChanges = updateSharedPropsWithChanges(
-				targetVal as Record<string, unknown>,
-				sourceVal as Record<string, unknown>,
-				trackChanges,
-				fullKey
-			);
-			if (trackChanges && subChanges) {
-				changes.push(...(subChanges as FieldChanges<T>));
-			}
-		} else if (Array.isArray(sourceVal) && Array.isArray(targetVal)) {
-			if (trackChanges && sourceVal.length !== targetVal.length) {
-				changes.push({
-					key: fullKey as keyof T,
-					oldValue: targetVal.length,
-					newValue: sourceVal.length,
-				} as ArrayLengthChange<Extract<keyof T, string>>);
-			}
-			target[key as keyof T] = sourceVal.slice() as T[keyof T];
-		} else if (sourceVal !== targetVal) {
-			if (trackChanges) {
-				changes.push({
-					key: fullKey as Extract<keyof T, string>,
-					oldValue: targetVal,
-					newValue: sourceVal,
-				} as FieldChange<T, Extract<keyof T, string>>);
-			}
-			target[key as keyof T] = sourceVal as T[keyof T];
-		}
-	});
-
-	return trackChanges ? changes : undefined;
-}
-
+/** Finds all shared properties (keys) between `target` and `source` and returns an array of changes.
+ *  Setting the `update` flag will also update the shared properties of `source` accordingly. */
 export function diffAndUpdateSharedProps<T extends object>(
 	target: T,
 	source: Partial<T>,
@@ -151,61 +105,3 @@ export function diffAndUpdateSharedProps<T extends object>(
 
 	return changes;
 }
-
-// /** This function takes two objects, obj1 and obj2, and iterates through their combined set of keys. For each key, it checks if the corresponding values are standard objects, arrays, or other types. If both values are standard objects, it calls itself recursively to find the differences and merges the resulting changes into the main changes array. If both values are arrays, it compares their lengths and adds a change entry if they differ. For other types, it directly compares the values and adds a change entry if they differ.
-//  * The parentKey parameter is used to keep track of nested keys during the recursion. */
-// export function diffObjects<T extends Record<string, unknown>>(
-// 	obj1: T,
-// 	obj2: T,
-// 	parentKey: string = ''
-// ): FieldChanges<T> {
-// 	const changes: FieldChanges<T> = [];
-
-// 	const keys = new Set([...Object.keys(obj1), ...Object.keys(obj2)]);
-
-// 	keys.forEach(key => {
-// 		const fullKey = parentKey ? `${parentKey}.${key}` : key;
-// 		const val1 = obj1[key as keyof T];
-// 		const val2 = obj2[key as keyof T];
-
-// 		if (isStandardObj(val1) && isStandardObj(val2)) {
-// 			changes.push(...diffObjects(val1 as T, val2 as T, fullKey));
-// 		} else if (Array.isArray(val1) && Array.isArray(val2)) {
-// 			if (val1.length !== val2.length) {
-// 				changes.push({
-// 					key: fullKey as keyof T,
-// 					oldValue: val1.length,
-// 					newValue: val2.length,
-// 				} as ArrayLengthChange<keyof T>);
-// 			}
-// 		} else if (val1 !== val2) {
-// 			changes.push({
-// 				key: fullKey as keyof T,
-// 				oldValue: val1,
-// 				newValue: val2,
-// 			});
-// 		}
-// 	});
-
-// 	return changes;
-// }
-
-// /** Updates `target` with shared properties of `source`. Array properties are replaced entirely.  */
-// export function updateSharedProps(target: Record<string, unknown>, source: Record<string, unknown>): void {
-// 	const sharedKeys = Object.keys(target).filter(key => key in source);
-
-// 	sharedKeys.forEach(key => {
-// 		const sourceVal = source[key];
-// 		const targetVal = target[key];
-
-// 		if (isStandardObj(sourceVal) && isStandardObj(targetVal)) {
-// 			updateSharedProps(targetVal, sourceVal);
-// 		} else if (Array.isArray(sourceVal) && Array.isArray(targetVal)) {
-// 			target[key] = sourceVal.slice();
-// 		} else {
-// 			target[key] = sourceVal;
-// 		}
-// 	});
-// }
-
-// Hybrid of the above 2 functions

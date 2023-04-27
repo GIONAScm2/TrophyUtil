@@ -29,7 +29,7 @@ export const oldSeries = {
 		$date: '2023-04-19T04:35:10.539Z',
 	},
 	__v: 0,
-	name: 'Fatal Frame',
+	name: 'Fatal Fram',
 	_imagePath: '1121/0ecf4b',
 	_nameSerialized: 'fatal-frame',
 };
@@ -55,6 +55,13 @@ export const newSeries = {
 			gameIds: [21312, 21320],
 			_id: {
 				$oid: '640d5e44e5aa96a352bce7fb',
+			},
+		},
+		{
+			stageNum: 3,
+			gameIds: [22000],
+			_id: {
+				$oid: '640d5e44e5aa96a352bce7fc',
 			},
 		},
 	],
