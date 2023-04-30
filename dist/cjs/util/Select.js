@@ -10,18 +10,6 @@ class Select {
     }
     /** HTMLElement containing max page number. */
     static MAX_PAGE_NUM = `#content ul.pagination:not(.small) > li:nth-last-child(2) > a`;
-    /** Selects all trophy groups from a trophy list. */
-    static TROPHY_GROUP = `#content div.col-xs > div.box.no-top-border`;
-    static trophyGroups(parent) {
-        return [...parent.querySelectorAll(Select.TROPHY_GROUP)];
-    }
-    static trophyGroupName(trophyGroup) {
-        return trophyGroup.querySelector(`table tr > td > span.title`);
-    }
-    /** Selects table of trophy nodes given a {@link TROPHY_GROUP}. */
-    static trophyGroupTrophyTable(trophyGroup) {
-        return trophyGroup.querySelector(`table:last-of-type`);
-    }
     /** Selects all trophy nodes from a trophy list. */
     static TROPHY_LIST_TROPHIES = `#content div.col-xs > div.box.no-top-border table:last-of-type ${Select.TR}`;
     static SUFFIX = `tbody > ${Select.TR}`;

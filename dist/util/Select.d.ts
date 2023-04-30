@@ -4,12 +4,6 @@ export declare class Select {
     static tr(parent: Document | HTMLElement): HTMLTableRowElement[];
     /** HTMLElement containing max page number. */
     static readonly MAX_PAGE_NUM = "#content ul.pagination:not(.small) > li:nth-last-child(2) > a";
-    /** Selects all trophy groups from a trophy list. */
-    private static readonly TROPHY_GROUP;
-    static trophyGroups(parent: Document | HTMLElement): HTMLDivElement[];
-    static trophyGroupName(trophyGroup: HTMLDivElement): HTMLSpanElement | null;
-    /** Selects table of trophy nodes given a {@link TROPHY_GROUP}. */
-    static trophyGroupTrophyTable(trophyGroup: HTMLDivElement): HTMLTableElement | null;
     /** Selects all trophy nodes from a trophy list. */
     static readonly TROPHY_LIST_TROPHIES: "#content div.col-xs > div.box.no-top-border table:last-of-type tr:not(:empty, [id*='load'])";
     private static readonly SUFFIX;

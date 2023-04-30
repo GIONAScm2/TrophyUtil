@@ -2,15 +2,21 @@ import {ITrophyGroup, Select} from '../../index.js';
 import {PsnpParser} from '../psnpParser.js';
 import {PsnpTrophyParser} from './psnpTrophy.js';
 
-export class PsnpTrophyGroupParser extends PsnpParser<ITrophyGroup[], Document> {
+export class PsnpTrophyGroupsParser extends PsnpParser<ITrophyGroup[], Document> {
 	protected readonly type = 'Trophy Group';
+	trophyGroupNodes: HTMLDivElement[];
 
-	protected _parse(doc: Document): ITrophyGroup[] {
-		const groups = Select.trophyGroups(doc)
-			.map(group => {
-				const trophyTable = Select.trophyGroupTrophyTable(group);
-				const groupHeader = group.previousElementSibling;
-				const groupName = Select.trophyGroupName(group)?.textContent?.trim() ?? 'Base Game';
+	constructor(public doc: Document) {
+		super();
+		this.trophyGroupNodes = this.getTrophyGroups();
+	}
+
+	protected _parse(): ITrophyGroup[] {
+		const groups = this.getTrophyGroups()
+			.map(groupNode => {
+				const trophyTable = this.trophyGroupTrophyTable(groupNode);
+				const groupHeader = groupNode.previousElementSibling;
+				const groupName = this.trophyGroupName(groupNode);
 
 				if (!trophyTable || !groupHeader || !groupName) {
 					return null;
@@ -31,5 +37,21 @@ export class PsnpTrophyGroupParser extends PsnpParser<ITrophyGroup[], Document> 
 			.filter(group => group !== null) as ITrophyGroup[];
 
 		return groups;
+	}
+
+	/** Returns an array of nodes representing the trophy list's trophy groups. */
+	getTrophyGroups() {
+		return [...this.doc.querySelectorAll<HTMLDivElement>(`#content div.col-xs > div.box.no-top-border`)];
+	}
+
+	/** Given a trophy group node, returns the name of the group. */
+	trophyGroupName(trophyGroup: HTMLDivElement): 'Base Game' | string {
+		const nameHolder = trophyGroup.querySelector<HTMLSpanElement>(`table tr > td > span.title`);
+		return nameHolder?.textContent?.trim() ?? 'Base Game';
+	}
+
+	/** Given a trophy group node, returns the `HTMLTableElement` containing the group's trophy nodes. */
+	trophyGroupTrophyTable(trophyGroup: HTMLDivElement) {
+		return trophyGroup.querySelector<HTMLTableElement>(`table:last-of-type`);
 	}
 }
