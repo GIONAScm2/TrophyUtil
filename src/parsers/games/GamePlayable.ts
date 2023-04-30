@@ -17,22 +17,26 @@ export class ParserGamePlayable extends PsnpParser<IGamePlayable, HTMLTableRowEl
 		}
 
 		const _imagePath = /\w+\/\w+(?=\.[A-z]{3}$)/.exec(imageSrc)?.at(0);
-		if (!_imagePath) {
+		const name = titleAnchorEl.textContent.trim();
+		const platforms = [...tr.querySelectorAll('span.tag.platform')].map(tag => tag.textContent) as PlatformTag[];
+
+		if (!_imagePath || !name || !platforms.length) {
 			return null;
 		}
 
 		const [_id, _nameSerialized] = hrefIdAndTitle;
-		const name = titleAnchorEl.textContent.trim();
 		const stackLabel =
 			(titleAnchorEl.parentElement
 				?.querySelector('bullet')
 				?.nextSibling?.textContent?.trim() as StackAbbrNullable) ?? null;
-		const platforms = [...tr.querySelectorAll('span.tag.platform')].map(tag => tag.textContent) as PlatformTag[];
 
-		const progressBar = tr.querySelector(`div.progress-bar > span`);
-		const percent = progressBar ? parseNum(progressBar) : null;
+		const progressPercent = parseNum(tr.querySelector(`div.progress-bar > span`));
+		const percent = Number.isNaN(progressPercent) ? null : progressPercent;
 
 		const rarityBase = parseNum(rarityBaseEl);
+		if (Number.isNaN(rarityBase)) {
+			return null;
+		}
 		const rarityDlcEl = tr.querySelector('td > span.separator.completion-status > span:nth-of-type(2)');
 		const rarityDlc = rarityDlcEl ? parseNum(rarityDlcEl) : undefined;
 
@@ -41,8 +45,8 @@ export class ParserGamePlayable extends PsnpParser<IGamePlayable, HTMLTableRowEl
 		let completionSpeed, latestTrophyTimestamp;
 		const dateHolder = tr.querySelector('td > div.small-info:nth-of-type(3)');
 		if (dateHolder) {
-			const speedString = dateHolder.querySelector('bullet + b')?.textContent?.trim();
-			completionSpeed = speedString ? PsnpGamePlayable.speedStringToSeconds(speedString) : null;
+			const speedString = dateHolder.querySelector('bullet + b')?.textContent?.trim() || '';
+			completionSpeed = speedString ? PsnpGamePlayable.speedStringToSeconds(speedString) : undefined;
 
 			const day = dateHolder.childNodes[0]?.textContent?.trim();
 			const monthYear = dateHolder.childNodes[2]?.textContent?.trim();
@@ -51,6 +55,19 @@ export class ParserGamePlayable extends PsnpParser<IGamePlayable, HTMLTableRowEl
 
 		const trophyCount = this.parseTrophyCount(tr) ?? undefined;
 
+		console.log(_id,
+			_nameSerialized,
+			name,
+			_imagePath,
+			stackLabel,
+			platforms,
+			rarityBase,
+			rarityDlc,
+			percent,
+			completionStatus,
+			completionSpeed,
+			latestTrophyTimestamp,
+			trophyCount,)
 		return {
 			_id,
 			_nameSerialized,

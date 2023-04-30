@@ -4,7 +4,7 @@ import {PlatformTag, StackAbbrNullable, IGamePartialTrophyList} from '../../mode
 /** Parses a partial game representation from TrophyList pages. */
 export class ParserGameFromTrophyList extends PsnpParser<IGamePartialTrophyList, HTMLTableRowElement> {
 	protected readonly type = 'Partial Game (TrophyList)';
-	
+
 	protected _parse(tr: HTMLTableRowElement): IGamePartialTrophyList | null {
 		const titleAnchorEl = tr.querySelector(`td > span > span > a[href^='/trophies/']`);
 		const href = titleAnchorEl?.getAttribute('href');
@@ -16,14 +16,15 @@ export class ParserGameFromTrophyList extends PsnpParser<IGamePartialTrophyList,
 		}
 
 		const _imagePath = /\w+\/\w+(?=\.[A-z]{3}$)/.exec(imageSrc)?.at(0);
-		if (!_imagePath) {
+		const name = titleAnchorEl.textContent.trim();
+		const platforms = [...tr.querySelectorAll('span.tag.platform')].map(tag => tag.textContent) as PlatformTag[];
+
+		if (!_imagePath || !name || !platforms.length) {
 			return null;
 		}
 
 		const [_id, _nameSerialized] = hrefIdAndTitle;
-		const name = titleAnchorEl.textContent.trim();
 		const stackLabel = (tr.querySelector('.separator .typo-top')?.textContent?.trim() as StackAbbrNullable) || null;
-		const platforms = [...tr.querySelectorAll('span.tag.platform')].map(tag => tag.textContent) as PlatformTag[];
 
 		return {
 			_id,

@@ -1,9 +1,13 @@
 import { TrophyCount } from '../models/index.js';
-/** Parses a `T` from `E`. */
+/** Parses an entity `T` from `E`. */
 export declare abstract class PsnpParser<T, E> {
     /** Entity identifier to aid subclass debugging. */
     protected abstract readonly type: string;
+    /** Parses an entity from a DOM target (Document or Element).
+     *
+     * @throws If any of the entity's required fields are parsed as `null`.	*/
     parse(domTarget: E): T;
+    /** Method that performs the parsing. */
     protected abstract _parse(parseTarget: E): T | null;
     /**
      * Given a PSNP URL pathname, returns a tuple of the entity ID and serialized name.

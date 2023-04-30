@@ -2,8 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PsnpParser = void 0;
 const util_js_1 = require("../util/util.js");
-/** Parses a `T` from `E`. */
+/** Parses an entity `T` from `E`. */
 class PsnpParser {
+    /** Parses an entity from a DOM target (Document or Element).
+     *
+     * @throws If any of the entity's required fields are parsed as `null`.	*/
     parse(domTarget) {
         const parsedItem = this._parse(domTarget);
         if (!parsedItem) {

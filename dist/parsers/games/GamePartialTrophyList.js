@@ -11,13 +11,13 @@ export class ParserGameFromTrophyList extends PsnpParser {
             return null;
         }
         const _imagePath = /\w+\/\w+(?=\.[A-z]{3}$)/.exec(imageSrc)?.at(0);
-        if (!_imagePath) {
+        const name = titleAnchorEl.textContent.trim();
+        const platforms = [...tr.querySelectorAll('span.tag.platform')].map(tag => tag.textContent);
+        if (!_imagePath || !name || !platforms.length) {
             return null;
         }
         const [_id, _nameSerialized] = hrefIdAndTitle;
-        const name = titleAnchorEl.textContent.trim();
         const stackLabel = tr.querySelector('.separator .typo-top')?.textContent?.trim() || null;
-        const platforms = [...tr.querySelectorAll('span.tag.platform')].map(tag => tag.textContent);
         return {
             _id,
             _nameSerialized,

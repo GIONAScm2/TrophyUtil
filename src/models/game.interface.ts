@@ -67,11 +67,11 @@ interface GameProgress {
 	 * If a game is platted, it will have the `platinum` class regardless of whether there's DLC.
 	 * If a game is a 100%'d nonplat, it will have the `completed` class. */
 	completionStatus?: 'platinum' | 'completed';
-	/** Completion speed in seconds, or `null` if game is incomplete.
+	/** Completion speed in seconds, or `undefined` if game is incomplete.
 	 *
 	 * Note that 'platinum in [SPEED 1]' changes to 'completed in [SPEED 2]' if a game has
 	 * DLC trophies that the user completes. */
-	completionSpeed?: number | null;
+	completionSpeed?: number;
 	/** Timestamp at which the most recent trophy was earned (ms). `undefined` for games at 0% (or unplayed series games). */
 	latestTrophy?: number;
 }

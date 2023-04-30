@@ -1,11 +1,14 @@
 import {TrophyCount} from '../models/index.js';
 import {parseNum} from '../util/util.js';
 
-/** Parses a `T` from `E`. */
+/** Parses an entity `T` from `E`. */
 export abstract class PsnpParser<T, E> {
 	/** Entity identifier to aid subclass debugging. */
 	protected abstract readonly type: string;
 
+	/** Parses an entity from a DOM target (Document or Element).
+	 * 
+	 * @throws If any of the entity's required fields are parsed as `null`.	*/
 	parse(domTarget: E): T {
 		const parsedItem = this._parse(domTarget);
 		if (!parsedItem) {
@@ -14,6 +17,7 @@ export abstract class PsnpParser<T, E> {
 		return parsedItem;
 	}
 
+	/** Method that performs the parsing. */
 	protected abstract _parse(parseTarget: E): T | null;
 
 	/**

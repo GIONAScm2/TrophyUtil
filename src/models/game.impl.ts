@@ -105,7 +105,7 @@ export class PsnpGamePlayable extends PsnpGameBase implements IGamePlayable {
 	stackLabel: StackAbbrNullable;
 	percent: number | null;
 	completionStatus?: 'platinum' | 'completed';
-	completionSpeed?: number | null;
+	completionSpeed?: number;
 	rarityBase: number;
 	rarityDLC?: number;
 	latestTrophy?: number;

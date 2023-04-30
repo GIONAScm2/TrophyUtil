@@ -8,7 +8,8 @@ export type OnlyRequiredPropertiesOf<T> = {
 };
 /** Mapped type that makes some properties optional. */
 export type MakePropertiesRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
-/** Parses a number from a string or DOM Node, taking care of trimming strings and parsing comma and percent characters. */
+/** Parses a numerical value from a string or DOM Node, returning said value or `NaN`.
+ * Prior to parsing, strings are trimmed and occurrences of `,` and `%` are removed. */
 export declare function parseNum(input: string | Node | null | undefined): number;
 export declare function getAbbreviation(regionName: string): StackAbbr | null;
 //# sourceMappingURL=util.d.ts.map
