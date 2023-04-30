@@ -1,5 +1,5 @@
 import { parseNum } from '../../index.js';
-import { PsnpParser } from '../PsnpParser.js';
+import { PsnpParser } from '../psnpParser.js';
 export class PsnpTrophyParser extends PsnpParser {
     type = 'Trophy';
     _parse(tr) {

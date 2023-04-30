@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PsnpTrophyParser = void 0;
 const index_js_1 = require("../../index.js");
-const PsnpParser_js_1 = require("../PsnpParser.js");
-class PsnpTrophyParser extends PsnpParser_js_1.PsnpParser {
+const psnpParser_js_1 = require("../psnpParser.js");
+class PsnpTrophyParser extends psnpParser_js_1.PsnpParser {
     type = 'Trophy';
     _parse(tr) {
         const titleAnchorEl = tr.querySelector(`a.title`);

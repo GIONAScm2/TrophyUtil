@@ -30,4 +30,4 @@ export declare abstract class PsnpParser<T, E> {
     }): [number, string] | undefined;
     protected parseTrophyCount(tr: HTMLTableRowElement, isHomeOrGameSearch?: boolean): TrophyCount | null;
 }
-//# sourceMappingURL=PsnpParser.d.ts.map
+//# sourceMappingURL=psnpParser.d.ts.map

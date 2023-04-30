@@ -1,5 +1,5 @@
 import { ParserGamePlayable, calculateTrophyPoints, sumTrophyCount } from '../../index.js';
-import { PsnpParser } from '../PsnpParser.js';
+import { PsnpParser } from '../psnpParser.js';
 export class ParserSeriesPageNeutral extends PsnpParser {
     type = 'Series Page';
     _parse(_window) {
@@ -11,9 +11,6 @@ export class ParserSeriesPageNeutral extends PsnpParser {
         }
         const [_id, _nameSerialized] = hrefIdAndTitle;
         const _imagePath = /\/series\/(.+?)\.S\.png/.exec(imageSrc)?.at(1);
-        if (!_imagePath) {
-            return null;
-        }
         const gameParser = new ParserGamePlayable();
         const stageElements = [..._window.document.querySelectorAll(`table.box.zebra.series`)];
         const stages = stageElements.map(el => {
@@ -23,7 +20,7 @@ export class ParserSeriesPageNeutral extends PsnpParser {
             return { stageNum, games };
         });
         const trophyCount = aggregateSeriesTrophyCount(stages);
-        if (!trophyCount) {
+        if (!_imagePath || !stages.length || !trophyCount) {
             return null;
         }
         const points = calculateTrophyPoints(trophyCount);

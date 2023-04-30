@@ -1,5 +1,5 @@
 import { calculateTrophyPoints, parseNum, sumTrophyCount } from '../../index.js';
-import { PsnpParser } from '../PsnpParser.js';
+import { PsnpParser } from '../psnpParser.js';
 export class ParserSeriesListing extends PsnpParser {
     type = 'Series Listing';
     _parse(tr) {
@@ -15,7 +15,7 @@ export class ParserSeriesListing extends PsnpParser {
         const name = titleAnchorEl.textContent.trim();
         const numGames = parseNum(tr.querySelector(`td > span.small-info > b`));
         const trophyCount = this.parseTrophyCount(tr);
-        if (!_imagePath || Number.isNaN(numGames) || !trophyCount) {
+        if (!_imagePath || !name || Number.isNaN(numGames) || !trophyCount) {
             return null;
         }
         const numTrophies = sumTrophyCount(trophyCount);

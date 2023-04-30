@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PsnpTrophyGroupParser = void 0;
 const index_js_1 = require("../../index.js");
-const PsnpParser_js_1 = require("../PsnpParser.js");
+const psnpParser_js_1 = require("../psnpParser.js");
 const psnpTrophy_js_1 = require("./psnpTrophy.js");
-class PsnpTrophyGroupParser extends PsnpParser_js_1.PsnpParser {
+class PsnpTrophyGroupParser extends psnpParser_js_1.PsnpParser {
     type = 'Trophy Group';
     _parse(doc) {
         const groups = index_js_1.Select.trophyGroups(doc)

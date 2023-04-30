@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ParserGamePlayable = void 0;
-const PsnpParser_js_1 = require("../PsnpParser.js");
+const psnpParser_js_1 = require("../psnpParser.js");
 const index_js_1 = require("../../index.js");
 /** Parses a 'playable' game containing user progress from Profile and Series pages. */
-class ParserGamePlayable extends PsnpParser_js_1.PsnpParser {
+class ParserGamePlayable extends psnpParser_js_1.PsnpParser {
     type = 'Playable Game';
     _parse(tr) {
         const titleAnchorEl = tr.querySelector(`a.title`);
@@ -44,7 +44,6 @@ class ParserGamePlayable extends PsnpParser_js_1.PsnpParser {
             latestTrophyTimestamp = day && monthYear ? new Date(`${day} ${monthYear}`).valueOf() : undefined;
         }
         const trophyCount = this.parseTrophyCount(tr) ?? undefined;
-        console.log(_id, _nameSerialized, name, _imagePath, stackLabel, platforms, rarityBase, rarityDlc, percent, completionStatus, completionSpeed, latestTrophyTimestamp, trophyCount);
         return {
             _id,
             _nameSerialized,

@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ParserGameFromTrophyList = void 0;
-const PsnpParser_js_1 = require("../PsnpParser.js");
+const psnpParser_js_1 = require("../psnpParser.js");
 /** Parses a partial game representation from TrophyList pages. */
-class ParserGameFromTrophyList extends PsnpParser_js_1.PsnpParser {
+class ParserGameFromTrophyList extends psnpParser_js_1.PsnpParser {
     type = 'Partial Game (TrophyList)';
     _parse(tr) {
         const titleAnchorEl = tr.querySelector(`td > span > span > a[href^='/trophies/']`);

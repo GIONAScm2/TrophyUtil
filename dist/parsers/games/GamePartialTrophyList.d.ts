@@ -1,4 +1,4 @@
-import { PsnpParser } from '../PsnpParser.js';
+import { PsnpParser } from '../psnpParser.js';
 import { IGamePartialTrophyList } from '../../models/game.interface.js';
 /** Parses a partial game representation from TrophyList pages. */
 export declare class ParserGameFromTrophyList extends PsnpParser<IGamePartialTrophyList, HTMLTableRowElement> {

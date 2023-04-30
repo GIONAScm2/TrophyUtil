@@ -1,4 +1,4 @@
-import { PsnpParser } from '../PsnpParser.js';
+import { PsnpParser } from '../psnpParser.js';
 import { calculateTrophyPoints, sumTrophyCount, } from '../../models/index.js';
 import { parseNum } from '../../util/util.js';
 /** Parses a standard game representation from Games and GameSearch pages. */

@@ -17,5 +17,5 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./games/index.js"), exports);
 __exportStar(require("./series/index.js"), exports);
 __exportStar(require("./trophies/index.js"), exports);
-__exportStar(require("./PsnpParser.js"), exports);
+__exportStar(require("./psnpParser.js"), exports);
 //# sourceMappingURL=index.js.map

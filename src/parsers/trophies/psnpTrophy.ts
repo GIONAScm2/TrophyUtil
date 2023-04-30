@@ -1,5 +1,5 @@
 import {ITrophy, TrophyGrade, parseNum} from '../../index.js';
-import {PsnpParser} from '../PsnpParser.js';
+import {PsnpParser} from '../psnpParser.js';
 
 export class PsnpTrophyParser extends PsnpParser<ITrophy, HTMLTableRowElement> {
 	protected readonly type = 'Trophy';

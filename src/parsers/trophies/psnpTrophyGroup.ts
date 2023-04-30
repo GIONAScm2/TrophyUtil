@@ -1,5 +1,5 @@
 import {ITrophyGroup, Select} from '../../index.js';
-import {PsnpParser} from '../PsnpParser.js';
+import {PsnpParser} from '../psnpParser.js';
 import {PsnpTrophyParser} from './psnpTrophy.js';
 
 export class PsnpTrophyGroupParser extends PsnpParser<ITrophyGroup[], Document> {

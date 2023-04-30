@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ParserSeriesListing = void 0;
 const index_js_1 = require("../../index.js");
-const PsnpParser_js_1 = require("../PsnpParser.js");
-class ParserSeriesListing extends PsnpParser_js_1.PsnpParser {
+const psnpParser_js_1 = require("../psnpParser.js");
+class ParserSeriesListing extends psnpParser_js_1.PsnpParser {
     type = 'Series Listing';
     _parse(tr) {
         const titleAnchorEl = tr.querySelector(`a.title`);
@@ -18,7 +18,7 @@ class ParserSeriesListing extends PsnpParser_js_1.PsnpParser {
         const name = titleAnchorEl.textContent.trim();
         const numGames = (0, index_js_1.parseNum)(tr.querySelector(`td > span.small-info > b`));
         const trophyCount = this.parseTrophyCount(tr);
-        if (!_imagePath || Number.isNaN(numGames) || !trophyCount) {
+        if (!_imagePath || !name || Number.isNaN(numGames) || !trophyCount) {
             return null;
         }
         const numTrophies = (0, index_js_1.sumTrophyCount)(trophyCount);

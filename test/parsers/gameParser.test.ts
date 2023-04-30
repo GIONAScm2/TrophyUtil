@@ -2,11 +2,11 @@ import {dirname, resolve} from 'path';
 import {fileURLToPath} from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 import fs from 'fs';
-import {ParserGameFromTrophyList, ParserGameStandard, ParserGamePlayable} from '../../../src/parsers/index';
-import {Select} from '../../../src/util/index';
+import {ParserGameFromTrophyList, ParserGameStandard, ParserGamePlayable} from '../../src/parsers/index';
+import {Select} from '../../src/util/index';
 
 beforeAll(() => {
-	const html = fs.readFileSync(resolve(__dirname, '../../fixtures/psnpGameVariety.html'), 'utf8');
+	const html = fs.readFileSync(resolve(__dirname, '../fixtures/psnpGameVariety.html'), 'utf8');
 	document.body.innerHTML = html;
 });
 

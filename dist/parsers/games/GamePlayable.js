@@ -1,4 +1,4 @@
-import { PsnpParser } from '../PsnpParser.js';
+import { PsnpParser } from '../psnpParser.js';
 import { PsnpGamePlayable, parseNum } from '../../index.js';
 /** Parses a 'playable' game containing user progress from Profile and Series pages. */
 export class ParserGamePlayable extends PsnpParser {
@@ -41,7 +41,6 @@ export class ParserGamePlayable extends PsnpParser {
             latestTrophyTimestamp = day && monthYear ? new Date(`${day} ${monthYear}`).valueOf() : undefined;
         }
         const trophyCount = this.parseTrophyCount(tr) ?? undefined;
-        console.log(_id, _nameSerialized, name, _imagePath, stackLabel, platforms, rarityBase, rarityDlc, percent, completionStatus, completionSpeed, latestTrophyTimestamp, trophyCount);
         return {
             _id,
             _nameSerialized,

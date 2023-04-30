@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ParserSeriesPageNeutral = void 0;
 const index_js_1 = require("../../index.js");
-const PsnpParser_js_1 = require("../PsnpParser.js");
-class ParserSeriesPageNeutral extends PsnpParser_js_1.PsnpParser {
+const psnpParser_js_1 = require("../psnpParser.js");
+class ParserSeriesPageNeutral extends psnpParser_js_1.PsnpParser {
     type = 'Series Page';
     _parse(_window) {
         const name = _window.document.querySelector(`div.series-info div.ellipsis > span`)?.textContent?.trim();
@@ -14,9 +14,6 @@ class ParserSeriesPageNeutral extends PsnpParser_js_1.PsnpParser {
         }
         const [_id, _nameSerialized] = hrefIdAndTitle;
         const _imagePath = /\/series\/(.+?)\.S\.png/.exec(imageSrc)?.at(1);
-        if (!_imagePath) {
-            return null;
-        }
         const gameParser = new index_js_1.ParserGamePlayable();
         const stageElements = [..._window.document.querySelectorAll(`table.box.zebra.series`)];
         const stages = stageElements.map(el => {
@@ -26,7 +23,7 @@ class ParserSeriesPageNeutral extends PsnpParser_js_1.PsnpParser {
             return { stageNum, games };
         });
         const trophyCount = aggregateSeriesTrophyCount(stages);
-        if (!trophyCount) {
+        if (!_imagePath || !stages.length || !trophyCount) {
             return null;
         }
         const points = (0, index_js_1.calculateTrophyPoints)(trophyCount);

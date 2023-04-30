@@ -1,3 +1,4 @@
+
 /** @type {import('@jest/types').Config.InitialOptions} */
 const config = {
 	preset: 'ts-jest',
@@ -16,6 +17,7 @@ const config = {
 	moduleNameMapper: {
 		'^(\\.{1,2}/.*)\\.js$': '$1',
 	},
+	setupFilesAfterEnv: ["<rootDir>/jest.setup.mjs"],
 };
 
 export default config;
