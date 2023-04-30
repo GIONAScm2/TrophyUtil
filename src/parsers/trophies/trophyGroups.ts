@@ -1,18 +1,12 @@
 import {ITrophyGroup, Select} from '../../index.js';
 import {PsnpParser} from '../psnpParser.js';
-import {PsnpTrophyParser} from './psnpTrophy.js';
+import {ParserTrophy} from './trophy.js';
 
-export class PsnpTrophyGroupsParser extends PsnpParser<ITrophyGroup[], Document> {
+export class ParserTrophyGroups extends PsnpParser<ITrophyGroup[], Document> {
 	protected readonly type = 'Trophy Group';
-	trophyGroupNodes: HTMLDivElement[];
 
-	constructor(public doc: Document) {
-		super();
-		this.trophyGroupNodes = this.getTrophyGroups();
-	}
-
-	protected _parse(): ITrophyGroup[] {
-		const groups = this.getTrophyGroups()
+	protected _parse(doc: Document): ITrophyGroup[] {
+		const groups = this.getTrophyGroups(doc)
 			.map(groupNode => {
 				const trophyTable = this.trophyGroupTrophyTable(groupNode);
 				const groupHeader = groupNode.previousElementSibling;
@@ -25,7 +19,7 @@ export class PsnpTrophyGroupsParser extends PsnpParser<ITrophyGroup[], Document>
 				const match = groupHeader.id.match(/^DLC-(\d+)$/);
 				const groupNum = match ? +match[1] : 0;
 
-				const trophyParser = new PsnpTrophyParser();
+				const trophyParser = new ParserTrophy();
 				const trophies = Select.tr(trophyTable).map(tr => trophyParser.parse(tr));
 
 				return {
@@ -40,8 +34,8 @@ export class PsnpTrophyGroupsParser extends PsnpParser<ITrophyGroup[], Document>
 	}
 
 	/** Returns an array of nodes representing the trophy list's trophy groups. */
-	getTrophyGroups() {
-		return [...this.doc.querySelectorAll<HTMLDivElement>(`#content div.col-xs > div.box.no-top-border`)];
+	getTrophyGroups(doc: Document) {
+		return [...doc.querySelectorAll<HTMLDivElement>(`#content div.col-xs > div.box.no-top-border`)];
 	}
 
 	/** Given a trophy group node, returns the name of the group. */
