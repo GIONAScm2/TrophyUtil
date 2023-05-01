@@ -34,18 +34,18 @@ export class ParserTrophyGroups extends PsnpParser<ITrophyGroup[], Document> {
 	}
 
 	/** Returns an array of nodes representing the trophy list's trophy groups. */
-	getTrophyGroups(doc: Document) {
+	protected getTrophyGroups(doc: Document) {
 		return [...doc.querySelectorAll<HTMLDivElement>(`#content div.col-xs > div.box.no-top-border`)];
 	}
 
 	/** Given a trophy group node, returns the name of the group. */
-	trophyGroupName(trophyGroup: HTMLDivElement): 'Base Game' | string {
+	protected trophyGroupName(trophyGroup: HTMLDivElement): 'Base Game' | string {
 		const nameHolder = trophyGroup.querySelector<HTMLSpanElement>(`table tr > td > span.title`);
 		return nameHolder?.textContent?.trim() ?? 'Base Game';
 	}
 
 	/** Given a trophy group node, returns the `HTMLTableElement` containing the group's trophy nodes. */
-	trophyGroupTrophyTable(trophyGroup: HTMLDivElement) {
+	protected trophyGroupTrophyTable(trophyGroup: HTMLDivElement) {
 		return trophyGroup.querySelector<HTMLTableElement>(`table:last-of-type`);
 	}
 }

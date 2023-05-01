@@ -1,4 +1,4 @@
-import { IPsnpEntity, ITrophyCount, MongoTimestamps } from '../index.js';
+import { IPsnpEntity, ITrophyCount, MongoTimestamps, MakePropertiesOptional } from '../index.js';
 import { ITrophyGroup } from './trophy.interface.js';
 export declare const StackLookup: {
     readonly NA: "North American";
@@ -37,13 +37,13 @@ export interface MetadataFields {
     genres?: string[];
     themes?: string[];
     modes?: string[];
-    releases?: string[];
+    otherNames?: string[];
 }
 interface Metadata {
     metaData: MetadataFields;
 }
 /** Represents a game's header stats. */
-interface HeaderStats {
+export interface HeaderStats {
     gameOwners: number;
     recentPlayers: number;
     numPlatted?: number;
@@ -98,15 +98,20 @@ export interface IGameStandard extends GameBase, StackLabel, ITrophyCount, Unpla
 /** Games from Profile and Series pages. */
 export interface IGamePlayable extends GameBase, StackLabel, Partial<ITrophyCount>, Rarity, GameProgress {
 }
-export interface IGamePage extends GameBase, Metadata, Rarity {
+/** Game details retrieved from its trophy list. */
+export interface IGamePage extends MakePropertiesOptional<GameBase, '_imagePath'>, StackLabel, Metadata, Rarity {
     /** ID that uniquely identifies the game's PSNP subforum. */
     forumId: number;
+    /** List of {@link ITrophyGroup} */
     trophyGroups: ITrophyGroup[];
+    /** List of {@link IGamePartialTrophyList} */
     stacks: IGamePartialTrophyList[];
+    /** Aggregate stats; see {@link HeaderStats} */
     completionStats: HeaderStats;
 }
 /** Represents a neutral Game document containing all fields that should be stored. */
 export interface IGameStandardDoc extends IGameStandard, Rarity, Partial<Metadata>, MongoTimestamps {
+    /** List of {@link ITrophyGroup} */
     trophyGroups: ITrophyGroup[];
 }
 /** Represents a user Game document containing all fields that should be stored. */

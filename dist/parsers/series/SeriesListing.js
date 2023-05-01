@@ -5,7 +5,7 @@ export class ParserSeriesListing extends PsnpParser {
     _parse(tr) {
         const titleAnchorEl = tr.querySelector(`a.title`);
         const href = titleAnchorEl?.getAttribute('href');
-        const hrefIdAndTitle = this._extractIdAndTitleFromPathname({ pathname: href });
+        const hrefIdAndTitle = this._extractIdAndTitleFromPsnpUrl({ url: href });
         const imageSrc = tr.querySelector('img[src]')?.getAttribute('src');
         if (!titleAnchorEl?.textContent || !hrefIdAndTitle || !imageSrc) {
             return null;
