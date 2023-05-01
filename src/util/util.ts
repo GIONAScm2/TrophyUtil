@@ -14,21 +14,36 @@ export type OnlyRequiredPropertiesOf<T> = {
 	[K in keyof T as T[K] extends Required<T>[K] ? K : never]: T[K];
 };
 
-/** Mapped type that makes some properties optional. */
+/** Creates a new type based on `T` with properties specified by `K` made required.
+ *
+ * @template T - The original object type.
+ * @template K - A union of keys from the object type `T` that should be made required. */
 export type MakePropertiesRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
 
-/** Parses a numerical value from a string or DOM Node, returning said value or `NaN`.
- * Prior to parsing, strings are trimmed and occurrences of `,` and `%` are removed. */
+/** Creates a new type based on `T` with properties specified by `K` made optional.
+ *
+ * @template T - The original object type.
+ * @template K - A union of keys from the object type `T` that should be made optional. */
+export type MakePropertiesOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+
+/** 
+ * Parses a numerical value from a string or DOM Node, returning said value or `NaN`.
+ * 
+ * Prior to parsing, strings are trimmed and occurrences of `,`, `%`, and `\s.+` are removed. 
+ * 
+ * @example
+ * parseNum("5,001.5% (25.99%)") // 5001.5
+ */
 export function parseNum(input: string | Node | null | undefined): number {
-	const narrowedInput = input ?? '';
-	const text = typeof narrowedInput === 'string' ? narrowedInput : narrowedInput.textContent ?? '';
-	const cleanText = text.trim().replaceAll(/%|,/g, '');
-	return +cleanText;
+	const inputAsNonNull = input ?? '';
+	const inputAsString = typeof inputAsNonNull === 'string' ? inputAsNonNull : inputAsNonNull.textContent ?? '';
+	const inputAsParsable = inputAsString.trim().replaceAll(/%|,|\s.+/g, '');
+	return +inputAsParsable;
 }
 
-export function getAbbreviation(regionName: string): StackAbbr | null {
+export function getStackAbbr(fullRegionName: string): StackAbbr | null {
 	for (const [key, value] of Object.entries(StackLookup)) {
-		if (value === regionName) {
+		if (value === fullRegionName) {
 			return key as StackAbbr;
 		}
 	}

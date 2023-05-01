@@ -8,7 +8,7 @@ export class ParserGamePlayable extends PsnpParser<IGamePlayable, HTMLTableRowEl
 	protected _parse(tr: HTMLTableRowElement): IGamePlayable | null {
 		const titleAnchorEl = tr.querySelector(`a.title`);
 		const href = titleAnchorEl?.getAttribute('href');
-		const hrefIdAndTitle = this._extractIdAndTitleFromPathname({pathname: href});
+		const hrefIdAndTitle = this._extractIdAndTitleFromPsnpUrl({url: href});
 		const imageSrc = tr.querySelector('img[src]')?.getAttribute('src');
 		const rarityBaseEl = tr.querySelector(`td > span.separator.completion-status > span:first-of-type`);
 
