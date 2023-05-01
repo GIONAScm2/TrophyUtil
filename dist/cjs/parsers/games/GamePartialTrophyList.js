@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ParserGameFromTrophyList = void 0;
+exports.ParserGamePartialStack = void 0;
 const psnpParser_js_1 = require("../psnpParser.js");
 /** Parses a partial game representation from TrophyList pages. */
-class ParserGameFromTrophyList extends psnpParser_js_1.PsnpParser {
+class ParserGamePartialStack extends psnpParser_js_1.PsnpParser {
     type = 'Partial Game (TrophyList)';
     _parse(tr) {
         const titleAnchorEl = tr.querySelector(`td > span > span > a[href^='/trophies/']`);
         const href = titleAnchorEl?.getAttribute('href');
-        const hrefIdAndTitle = this._extractIdAndTitleFromPathname({ pathname: href });
+        const hrefIdAndTitle = this._extractIdAndTitleFromPsnpUrl({ url: href });
         const imageSrc = tr.querySelector('img[src]')?.getAttribute('src');
         if (!titleAnchorEl?.textContent || !hrefIdAndTitle || !imageSrc) {
             return null;
@@ -31,5 +31,5 @@ class ParserGameFromTrophyList extends psnpParser_js_1.PsnpParser {
         };
     }
 }
-exports.ParserGameFromTrophyList = ParserGameFromTrophyList;
+exports.ParserGamePartialStack = ParserGamePartialStack;
 //# sourceMappingURL=gamePartialTrophyList.js.map

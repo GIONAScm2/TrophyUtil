@@ -4,7 +4,7 @@ export class ParserSeriesPageNeutral extends PsnpParser {
     type = 'Series Page';
     _parse(_window) {
         const name = _window.document.querySelector(`div.series-info div.ellipsis > span`)?.textContent?.trim();
-        const hrefIdAndTitle = this._extractIdAndTitleFromPathname({ pathname: _window.location.pathname });
+        const hrefIdAndTitle = this._extractIdAndTitleFromPsnpUrl({ url: _window.location.pathname });
         const imageSrc = _window.document.querySelector('div.series-info picture img[src]')?.getAttribute('src');
         if (!name || !hrefIdAndTitle || !imageSrc) {
             return null;

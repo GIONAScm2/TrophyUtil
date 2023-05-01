@@ -6,7 +6,7 @@ export class ParserGamePlayable extends PsnpParser {
     _parse(tr) {
         const titleAnchorEl = tr.querySelector(`a.title`);
         const href = titleAnchorEl?.getAttribute('href');
-        const hrefIdAndTitle = this._extractIdAndTitleFromPathname({ pathname: href });
+        const hrefIdAndTitle = this._extractIdAndTitleFromPsnpUrl({ url: href });
         const imageSrc = tr.querySelector('img[src]')?.getAttribute('src');
         const rarityBaseEl = tr.querySelector(`td > span.separator.completion-status > span:first-of-type`);
         if (!titleAnchorEl?.textContent || !hrefIdAndTitle || !imageSrc || !rarityBaseEl) {

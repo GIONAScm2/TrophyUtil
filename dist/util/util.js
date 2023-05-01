@@ -6,17 +6,23 @@ export async function sleep(ms) {
 export function extractKeys(keysObj) {
     return Object.keys(keysObj);
 }
-/** Parses a numerical value from a string or DOM Node, returning said value or `NaN`.
- * Prior to parsing, strings are trimmed and occurrences of `,` and `%` are removed. */
+/**
+ * Parses a numerical value from a string or DOM Node, returning said value or `NaN`.
+ *
+ * Prior to parsing, strings are trimmed and occurrences of `,`, `%`, and `\s.+` are removed.
+ *
+ * @example
+ * parseNum("5,001.5% (25.99%)") // 5001.5
+ */
 export function parseNum(input) {
-    const narrowedInput = input ?? '';
-    const text = typeof narrowedInput === 'string' ? narrowedInput : narrowedInput.textContent ?? '';
-    const cleanText = text.trim().replaceAll(/%|,/g, '');
-    return +cleanText;
+    const inputAsNonNull = input ?? '';
+    const inputAsString = typeof inputAsNonNull === 'string' ? inputAsNonNull : inputAsNonNull.textContent ?? '';
+    const inputAsParsable = inputAsString.trim().replaceAll(/%|,|\s.+/g, '');
+    return +inputAsParsable;
 }
-export function getAbbreviation(regionName) {
+export function getStackAbbr(fullRegionName) {
     for (const [key, value] of Object.entries(StackLookup)) {
-        if (value === regionName) {
+        if (value === fullRegionName) {
             return key;
         }
     }

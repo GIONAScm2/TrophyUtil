@@ -1,11 +1,11 @@
 import { PsnpParser } from '../psnpParser.js';
 /** Parses a partial game representation from TrophyList pages. */
-export class ParserGameFromTrophyList extends PsnpParser {
+export class ParserGamePartialStack extends PsnpParser {
     type = 'Partial Game (TrophyList)';
     _parse(tr) {
         const titleAnchorEl = tr.querySelector(`td > span > span > a[href^='/trophies/']`);
         const href = titleAnchorEl?.getAttribute('href');
-        const hrefIdAndTitle = this._extractIdAndTitleFromPathname({ pathname: href });
+        const hrefIdAndTitle = this._extractIdAndTitleFromPsnpUrl({ url: href });
         const imageSrc = tr.querySelector('img[src]')?.getAttribute('src');
         if (!titleAnchorEl?.textContent || !hrefIdAndTitle || !imageSrc) {
             return null;

@@ -2,8 +2,9 @@ import {dirname, resolve} from 'path';
 import {fileURLToPath} from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 import fs from 'fs';
-import {ParserGameFromTrophyList, ParserGameStandard, ParserGamePlayable} from '../../src/parsers/index';
+import {ParserGameStandard, ParserGamePlayable, ParserGamePartialStack, ParserGamePage} from '../../src/parsers/index';
 import {Select} from '../../src/util/index';
+import {JSDOM} from 'jsdom';
 
 beforeAll(() => {
 	const html = fs.readFileSync(resolve(__dirname, '../fixtures/psnpGameVariety.html'), 'utf8');
@@ -12,7 +13,7 @@ beforeAll(() => {
 
 describe('Game Parsers', () => {
 	test('should parse trophy_list nodes without error', () => {
-		const parser = new ParserGameFromTrophyList();
+		const parser = new ParserGamePartialStack();
 		const nodes = [...document.querySelectorAll<HTMLTableRowElement>('[data-page="trophy_list"] tr')];
 		expect(() => {
 			const games = nodes.map(node => parser.parse(node));
@@ -51,5 +52,53 @@ describe('Game Parsers', () => {
 		expect(() => {
 			const games = nodes.map(node => parser.parse(node));
 		}).not.toThrow();
+	});
+
+	test(`should parse game details from trophy list without error`, () => {
+		const html = fs.readFileSync(resolve(__dirname, '../fixtures/psnpTrophyListTEW.html'), 'utf8');
+		const jsdom = new JSDOM(html);
+
+		const parser = new ParserGamePage();
+		const game = parser.parse(jsdom.window.document);
+
+		expect(game._id).toBe(2983);
+		expect(game.name).toBe('The Evil Within');
+		expect(game._nameSerialized).toBe('the-evil-within');
+		expect(game.forumId).toBe(2725);
+		expect(game.platforms.length).toBe(1);
+		expect(game.stackLabel).toBeNull();
+		expect(game.stacks.length).toBe(6);
+		expect(game.trophyGroups.length).toBe(4);
+
+		expect(game.completionStats).toEqual({
+			gameOwners: 249094,
+			recentPlayers: 94,
+			numPlatted: 9903,
+			avgCompletion: 12,
+			trophiesEarned: 2727859,
+			num100Percented: 3767,
+		});
+
+		expect(game.rarityBase).toBe(3.98);
+		expect(game.rarityDlc).toBe(1.51);
+
+		expect(game.metaData).toEqual({
+			developer: 'Tango Gameworks',
+			publisher: 'Bethesda Softworks',
+			genres: ['Shooter', 'Adventure'],
+			themes: ['Action', 'Horror', 'Survival'],
+			modes: ['Single player'],
+			otherNames: [
+				'サイコブレイク',
+				'Psychobreak',
+				'Project Zwei',
+				'PsychoBreak',
+				'Mobius',
+				'PsychoBreak',
+				'Project Zwei',
+				'サイコブレイク',
+				'Mobius',
+			],
+		});
 	});
 });

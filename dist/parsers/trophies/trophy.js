@@ -5,7 +5,7 @@ export class ParserTrophy extends PsnpParser {
     _parse(tr) {
         const titleAnchorEl = tr.querySelector(`a.title`);
         const href = titleAnchorEl?.getAttribute('href');
-        const hrefTrophyIdAndName = this._extractIdAndTitleFromPathname({ pathname: href, index: 3 });
+        const hrefTrophyIdAndName = this._extractIdAndTitleFromPsnpUrl({ url: href, index: 3 });
         const imageSrc = tr.querySelector('picture img[src]')?.getAttribute('src');
         if (!titleAnchorEl?.textContent || !hrefTrophyIdAndName || !imageSrc) {
             return null;
