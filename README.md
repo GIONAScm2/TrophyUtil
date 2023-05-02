@@ -1,6 +1,6 @@
 # TrophyUtil
 
-TrophyUtil is a versatile utility library designed for parsing, modelling, and manipulating core [PSNProfiles](https://psnprofiles.com/) (PSNP) entities like trophies, games, and game series.
+TrophyUtil is a specialized utility library designed for parsing, modelling, and manipulating core [PSNProfiles](https://psnprofiles.com/) (PSNP) entities like trophies, games, and game series.
 
 ## Features
 
@@ -21,7 +21,7 @@ npm install trophyutil
 
 ## Usage
 
-Below is an example of how to use the `PsnpSeriesListingParser` and `PsnpSeriesListing` classes from TrophyUtil:
+Here's how you might use this library to parse games, for example:
 
 ```typescript
 import {getPsnpPageType, PsnpGameStandard, ParserGameStandard} from 'trophyutil';
