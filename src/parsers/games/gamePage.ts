@@ -1,6 +1,6 @@
 import {PsnpParser} from '../psnpParser.js';
 import {ParserTrophyGroups} from '../trophies/trophyGroups.js';
-import {ParserGamePartialStack} from '../games/gamePartialTrophyList.js';
+import {ParserGamePartialStack} from './gamePartialTrophyList.js';
 import {
 	PlatformTag,
 	IGamePage,
