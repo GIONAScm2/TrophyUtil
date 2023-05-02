@@ -1,5 +1,5 @@
 {
-	"name": "@gionascm2/trophyutil",
+	"name": "trophyutil",
 	"description": "Isomorphic library of trophy utilities",
 	"version": "6.0.2",
 	"type": "module",

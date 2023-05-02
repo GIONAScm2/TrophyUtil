@@ -16,7 +16,7 @@ TrophyUtil is a versatile utility library designed for parsing, modelling, and m
 Install TrophyUtil using npm:
 
 ```
-npm install @gionascm2/trophyutil
+npm install trophyutil
 ```
 
 ## Usage
@@ -24,7 +24,7 @@ npm install @gionascm2/trophyutil
 Below is an example of how to use the `PsnpSeriesListingParser` and `PsnpSeriesListing` classes from TrophyUtil:
 
 ```typescript
-import {getPsnpPageType, PsnpGameStandard, ParserGameStandard} from '@gionascm2/trophyutil';
+import {getPsnpPageType, PsnpGameStandard, ParserGameStandard} from 'trophyutil';
 
 // Select nodes based on page type
 const pageType = getPsnpPageType(window.location);
