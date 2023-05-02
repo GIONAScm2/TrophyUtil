@@ -1,14 +1,15 @@
 # TrophyUtil
 
-TrophyUtil is a versatile TypeScript utility library designed to facilitate the extraction, parsing, and manipulation of key [PSNProfiles](https://psnprofiles.com/) entities like trophies, games, and game series. The library provides an extensive set of parsers and models for handling PSNP series listings, game listings, trophy listings, and more. It's designed to work seamlessly in both frontend and backend (via [jsdom](https://github.com/jsdom/jsdom)) projects, making it an isomorphic solution for PSNP data handling.
+TrophyUtil is a versatile utility library designed for parsing, modelling, and manipulating core [PSNProfiles](https://psnprofiles.com/) (PSNP) entities like trophies, games, and game series.
 
 ## Features
 
--   Parsers for PSNP data, including series listings, game listings, trophy listings, and trophy details
--   Models for representing PSNP entities such as series, games, and trophies, along with associated metadata
--   Utility functions for common tasks such as parsing numbers and manipulating object properties
--   Type safety and enhanced error handling through TypeScript annotations and mapped types
--   Support for both client-side (frontend) and server-side (backend) usage
+-   Isomorphic, working seamlessly in both frontend and backend (via [jsdom](https://github.com/jsdom/jsdom)) projects.
+-   Compatible with both CommonJS and ESM.
+-   HTML parsers for core PSNP entities like trophies, games, and game series.
+-   Richly-annotated interfaces and classes that provide helpful methods, like transforming a completion time into a timestamp and vice versa.
+-   Additional interfaces for MongoDB/Mongoose provide smoother database integration with properties like `createdAt` and `updatedAt`.
+-   Specialized utility functions for trophy-specific use cases like parsing formatted numbers and checking for relative equality between entities.
 
 ## Installation
 
@@ -23,30 +24,21 @@ npm install @gionascm2/trophyutil
 Below is an example of how to use the `PsnpSeriesListingParser` and `PsnpSeriesListing` classes from TrophyUtil:
 
 ```typescript
-import {PsnpSeriesListingParser, PsnpSeriesListing} from '@gionascm2/trophyutil';
+import {getPsnpPageType, PsnpGameStandard, ParserGameStandard} from '@gionascm2/trophyutil';
 
-// HTML content of a PSNP series listings page
-const seriesListingsPageHtml = '...';
+// Select nodes based on page type
+const pageType = getPsnpPageType(window.location);
+const gameNodes = PsnpGameStandard.getGameNodes(pageType, window.document);
 
-// Create an instance of the parser
-const parser = new PsnpSeriesListingParser();
+// Parse nodes into richly-interfaced data
+const parser = new ParserGameStandard();
+const gameData = gameNodes.map(node => parser.parse(node));
+const speed = gameData[0].completionSpeed; // 3661
 
-// Parse the series listings from the HTML content
-const seriesListings = parser.parse(seriesListingsPageHtml);
-
-// Iterate through the parsed series listings
-seriesListings.forEach(series => {
-	// Create an instance of PsnpSeriesListing
-	const psnpSeriesListing = new PsnpSeriesListing(series);
-
-	// Access properties of the series listing
-	console.log(psnpSeriesListing.id);
-	console.log(psnpSeriesListing.name);
-	console.log(psnpSeriesListing.numGames);
-});
+// Classes wrap data with utility methods
+const games = gameData.map(data => new PsnpGameStandard(data));
+const speedString = PsnpGameStandard.secondsToSpeedString(speed); // "1 hour, 1 minute"
 ```
-
-For more detailed examples and usage instructions, please refer to the individual classes and functions within the TrophyUtil library.
 
 ## Contributing
 
@@ -54,4 +46,4 @@ Contributions are welcome! Submit a pull request or create an issue to contribut
 
 ## License
 
-This project is licensed under the MIT License - see `COPYING.txt` for details.
+This project is licensed under the GPLv3 License - see `COPYING.txt` for details.
