@@ -4,9 +4,9 @@ import {ParserGamePartialStack} from './gamePartialTrophyList.js';
 import {
 	PlatformTag,
 	IGamePage,
-	MetadataFields,
+	IMetadataFields,
 	IGamePartialTrophyList,
-	HeaderStats,
+	IHeaderStats,
 } from '../../models/game.interface.js';
 import {parseNum, getStackAbbr} from '../../util/util.js';
 
@@ -92,8 +92,8 @@ export class ParserGamePage extends PsnpParser<IGamePage, Document> {
 		};
 	}
 
-	/** Parses {@link MetadataFields} from the trophy list. */
-	protected parseMetadata(doc: Document): MetadataFields {
+	/** Parses {@link IMetadataFields} from the trophy list. */
+	protected parseMetadata(doc: Document): IMetadataFields {
 		const metadataRows = [...doc.querySelectorAll<HTMLTableRowElement>(`table.gameInfo tr`)].filter(
 			tr => tr.cells.length > 1
 		);
@@ -126,8 +126,8 @@ export class ParserGamePage extends PsnpParser<IGamePage, Document> {
 		return metadata;
 	}
 
-	/** Parses `stats` to return {@link HeaderStats} or `null`. */
-	protected parseHeaderStats(stats: HTMLSpanElement[]): HeaderStats | null {
+	/** Parses `stats` to return {@link IHeaderStats} or `null`. */
+	protected parseHeaderStats(stats: HTMLSpanElement[]): IHeaderStats | null {
 		const findStat = (statName: string) => stats.find(span => span.textContent?.includes(statName));
 
 		const gameOwners = parseNum(findStat('Game Owners')?.firstChild);

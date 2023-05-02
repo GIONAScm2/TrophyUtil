@@ -1,32 +1,36 @@
-import { MongoDateField, PsnpEntity, TrophyCount } from './common.js';
-import { ChangeData, ITrophyGroup, PsnpPageType } from '../index.js';
-import { StackAbbrNullable, PlatformTag, IGameStandardDoc, IGamePartialHome, IGamePartialTrophyList, IGamePlayable, IGameStandard, GameBase, MetadataFields } from './game.interface.js';
-export declare function sumTrophyCount(tc: TrophyCount): number;
-export declare function calculateTrophyPoints(tc: TrophyCount): number;
+import { type MongoDateField, type TrophyCount, PsnpEntity } from './common.js';
+import type { ChangeData, ITrophyGroup, PsnpPageType } from '../index.js';
+import type { StackAbbrNullable, PlatformTag, IGameStandardDoc, IGamePartialHome, IGamePartialTrophyList, IGamePlayable, IGameStandard, IGameBase, IMetadataFields } from './game.interface.js';
+/** Type predicate to narrow `game` type as a {@link IGamePartialTrophyList} */
 export declare function isGameFromStacks(game: any): game is IGamePartialTrophyList;
+/** Type predicate to narrow `game` type as a {@link IGamePartialHome} */
 export declare function isGameFromHome(game: any): game is IGamePartialHome;
+/** Type predicate to narrow `game` type as a {@link IGameStandard} */
 export declare function isGameStandard(game: any): game is IGameStandard;
+/** Type predicate to narrow `game` type as a {@link IGamePlayable} */
 export declare function isGamePlayable(game: any): game is IGamePlayable;
-export declare abstract class PsnpGameBase extends PsnpEntity implements GameBase, Partial<IGamePartialHome> {
+/** Abstract class containing properties and methods applicable to all PSNP game types. */
+export declare abstract class PsnpGameBase extends PsnpEntity implements IGameBase, Partial<IGamePartialHome> {
     platforms: PlatformTag[];
     trophyCount?: TrophyCount;
     get url(): string;
     get src(): string;
     /** (Getter) Calculates game's point value based on its trophy count. */
     get points(): number;
-    constructor(data: GameBase);
+    constructor(data: IGameBase);
     /**
-     * Parses game nodes from a given page. Server-side calls must explicitly pass a JSDOM document.
+     * Given a {@link PsnpPageType} and document, parses and returns an array of game nodes.
      * @param pageType Type of PSNProfiles page
      * @param doc Document to parse nodes from
-     * @returns
      */
     static getGameNodes(pageType: PsnpPageType, doc: Document): HTMLTableRowElement[];
 }
-export declare class PsnpGamePartial extends PsnpGameBase {
+/** Class representing a primitive PSNP game from `Home` or `Other Platforms and Regions` */
+export declare class PsnpGamePartial extends PsnpGameBase implements Partial<IGamePartialHome & IGamePartialTrophyList> {
     stackLabel?: StackAbbrNullable;
     constructor(data: IGamePartialHome | IGamePartialTrophyList);
 }
+/** Class representing a standard PSNP game from `Games` or `GameSearch` */
 export declare class PsnpGameStandard extends PsnpGameBase implements IGameStandard {
     trophyCount: TrophyCount;
     stackLabel: StackAbbrNullable;
@@ -55,7 +59,7 @@ export declare class PsnpGameStandardDoc extends PsnpGameStandard implements IGa
     trophyGroups: ITrophyGroup[];
     rarityBase: number;
     rarityDlc?: number;
-    metaData?: MetadataFields;
+    metaData?: IMetadataFields;
     createdAt: MongoDateField;
     updatedAt: MongoDateField;
     get trophies(): import("./trophy.interface.js").ITrophy[] | undefined;

@@ -10,11 +10,16 @@ export interface ITrophyCount {
     /** The aggregated number of trophies of each grade. */
     trophyCount: TrophyCount;
 }
+/** Given a {@link TrophyCount}, sums the total number of trophies. */
+export declare function sumTrophyCount(tc: TrophyCount): number;
+/** Given a {@link TrophyCount}, calculates the total point value. */
+export declare function calculateTrophyPoints(tc: TrophyCount): number;
+/** Mongoose's automatic timestamps take this form. */
 export type MongoDateField = {
     $date: string;
 };
 /** Represents MongoDB timestamp fields. */
-export interface MongoTimestamps {
+export interface IMongoTimestamps {
     createdAt: MongoDateField;
     updatedAt: MongoDateField;
 }
@@ -28,17 +33,18 @@ export interface IPsnpEntity {
     _nameSerialized: string;
     /** URL fragment used to construct the full `src` URL of the entity's image.
      *
-     * For games, size is 100x100 for PS5 games, and 100x56 for other platforms. */
+     * For games, size is 100x100 for PS5 games and 100x56 for other platforms. */
     _imagePath: string;
 }
+/** Abstract class containing properties and methods applicable to all PSNP entities. */
 export declare abstract class PsnpEntity implements IPsnpEntity {
     readonly _id: number;
     name: string;
     _nameSerialized: string;
     _imagePath: string;
-    /** (Getter) Constructs and returns entity URL using `_id` and `_nameSerialized`. */
+    /** (Getter) Constructs and returns entity's URL using `_id` and `_nameSerialized`. */
     abstract get url(): string;
-    /** (Getter) Constructs and returns entity image URL using `_imagePath`. */
+    /** (Getter) Constructs and returns entity's image URL using `_imagePath`. */
     abstract get src(): string;
     constructor(data: IPsnpEntity);
     toString(): string;

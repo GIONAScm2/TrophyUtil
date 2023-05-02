@@ -1,27 +1,26 @@
-import { PsnpEntity } from './common.js';
+import { PsnpEntity, calculateTrophyPoints } from './common.js';
 import { Select, diffAndUpdateSharedProps } from '../index.js';
-// Type predicates
+// These variables protect type predicates by throwing errors if the property names ever change.
 const percentKey = 'percent';
 const trophyCountKey = 'trophyCount';
 const stackLabelKey = 'stackLabel';
-export function sumTrophyCount(tc) {
-    return tc.bronze + tc.silver + tc.gold + tc.platinum;
-}
-export function calculateTrophyPoints(tc) {
-    return tc.bronze * 15 + tc.silver * 30 + tc.gold * 90 + tc.platinum * 300;
-}
+/** Type predicate to narrow `game` type as a {@link IGamePartialTrophyList} */
 export function isGameFromStacks(game) {
     return !(percentKey in game) && !(trophyCountKey in game);
 }
+/** Type predicate to narrow `game` type as a {@link IGamePartialHome} */
 export function isGameFromHome(game) {
     return !(percentKey in game) && trophyCountKey in game;
 }
+/** Type predicate to narrow `game` type as a {@link IGameStandard} */
 export function isGameStandard(game) {
     return !(percentKey in game) && trophyCountKey in game && stackLabelKey in game;
 }
+/** Type predicate to narrow `game` type as a {@link IGamePlayable} */
 export function isGamePlayable(game) {
     return percentKey in game;
 }
+/** Abstract class containing properties and methods applicable to all PSNP game types. */
 export class PsnpGameBase extends PsnpEntity {
     platforms;
     trophyCount;
@@ -40,10 +39,9 @@ export class PsnpGameBase extends PsnpEntity {
         this.platforms = data.platforms;
     }
     /**
-     * Parses game nodes from a given page. Server-side calls must explicitly pass a JSDOM document.
+     * Given a {@link PsnpPageType} and document, parses and returns an array of game nodes.
      * @param pageType Type of PSNProfiles page
      * @param doc Document to parse nodes from
-     * @returns
      */
     static getGameNodes(pageType, doc) {
         const selectors = Select.gameNodes[pageType] ?? '';
@@ -51,6 +49,7 @@ export class PsnpGameBase extends PsnpEntity {
         return nodes;
     }
 }
+/** Class representing a primitive PSNP game from `Home` or `Other Platforms and Regions` */
 export class PsnpGamePartial extends PsnpGameBase {
     stackLabel;
     constructor(data) {
@@ -63,6 +62,7 @@ export class PsnpGamePartial extends PsnpGameBase {
         }
     }
 }
+/** Class representing a standard PSNP game from `Games` or `GameSearch` */
 export class PsnpGameStandard extends PsnpGameBase {
     trophyCount;
     stackLabel;

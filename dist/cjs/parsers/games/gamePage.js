@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ParserGamePage = void 0;
 const psnpParser_js_1 = require("../psnpParser.js");
 const trophyGroups_js_1 = require("../trophies/trophyGroups.js");
-const gamePartialTrophyList_js_1 = require("../games/gamePartialTrophyList.js");
+const gamePartialTrophyList_js_1 = require("./gamePartialTrophyList.js");
 const util_js_1 = require("../../util/util.js");
 /** Parses a partial game representation from TrophyList pages. */
 class ParserGamePage extends psnpParser_js_1.PsnpParser {
@@ -71,7 +71,7 @@ class ParserGamePage extends psnpParser_js_1.PsnpParser {
             metaData,
         };
     }
-    /** Parses {@link MetadataFields} from the trophy list. */
+    /** Parses {@link IMetadataFields} from the trophy list. */
     parseMetadata(doc) {
         const metadataRows = [...doc.querySelectorAll(`table.gameInfo tr`)].filter(tr => tr.cells.length > 1);
         const getValueOf = (propName, multiple = false) => {
@@ -97,7 +97,7 @@ class ParserGamePage extends psnpParser_js_1.PsnpParser {
         };
         return metadata;
     }
-    /** Parses `stats` to return {@link HeaderStats} or `null`. */
+    /** Parses `stats` to return {@link IHeaderStats} or `null`. */
     parseHeaderStats(stats) {
         const findStat = (statName) => stats.find(span => span.textContent?.includes(statName));
         const gameOwners = (0, util_js_1.parseNum)(findStat('Game Owners')?.firstChild);

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StackLookup = void 0;
+/** Maps {@link StackAbbr} to non-abbreviated name. */
 exports.StackLookup = {
     NA: 'North American',
     EU: 'European',

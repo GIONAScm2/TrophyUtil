@@ -1,3 +1,4 @@
+/** Maps {@link StackAbbr} to non-abbreviated name. */
 export const StackLookup = {
     NA: 'North American',
     EU: 'European',

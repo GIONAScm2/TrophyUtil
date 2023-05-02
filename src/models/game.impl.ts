@@ -1,6 +1,7 @@
-import {MongoDateField, PsnpEntity, TrophyCount} from './common.js';
-import {ChangeData, ITrophyGroup, PsnpPageType, PsnpPageWithGames, Select, diffAndUpdateSharedProps} from '../index.js';
-import {
+import {type MongoDateField, type TrophyCount, PsnpEntity, calculateTrophyPoints} from './common.js';
+import type {ChangeData, ITrophyGroup, PsnpPageType, PsnpPageWithGames} from '../index.js';
+import {Select, diffAndUpdateSharedProps} from '../index.js';
+import type {
 	StackAbbrNullable,
 	PlatformTag,
 	IGameStandardDoc,
@@ -8,37 +9,34 @@ import {
 	IGamePartialTrophyList,
 	IGamePlayable,
 	IGameStandard,
-	GameBase,
-	MetadataFields,
+	IGameBase,
+	IMetadataFields,
 } from './game.interface.js';
 
-// Type predicates
+// These variables protect type predicates by throwing errors if the property names ever change.
 const percentKey: keyof IGamePlayable = 'percent';
 const trophyCountKey: keyof IGamePartialHome = 'trophyCount';
 const stackLabelKey: keyof IGameStandard = 'stackLabel';
 
-export function sumTrophyCount(tc: TrophyCount): number {
-	return tc.bronze + tc.silver + tc.gold + tc.platinum;
-}
-
-export function calculateTrophyPoints(tc: TrophyCount): number {
-	return tc.bronze * 15 + tc.silver * 30 + tc.gold * 90 + tc.platinum * 300;
-}
-
+/** Type predicate to narrow `game` type as a {@link IGamePartialTrophyList} */
 export function isGameFromStacks(game: any): game is IGamePartialTrophyList {
 	return !(percentKey in game) && !(trophyCountKey in game);
 }
+/** Type predicate to narrow `game` type as a {@link IGamePartialHome} */
 export function isGameFromHome(game: any): game is IGamePartialHome {
 	return !(percentKey in game) && trophyCountKey in game;
 }
+/** Type predicate to narrow `game` type as a {@link IGameStandard} */
 export function isGameStandard(game: any): game is IGameStandard {
 	return !(percentKey in game) && trophyCountKey in game && stackLabelKey in game;
 }
+/** Type predicate to narrow `game` type as a {@link IGamePlayable} */
 export function isGamePlayable(game: any): game is IGamePlayable {
 	return percentKey in game;
 }
 
-export abstract class PsnpGameBase extends PsnpEntity implements GameBase, Partial<IGamePartialHome> {
+/** Abstract class containing properties and methods applicable to all PSNP game types. */
+export abstract class PsnpGameBase extends PsnpEntity implements IGameBase, Partial<IGamePartialHome> {
 	platforms: PlatformTag[];
 	trophyCount?: TrophyCount;
 
@@ -54,16 +52,15 @@ export abstract class PsnpGameBase extends PsnpEntity implements GameBase, Parti
 		return this.trophyCount ? calculateTrophyPoints(this.trophyCount) : Number.NaN;
 	}
 
-	constructor(data: GameBase) {
+	constructor(data: IGameBase) {
 		super(data);
 		this.platforms = data.platforms;
 	}
 
 	/**
-	 * Parses game nodes from a given page. Server-side calls must explicitly pass a JSDOM document.
+	 * Given a {@link PsnpPageType} and document, parses and returns an array of game nodes.
 	 * @param pageType Type of PSNProfiles page
 	 * @param doc Document to parse nodes from
-	 * @returns
 	 */
 	static getGameNodes(pageType: PsnpPageType, doc: Document): HTMLTableRowElement[] {
 		const selectors = Select.gameNodes[pageType as PsnpPageWithGames] ?? '';
@@ -72,7 +69,8 @@ export abstract class PsnpGameBase extends PsnpEntity implements GameBase, Parti
 	}
 }
 
-export class PsnpGamePartial extends PsnpGameBase {
+/** Class representing a primitive PSNP game from `Home` or `Other Platforms and Regions` */
+export class PsnpGamePartial extends PsnpGameBase implements Partial<IGamePartialHome & IGamePartialTrophyList> {
 	stackLabel?: StackAbbrNullable;
 
 	constructor(data: IGamePartialHome | IGamePartialTrophyList) {
@@ -86,6 +84,7 @@ export class PsnpGamePartial extends PsnpGameBase {
 	}
 }
 
+/** Class representing a standard PSNP game from `Games` or `GameSearch` */
 export class PsnpGameStandard extends PsnpGameBase implements IGameStandard {
 	trophyCount: TrophyCount;
 	stackLabel: StackAbbrNullable;
@@ -208,7 +207,7 @@ export class PsnpGameStandardDoc extends PsnpGameStandard implements IGameStanda
 	trophyGroups: ITrophyGroup[];
 	rarityBase: number;
 	rarityDlc?: number;
-	metaData?: MetadataFields;
+	metaData?: IMetadataFields;
 	createdAt: MongoDateField;
 	updatedAt: MongoDateField;
 

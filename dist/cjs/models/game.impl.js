@@ -1,36 +1,33 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PsnpGameStandardDoc = exports.PsnpGamePlayable = exports.PsnpGameStandard = exports.PsnpGamePartial = exports.PsnpGameBase = exports.isGamePlayable = exports.isGameStandard = exports.isGameFromHome = exports.isGameFromStacks = exports.calculateTrophyPoints = exports.sumTrophyCount = void 0;
+exports.PsnpGameStandardDoc = exports.PsnpGamePlayable = exports.PsnpGameStandard = exports.PsnpGamePartial = exports.PsnpGameBase = exports.isGamePlayable = exports.isGameStandard = exports.isGameFromHome = exports.isGameFromStacks = void 0;
 const common_js_1 = require("./common.js");
 const index_js_1 = require("../index.js");
-// Type predicates
+// These variables protect type predicates by throwing errors if the property names ever change.
 const percentKey = 'percent';
 const trophyCountKey = 'trophyCount';
 const stackLabelKey = 'stackLabel';
-function sumTrophyCount(tc) {
-    return tc.bronze + tc.silver + tc.gold + tc.platinum;
-}
-exports.sumTrophyCount = sumTrophyCount;
-function calculateTrophyPoints(tc) {
-    return tc.bronze * 15 + tc.silver * 30 + tc.gold * 90 + tc.platinum * 300;
-}
-exports.calculateTrophyPoints = calculateTrophyPoints;
+/** Type predicate to narrow `game` type as a {@link IGamePartialTrophyList} */
 function isGameFromStacks(game) {
     return !(percentKey in game) && !(trophyCountKey in game);
 }
 exports.isGameFromStacks = isGameFromStacks;
+/** Type predicate to narrow `game` type as a {@link IGamePartialHome} */
 function isGameFromHome(game) {
     return !(percentKey in game) && trophyCountKey in game;
 }
 exports.isGameFromHome = isGameFromHome;
+/** Type predicate to narrow `game` type as a {@link IGameStandard} */
 function isGameStandard(game) {
     return !(percentKey in game) && trophyCountKey in game && stackLabelKey in game;
 }
 exports.isGameStandard = isGameStandard;
+/** Type predicate to narrow `game` type as a {@link IGamePlayable} */
 function isGamePlayable(game) {
     return percentKey in game;
 }
 exports.isGamePlayable = isGamePlayable;
+/** Abstract class containing properties and methods applicable to all PSNP game types. */
 class PsnpGameBase extends common_js_1.PsnpEntity {
     platforms;
     trophyCount;
@@ -42,17 +39,16 @@ class PsnpGameBase extends common_js_1.PsnpEntity {
     }
     /** (Getter) Calculates game's point value based on its trophy count. */
     get points() {
-        return this.trophyCount ? calculateTrophyPoints(this.trophyCount) : Number.NaN;
+        return this.trophyCount ? (0, common_js_1.calculateTrophyPoints)(this.trophyCount) : Number.NaN;
     }
     constructor(data) {
         super(data);
         this.platforms = data.platforms;
     }
     /**
-     * Parses game nodes from a given page. Server-side calls must explicitly pass a JSDOM document.
+     * Given a {@link PsnpPageType} and document, parses and returns an array of game nodes.
      * @param pageType Type of PSNProfiles page
      * @param doc Document to parse nodes from
-     * @returns
      */
     static getGameNodes(pageType, doc) {
         const selectors = index_js_1.Select.gameNodes[pageType] ?? '';
@@ -61,6 +57,7 @@ class PsnpGameBase extends common_js_1.PsnpEntity {
     }
 }
 exports.PsnpGameBase = PsnpGameBase;
+/** Class representing a primitive PSNP game from `Home` or `Other Platforms and Regions` */
 class PsnpGamePartial extends PsnpGameBase {
     stackLabel;
     constructor(data) {
@@ -74,6 +71,7 @@ class PsnpGamePartial extends PsnpGameBase {
     }
 }
 exports.PsnpGamePartial = PsnpGamePartial;
+/** Class representing a standard PSNP game from `Games` or `GameSearch` */
 class PsnpGameStandard extends PsnpGameBase {
     trophyCount;
     stackLabel;

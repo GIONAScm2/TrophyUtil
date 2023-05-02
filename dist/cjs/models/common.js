@@ -1,6 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PsnpEntity = void 0;
+exports.PsnpEntity = exports.calculateTrophyPoints = exports.sumTrophyCount = void 0;
+/** Given a {@link TrophyCount}, sums the total number of trophies. */
+function sumTrophyCount(tc) {
+    return tc.bronze + tc.silver + tc.gold + tc.platinum;
+}
+exports.sumTrophyCount = sumTrophyCount;
+/** Given a {@link TrophyCount}, calculates the total point value. */
+function calculateTrophyPoints(tc) {
+    return tc.bronze * 15 + tc.silver * 30 + tc.gold * 90 + tc.platinum * 300;
+}
+exports.calculateTrophyPoints = calculateTrophyPoints;
+/** Abstract class containing properties and methods applicable to all PSNP entities. */
 class PsnpEntity {
     _id;
     name;

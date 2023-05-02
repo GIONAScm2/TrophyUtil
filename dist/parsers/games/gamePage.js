@@ -1,6 +1,6 @@
 import { PsnpParser } from '../psnpParser.js';
 import { ParserTrophyGroups } from '../trophies/trophyGroups.js';
-import { ParserGamePartialStack } from '../games/gamePartialTrophyList.js';
+import { ParserGamePartialStack } from './gamePartialTrophyList.js';
 import { parseNum, getStackAbbr } from '../../util/util.js';
 /** Parses a partial game representation from TrophyList pages. */
 export class ParserGamePage extends PsnpParser {
@@ -68,7 +68,7 @@ export class ParserGamePage extends PsnpParser {
             metaData,
         };
     }
-    /** Parses {@link MetadataFields} from the trophy list. */
+    /** Parses {@link IMetadataFields} from the trophy list. */
     parseMetadata(doc) {
         const metadataRows = [...doc.querySelectorAll(`table.gameInfo tr`)].filter(tr => tr.cells.length > 1);
         const getValueOf = (propName, multiple = false) => {
@@ -94,7 +94,7 @@ export class ParserGamePage extends PsnpParser {
         };
         return metadata;
     }
-    /** Parses `stats` to return {@link HeaderStats} or `null`. */
+    /** Parses `stats` to return {@link IHeaderStats} or `null`. */
     parseHeaderStats(stats) {
         const findStat = (statName) => stats.find(span => span.textContent?.includes(statName));
         const gameOwners = parseNum(findStat('Game Owners')?.firstChild);
