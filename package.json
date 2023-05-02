@@ -1,6 +1,7 @@
 {
 	"name": "trophyutil",
 	"description": "Isomorphic library of trophy utilities",
+	"keywords": ["PSN", "PSNProfiles", "Trophy hunting"],
 	"version": "6.0.4",
 	"type": "module",
 	"exports": {
