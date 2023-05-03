@@ -27,4 +27,4 @@ class Select {
     };
 }
 export { Select };
-//# sourceMappingURL=Select.js.map
+//# sourceMappingURL=select.js.map

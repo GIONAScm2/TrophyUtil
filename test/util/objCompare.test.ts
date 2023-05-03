@@ -1,4 +1,4 @@
-import {isStandardObj, sharedPropsAreEqual, diffAndUpdateSharedProps, diffUpdate} from '../../src/util/index';
+import {isStandardObj, sharedPropsAreEqual, diffAndUpdateSharedProps} from '../../src/util/index';
 import {oldSeries, newSeries} from '../fixtures/seriesDocs';
 
 describe('isStandardObj', () => {

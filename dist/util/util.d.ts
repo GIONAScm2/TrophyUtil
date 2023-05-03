@@ -10,12 +10,12 @@ export type OnlyRequiredPropertiesOf<T> = {
  *
  * @template T - The original object type.
  * @template K - A union of keys from the object type `T` that should be made required. */
-export type MakePropertiesRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
+export type MakeRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
 /** Creates a new type based on `T` with properties specified by `K` made optional.
  *
  * @template T - The original object type.
  * @template K - A union of keys from the object type `T` that should be made optional. */
-export type MakePropertiesOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 /**
  * Parses a numerical value from a string or DOM Node, returning said value or `NaN`.
  *

@@ -19,4 +19,4 @@ export declare class Select {
         17: string[];
     };
 }
-//# sourceMappingURL=Select.d.ts.map
+//# sourceMappingURL=select.d.ts.map

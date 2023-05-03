@@ -1,16 +1,17 @@
-import {type MongoDateField, type TrophyCount, PsnpEntity, calculateTrophyPoints} from './common.js';
+import {PsnpEntity} from './psnpEntity.js';
+import {calculateTrophyPoints, type MongoDateField, type TrophyCount} from './common.js';
 import type {ChangeData, ITrophyGroup, PsnpPageType, PsnpPageWithGames} from '../index.js';
-import {Select, diffAndUpdateSharedProps} from '../index.js';
+import {Select} from '../index.js';
 import type {
-	StackAbbrNullable,
+	StackAbbr,
 	PlatformTag,
-	IGameStandardDoc,
+	IGameDoc,
 	IGamePartialHome,
 	IGamePartialTrophyList,
 	IGamePlayable,
 	IGameStandard,
-	IGameBase,
 	IMetadataFields,
+	IGameBase,
 } from './game.interface.js';
 
 // These variables protect type predicates by throwing errors if the property names ever change.
@@ -18,27 +19,13 @@ const percentKey: keyof IGamePlayable = 'percent';
 const trophyCountKey: keyof IGamePartialHome = 'trophyCount';
 const stackLabelKey: keyof IGameStandard = 'stackLabel';
 
-/** Type predicate to narrow `game` type as a {@link IGamePartialTrophyList} */
-export function isGameFromStacks(game: any): game is IGamePartialTrophyList {
-	return !(percentKey in game) && !(trophyCountKey in game);
-}
-/** Type predicate to narrow `game` type as a {@link IGamePartialHome} */
-export function isGameFromHome(game: any): game is IGamePartialHome {
-	return !(percentKey in game) && trophyCountKey in game;
-}
-/** Type predicate to narrow `game` type as a {@link IGameStandard} */
-export function isGameStandard(game: any): game is IGameStandard {
-	return !(percentKey in game) && trophyCountKey in game && stackLabelKey in game;
-}
-/** Type predicate to narrow `game` type as a {@link IGamePlayable} */
-export function isGamePlayable(game: any): game is IGamePlayable {
-	return percentKey in game;
-}
-
-/** Abstract class containing properties and methods applicable to all PSNP game types. */
-export abstract class PsnpGameBase extends PsnpEntity implements IGameBase, Partial<IGamePartialHome> {
+/** Class containing properties and methods applicable to all PSNP game types. */
+export class PsnpGameBase<T extends IGameBase = IGameBase> extends PsnpEntity<T> implements IGameBase {
 	platforms: PlatformTag[];
+	stackLabel?: StackAbbr | null;
 	trophyCount?: TrophyCount;
+	numTrophies?: number;
+	points?: number;
 
 	get url() {
 		return `https://psnprofiles.com/trophies/${this._id}-${this._nameSerialized}`;
@@ -47,14 +34,13 @@ export abstract class PsnpGameBase extends PsnpEntity implements IGameBase, Part
 		return `https://i.psnprofiles.com/games/${this._imagePath}.png`;
 	}
 
-	/** (Getter) Calculates game's point value based on its trophy count. */
-	get points(): number {
-		return this.trophyCount ? calculateTrophyPoints(this.trophyCount) : Number.NaN;
-	}
-
 	constructor(data: IGameBase) {
 		super(data);
 		this.platforms = data.platforms;
+		this.stackLabel = data.stackLabel;
+		this.trophyCount = data.trophyCount;
+		this.numTrophies = data.numTrophies;
+		this.points = data.points;
 	}
 
 	/**
@@ -67,56 +53,72 @@ export abstract class PsnpGameBase extends PsnpEntity implements IGameBase, Part
 		const nodes = selectors.flatMap(selector => [...doc.querySelectorAll<HTMLTableRowElement>(selector)]);
 		return nodes;
 	}
-}
 
-/** Class representing a primitive PSNP game from `Home` or `Other Platforms and Regions` */
-export class PsnpGamePartial extends PsnpGameBase implements Partial<IGamePartialHome & IGamePartialTrophyList> {
-	stackLabel?: StackAbbrNullable;
-
-	constructor(data: IGamePartialHome | IGamePartialTrophyList) {
-		super(data);
-		if (isGameFromHome(data)) {
-			this.trophyCount = data.trophyCount;
-		}
-		if (isGameFromStacks(data)) {
-			this.stackLabel = data.stackLabel;
-		}
+	/** Type predicate to narrow `game` type as a {@link IGamePartialTrophyList} */
+	isGameFromStacks(game: any): game is IGamePartialTrophyList {
+		return !(percentKey in game) && !(trophyCountKey in game);
+	}
+	/** Type predicate to narrow `game` type as a {@link IGamePartialHome} */
+	isGameFromHome(game: any): game is IGamePartialHome {
+		return !(percentKey in game) && trophyCountKey in game;
+	}
+	/** Type predicate to narrow `game` type as a {@link IGameStandard} */
+	isGameStandard(game: any): game is IGameStandard {
+		return !(percentKey in game) && trophyCountKey in game && stackLabelKey in game;
+	}
+	/** Type predicate to narrow `game` type as a {@link IGamePlayable} */
+	isGamePlayable(game: any): game is IGamePlayable {
+		return percentKey in game;
 	}
 }
 
 /** Class representing a standard PSNP game from `Games` or `GameSearch` */
-export class PsnpGameStandard extends PsnpGameBase implements IGameStandard {
+export class PsnpGameStandard<T extends IGameStandard = IGameStandard>
+	extends PsnpGameBase<T>
+	implements IGameStandard
+{
+	stackLabel: StackAbbr | null;
 	trophyCount: TrophyCount;
-	stackLabel: StackAbbrNullable;
-	numOwners: number;
 	numTrophies: number;
+	points: number;
+	numOwners: number;
 
 	constructor(data: IGameStandard) {
 		super(data);
-		this.trophyCount = data.trophyCount;
 		this.stackLabel = data.stackLabel;
-		this.numOwners = data.numOwners;
+		this.trophyCount = data.trophyCount;
 		this.numTrophies = data.numTrophies;
+		this.points = data.points;
+		this.numOwners = data.numOwners;
 	}
 }
 
-export class PsnpGamePlayable extends PsnpGameBase implements IGamePlayable {
-	stackLabel: StackAbbrNullable;
-	percent: number | null;
+export class PsnpGamePlayable<T extends IGamePlayable = IGamePlayable>
+	extends PsnpGameBase<T>
+	implements IGamePlayable
+{
+	stackLabel: StackAbbr | null;
+	trophyCount: TrophyCount;
+	numTrophies: number;
+	points: number;
+	rarityBase: number;
+	rarityDlc?: number;
+	percent?: number;
 	completionStatus?: 'platinum' | 'completed';
 	completionSpeed?: number;
-	rarityBase: number;
-	rarityDLC?: number;
 	latestTrophy?: number;
 
 	constructor(data: IGamePlayable) {
 		super(data);
 		this.stackLabel = data.stackLabel;
+		this.trophyCount = data.trophyCount;
+		this.numTrophies = data.numTrophies;
+		this.points = data.points;
+		this.rarityBase = data.rarityBase;
+		this.rarityDlc = data.rarityDlc;
 		this.percent = data.percent;
 		this.completionStatus = data.completionStatus;
 		this.completionSpeed = data.completionSpeed;
-		this.rarityBase = data.rarityBase;
-		this.rarityDLC = data.rarityDlc;
 		this.latestTrophy = data.latestTrophy;
 	}
 
@@ -203,52 +205,33 @@ export class PsnpGamePlayable extends PsnpGameBase implements IGamePlayable {
 	}
 }
 
-export class PsnpGameStandardDoc extends PsnpGameStandard implements IGameStandardDoc {
-	trophyGroups: ITrophyGroup[];
+export class PsnpGameStandardDoc<T extends IGameDoc = IGameDoc> extends PsnpGameStandard<T> implements IGameDoc {
+	trophies: ITrophyGroup[];
 	rarityBase: number;
 	rarityDlc?: number;
-	metaData?: IMetadataFields;
-	createdAt: MongoDateField;
-	updatedAt: MongoDateField;
+	forumId: number;
+	metaData: IMetadataFields;
+	createdAt?: MongoDateField;
+	updatedAt?: MongoDateField;
 
-	get trophies() {
-		if (!this.trophyGroups) return;
-		return this.trophyGroups.flatMap(s => s.trophies);
+	/** Flattens {@link trophies} stages, returning a 2D array of all trophies. */
+	get allTrophies() {
+		if (!this.trophies) return;
+		return this.trophies.flatMap(s => s.trophies);
 	}
 
-	constructor(data: IGameStandardDoc) {
+	constructor(data: IGameDoc) {
 		super(data);
-		this.trophyGroups = data.trophyGroups;
+		this.trophies = data.trophies;
 		this.rarityBase = data.rarityBase;
 		this.rarityDlc = data.rarityDlc;
+		this.forumId = data.forumId;
 		this.metaData = data.metaData;
 		this.createdAt = data.createdAt;
 		this.updatedAt = data.updatedAt;
 	}
 
-	/** Updates fields and returns a log of changes. */
-	static diffUpdate(
-		oldGame: IGameStandardDoc | null | undefined,
-		newGame: IGameStandardDoc,
-		update: boolean
-	): ChangeData<IGameStandardDoc> {
-		const commonChanges = {id: newGame._id, changes: []};
-
-		if (!oldGame) {
-			return {...commonChanges, operation: 'add'};
-		}
-		if (oldGame._id !== newGame._id) {
-			throw new Error(
-				`ID mismatch: Cannot update game '${oldGame.toString()}' using game '${newGame.toString()}'`
-			);
-		}
-
-		const changes = diffAndUpdateSharedProps(oldGame, newGame, update);
-
-		return {
-			...commonChanges,
-			operation: 'update',
-			changes,
-		};
+	diffUpdate(oldGame: T | null | undefined, newGame: T, update: boolean): ChangeData<T> {
+		return super.diffUpdate(oldGame, newGame, update);
 	}
 }

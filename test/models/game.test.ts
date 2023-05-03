@@ -1,4 +1,4 @@
-import {PsnpGamePartial, PsnpGamePlayable} from '../../src/models/game.impl';
+import {PsnpGameBase, PsnpGamePlayable} from '../../src/models/game.impl';
 import {IGamePartialTrophyList, IGamePlayable} from '../../src/models/game.interface';
 
 const mockPsnpGame: IGamePartialTrophyList = {
@@ -15,25 +15,26 @@ const mockPsnpGamePlayable: IGamePlayable = {
 	percent: 50,
 	rarityBase: 10,
 	completionSpeed: 3600,
+	trophyCount: {bronze: 5, silver: 5, gold: 5, platinum: 1},
+	numTrophies: 16,
+	points: 975,
 };
 
 describe('PsnpGame', () => {
 	it('should create a PsnpGame instance', () => {
-		const game = new PsnpGamePartial(mockPsnpGame);
-		expect(game).toBeInstanceOf(PsnpGamePartial);
+		const game = new PsnpGameBase(mockPsnpGame);
+		expect(game).toBeInstanceOf(PsnpGameBase);
 	});
 
 	it('should have the correct url property', () => {
-		const game = new PsnpGamePartial(mockPsnpGame);
+		const game = new PsnpGameBase(mockPsnpGame);
 		expect(game.url).toBe('https://psnprofiles.com/trophies/1-test-game');
 	});
 
 	it('should have the correct src property', () => {
-		const game = new PsnpGamePartial(mockPsnpGame);
+		const game = new PsnpGameBase(mockPsnpGame);
 		expect(game.src).toBe('https://i.psnprofiles.com/games/ABCD1234.png');
 	});
-
-	// Add more tests for other methods and properties
 });
 
 describe('PsnpGamePlayable', () => {
@@ -70,6 +71,4 @@ describe('PsnpGamePlayable', () => {
 		const seconds = PsnpGamePlayable.speedStringToSeconds('1 hour, 1 minute');
 		expect(seconds).toBe(3660);
 	});
-
-	// Add more tests for other methods and properties
 });

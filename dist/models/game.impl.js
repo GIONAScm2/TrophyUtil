@@ -1,42 +1,29 @@
-import { PsnpEntity, calculateTrophyPoints } from './common.js';
-import { Select, diffAndUpdateSharedProps } from '../index.js';
+import { PsnpEntity } from './psnpEntity.js';
+import { Select } from '../index.js';
 // These variables protect type predicates by throwing errors if the property names ever change.
 const percentKey = 'percent';
 const trophyCountKey = 'trophyCount';
 const stackLabelKey = 'stackLabel';
-/** Type predicate to narrow `game` type as a {@link IGamePartialTrophyList} */
-export function isGameFromStacks(game) {
-    return !(percentKey in game) && !(trophyCountKey in game);
-}
-/** Type predicate to narrow `game` type as a {@link IGamePartialHome} */
-export function isGameFromHome(game) {
-    return !(percentKey in game) && trophyCountKey in game;
-}
-/** Type predicate to narrow `game` type as a {@link IGameStandard} */
-export function isGameStandard(game) {
-    return !(percentKey in game) && trophyCountKey in game && stackLabelKey in game;
-}
-/** Type predicate to narrow `game` type as a {@link IGamePlayable} */
-export function isGamePlayable(game) {
-    return percentKey in game;
-}
-/** Abstract class containing properties and methods applicable to all PSNP game types. */
+/** Class containing properties and methods applicable to all PSNP game types. */
 export class PsnpGameBase extends PsnpEntity {
     platforms;
+    stackLabel;
     trophyCount;
+    numTrophies;
+    points;
     get url() {
         return `https://psnprofiles.com/trophies/${this._id}-${this._nameSerialized}`;
     }
     get src() {
         return `https://i.psnprofiles.com/games/${this._imagePath}.png`;
     }
-    /** (Getter) Calculates game's point value based on its trophy count. */
-    get points() {
-        return this.trophyCount ? calculateTrophyPoints(this.trophyCount) : Number.NaN;
-    }
     constructor(data) {
         super(data);
         this.platforms = data.platforms;
+        this.stackLabel = data.stackLabel;
+        this.trophyCount = data.trophyCount;
+        this.numTrophies = data.numTrophies;
+        this.points = data.points;
     }
     /**
      * Given a {@link PsnpPageType} and document, parses and returns an array of game nodes.
@@ -48,50 +35,61 @@ export class PsnpGameBase extends PsnpEntity {
         const nodes = selectors.flatMap(selector => [...doc.querySelectorAll(selector)]);
         return nodes;
     }
-}
-/** Class representing a primitive PSNP game from `Home` or `Other Platforms and Regions` */
-export class PsnpGamePartial extends PsnpGameBase {
-    stackLabel;
-    constructor(data) {
-        super(data);
-        if (isGameFromHome(data)) {
-            this.trophyCount = data.trophyCount;
-        }
-        if (isGameFromStacks(data)) {
-            this.stackLabel = data.stackLabel;
-        }
+    /** Type predicate to narrow `game` type as a {@link IGamePartialTrophyList} */
+    isGameFromStacks(game) {
+        return !(percentKey in game) && !(trophyCountKey in game);
+    }
+    /** Type predicate to narrow `game` type as a {@link IGamePartialHome} */
+    isGameFromHome(game) {
+        return !(percentKey in game) && trophyCountKey in game;
+    }
+    /** Type predicate to narrow `game` type as a {@link IGameStandard} */
+    isGameStandard(game) {
+        return !(percentKey in game) && trophyCountKey in game && stackLabelKey in game;
+    }
+    /** Type predicate to narrow `game` type as a {@link IGamePlayable} */
+    isGamePlayable(game) {
+        return percentKey in game;
     }
 }
 /** Class representing a standard PSNP game from `Games` or `GameSearch` */
 export class PsnpGameStandard extends PsnpGameBase {
-    trophyCount;
     stackLabel;
-    numOwners;
+    trophyCount;
     numTrophies;
+    points;
+    numOwners;
     constructor(data) {
         super(data);
-        this.trophyCount = data.trophyCount;
         this.stackLabel = data.stackLabel;
-        this.numOwners = data.numOwners;
+        this.trophyCount = data.trophyCount;
         this.numTrophies = data.numTrophies;
+        this.points = data.points;
+        this.numOwners = data.numOwners;
     }
 }
 export class PsnpGamePlayable extends PsnpGameBase {
     stackLabel;
+    trophyCount;
+    numTrophies;
+    points;
+    rarityBase;
+    rarityDlc;
     percent;
     completionStatus;
     completionSpeed;
-    rarityBase;
-    rarityDLC;
     latestTrophy;
     constructor(data) {
         super(data);
         this.stackLabel = data.stackLabel;
+        this.trophyCount = data.trophyCount;
+        this.numTrophies = data.numTrophies;
+        this.points = data.points;
+        this.rarityBase = data.rarityBase;
+        this.rarityDlc = data.rarityDlc;
         this.percent = data.percent;
         this.completionStatus = data.completionStatus;
         this.completionSpeed = data.completionSpeed;
-        this.rarityBase = data.rarityBase;
-        this.rarityDLC = data.rarityDlc;
         this.latestTrophy = data.latestTrophy;
     }
     /** Converts seconds into a PSNP speedString of the form `<num> <timeMetric>(s), <num> <timeMetric>(s)`.
@@ -163,41 +161,31 @@ export class PsnpGamePlayable extends PsnpGameBase {
     }
 }
 export class PsnpGameStandardDoc extends PsnpGameStandard {
-    trophyGroups;
+    trophies;
     rarityBase;
     rarityDlc;
+    forumId;
     metaData;
     createdAt;
     updatedAt;
-    get trophies() {
-        if (!this.trophyGroups)
+    /** Flattens {@link trophies} stages, returning a 2D array of all trophies. */
+    get allTrophies() {
+        if (!this.trophies)
             return;
-        return this.trophyGroups.flatMap(s => s.trophies);
+        return this.trophies.flatMap(s => s.trophies);
     }
     constructor(data) {
         super(data);
-        this.trophyGroups = data.trophyGroups;
+        this.trophies = data.trophies;
         this.rarityBase = data.rarityBase;
         this.rarityDlc = data.rarityDlc;
+        this.forumId = data.forumId;
         this.metaData = data.metaData;
         this.createdAt = data.createdAt;
         this.updatedAt = data.updatedAt;
     }
-    /** Updates fields and returns a log of changes. */
-    static diffUpdate(oldGame, newGame, update) {
-        const commonChanges = { id: newGame._id, changes: [] };
-        if (!oldGame) {
-            return { ...commonChanges, operation: 'add' };
-        }
-        if (oldGame._id !== newGame._id) {
-            throw new Error(`ID mismatch: Cannot update game '${oldGame.toString()}' using game '${newGame.toString()}'`);
-        }
-        const changes = diffAndUpdateSharedProps(oldGame, newGame, update);
-        return {
-            ...commonChanges,
-            operation: 'update',
-            changes,
-        };
+    diffUpdate(oldGame, newGame, update) {
+        return super.diffUpdate(oldGame, newGame, update);
     }
 }
 //# sourceMappingURL=game.impl.js.map

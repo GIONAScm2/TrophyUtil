@@ -1,5 +1,5 @@
 import {PsnpParser} from '../psnpParser.js';
-import {PlatformTag, StackAbbrNullable, IGamePartialTrophyList} from '../../models/game.interface.js';
+import {PlatformTag, StackAbbr, IGamePartialTrophyList} from '../../models/game.interface.js';
 
 /** Parses a partial game representation from TrophyList pages. */
 export class ParserGamePartialStack extends PsnpParser<IGamePartialTrophyList, HTMLTableRowElement> {
@@ -24,7 +24,7 @@ export class ParserGamePartialStack extends PsnpParser<IGamePartialTrophyList, H
 		}
 
 		const [_id, _nameSerialized] = hrefIdAndTitle;
-		const stackLabel = (tr.querySelector('.separator .typo-top')?.textContent?.trim() as StackAbbrNullable) || null;
+		const stackLabel = (tr.querySelector('.separator .typo-top')?.textContent?.trim() as StackAbbr) || null;
 
 		return {
 			_id,

@@ -1,12 +1,20 @@
 {
 	"name": "trophyutil",
-	"description": "Isomorphic library of trophy utilities",
+	"description": "Isomorphic library of specialized trophy utilities",
+	"author": {
+		"name": "Matthew Gionas",
+		"url": "https://github.com/GIONAScm2"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/GIONAScm2/TrophyUtil"
+	},
 	"keywords": [
 		"PSN",
 		"PSNProfiles",
 		"Trophy hunting"
 	],
-	"version": "6.0.5",
+	"version": "7.0.0",
 	"type": "module",
 	"exports": {
 		".": {
@@ -21,7 +29,7 @@
 		"start": "ts-node-esm src/index.ts",
 		"start:prod": "npm run build && node dist/index.js"
 	},
-	"license": "ISC",
+	"license": "GPL-3.0-or-later",
 	"devDependencies": {
 		"@inrupt/jest-jsdom-polyfills": "^1.6.2",
 		"@types/jest": "^29.5.1",

@@ -30,4 +30,4 @@ class Select {
     };
 }
 exports.Select = Select;
-//# sourceMappingURL=Select.js.map
+//# sourceMappingURL=select.js.map

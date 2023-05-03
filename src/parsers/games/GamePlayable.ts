@@ -1,5 +1,13 @@
 import {PsnpParser} from '../psnpParser.js';
-import {IGamePlayable, PlatformTag, StackAbbrNullable, PsnpGamePlayable, parseNum} from '../../index.js';
+import {
+	IGamePlayable,
+	PlatformTag,
+	StackAbbr,
+	PsnpGamePlayable,
+	parseNum,
+	sumTrophyCount,
+	calculateTrophyPoints,
+} from '../../index.js';
 
 /** Parses a 'playable' game containing user progress from Profile and Series pages. */
 export class ParserGamePlayable extends PsnpParser<IGamePlayable, HTMLTableRowElement> {
@@ -26,15 +34,16 @@ export class ParserGamePlayable extends PsnpParser<IGamePlayable, HTMLTableRowEl
 
 		const [_id, _nameSerialized] = hrefIdAndTitle;
 		const stackLabel =
-			(titleAnchorEl.parentElement
-				?.querySelector('bullet')
-				?.nextSibling?.textContent?.trim() as StackAbbrNullable) ?? null;
+			(titleAnchorEl.parentElement?.querySelector('bullet')?.nextSibling?.textContent?.trim() as StackAbbr) ??
+			null;
+
+		const trophyCount = this.parseTrophyCount(tr);
 
 		const progressPercent = parseNum(tr.querySelector(`div.progress-bar > span`));
-		const percent = Number.isNaN(progressPercent) ? null : progressPercent;
+		const percent = Number.isNaN(progressPercent) ? undefined : progressPercent;
 
 		const rarityBase = parseNum(rarityBaseEl);
-		if (Number.isNaN(rarityBase)) {
+		if (Number.isNaN(rarityBase) || !trophyCount) {
 			return null;
 		}
 		const rarityDlcEl = tr.querySelector('td > span.separator.completion-status > span:nth-of-type(2)');
@@ -53,7 +62,8 @@ export class ParserGamePlayable extends PsnpParser<IGamePlayable, HTMLTableRowEl
 			latestTrophyTimestamp = day && monthYear ? new Date(`${day} ${monthYear}`).valueOf() : undefined;
 		}
 
-		const trophyCount = this.parseTrophyCount(tr) ?? undefined;
+		const numTrophies = sumTrophyCount(trophyCount);
+		const points = calculateTrophyPoints(trophyCount);
 
 		return {
 			_id,
@@ -61,6 +71,9 @@ export class ParserGamePlayable extends PsnpParser<IGamePlayable, HTMLTableRowEl
 			name,
 			_imagePath,
 			stackLabel,
+			trophyCount,
+			numTrophies,
+			points,
 			platforms,
 			rarityBase,
 			rarityDlc,
@@ -68,7 +81,6 @@ export class ParserGamePlayable extends PsnpParser<IGamePlayable, HTMLTableRowEl
 			completionStatus,
 			completionSpeed,
 			latestTrophy: latestTrophyTimestamp,
-			trophyCount,
 		};
 	}
 }

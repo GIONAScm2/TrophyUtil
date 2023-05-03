@@ -22,13 +22,13 @@ class ParserGamePlayable extends psnpParser_js_1.PsnpParser {
             return null;
         }
         const [_id, _nameSerialized] = hrefIdAndTitle;
-        const stackLabel = titleAnchorEl.parentElement
-            ?.querySelector('bullet')
-            ?.nextSibling?.textContent?.trim() ?? null;
+        const stackLabel = titleAnchorEl.parentElement?.querySelector('bullet')?.nextSibling?.textContent?.trim() ??
+            null;
+        const trophyCount = this.parseTrophyCount(tr);
         const progressPercent = (0, index_js_1.parseNum)(tr.querySelector(`div.progress-bar > span`));
-        const percent = Number.isNaN(progressPercent) ? null : progressPercent;
+        const percent = Number.isNaN(progressPercent) ? undefined : progressPercent;
         const rarityBase = (0, index_js_1.parseNum)(rarityBaseEl);
-        if (Number.isNaN(rarityBase)) {
+        if (Number.isNaN(rarityBase) || !trophyCount) {
             return null;
         }
         const rarityDlcEl = tr.querySelector('td > span.separator.completion-status > span:nth-of-type(2)');
@@ -43,13 +43,17 @@ class ParserGamePlayable extends psnpParser_js_1.PsnpParser {
             const monthYear = dateHolder.childNodes[2]?.textContent?.trim();
             latestTrophyTimestamp = day && monthYear ? new Date(`${day} ${monthYear}`).valueOf() : undefined;
         }
-        const trophyCount = this.parseTrophyCount(tr) ?? undefined;
+        const numTrophies = (0, index_js_1.sumTrophyCount)(trophyCount);
+        const points = (0, index_js_1.calculateTrophyPoints)(trophyCount);
         return {
             _id,
             _nameSerialized,
             name,
             _imagePath,
             stackLabel,
+            trophyCount,
+            numTrophies,
+            points,
             platforms,
             rarityBase,
             rarityDlc,
@@ -57,7 +61,6 @@ class ParserGamePlayable extends psnpParser_js_1.PsnpParser {
             completionStatus,
             completionSpeed,
             latestTrophy: latestTrophyTimestamp,
-            trophyCount,
         };
     }
 }

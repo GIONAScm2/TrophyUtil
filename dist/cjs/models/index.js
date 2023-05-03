@@ -17,6 +17,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./common.js"), exports);
 __exportStar(require("./game.impl.js"), exports);
 __exportStar(require("./game.interface.js"), exports);
+__exportStar(require("./psnpEntity.js"), exports);
 __exportStar(require("./series.impl.js"), exports);
 __exportStar(require("./series.interface.js"), exports);
 __exportStar(require("./trophy.impl.js"), exports);

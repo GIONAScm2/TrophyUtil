@@ -1,7 +1,12 @@
-import {TrophyCount, PsnpEntity} from './common.js';
-import {ISeriesListing} from './series.interface.js';
+import {PsnpEntity} from './psnpEntity.js';
+import {MongoDateField, TrophyCount} from './common.js';
+import {ISeriesDoc, ISeriesListing, IStage} from './series.interface.js';
+import {type ChangeData} from '../util/objCompare.js';
 
-export class PsnpSeriesListing extends PsnpEntity implements ISeriesListing {
+export class PsnpSeriesListing<T extends ISeriesListing = ISeriesListing>
+	extends PsnpEntity<T>
+	implements ISeriesListing
+{
 	trophyCount: TrophyCount;
 	numTrophies: number;
 	numGames: number;
@@ -20,5 +25,26 @@ export class PsnpSeriesListing extends PsnpEntity implements ISeriesListing {
 		this.points = data.points;
 		this.numTrophies = data.numTrophies;
 		this.numGames = data.numGames;
+	}
+}
+
+export class SeriesDoc extends PsnpSeriesListing<ISeriesDoc> implements ISeriesDoc {
+	stages: IStage[];
+	createdAt?: MongoDateField | undefined;
+	updatedAt?: MongoDateField | undefined;
+
+	constructor(data: ISeriesDoc) {
+		super(data);
+		this.stages = data.stages;
+		this.createdAt = data.createdAt;
+		this.updatedAt = data.updatedAt;
+	}
+
+	diffUpdate(
+		oldEntity: ISeriesDoc | null | undefined,
+		newEntity: ISeriesDoc,
+		update: boolean
+	): ChangeData<ISeriesDoc> {
+		return super.diffUpdate(oldEntity, newEntity, update);
 	}
 }

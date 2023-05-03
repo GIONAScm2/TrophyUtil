@@ -1,5 +1,9 @@
-import { IPsnpEntity, ITrophyCount, IMongoTimestamps, MakePropertiesOptional } from '../index.js';
+import { IPsnpEntity, ITrophyCount, IMongoTimestamps, MakeOptional } from '../index.js';
 import { ITrophyGroup } from './trophy.interface.js';
+/** Abbreviated stack label that PSNP uses. */
+export type StackAbbr = keyof typeof StackLookup;
+/** Full stack label that PSNP uses. */
+export type StackFull = (typeof StackLookup)[StackAbbr];
 /** Maps {@link StackAbbr} to non-abbreviated name. */
 export declare const StackLookup: {
     readonly NA: "North American";
@@ -21,17 +25,15 @@ export declare const StackLookup: {
     readonly RR: "Rereleased";
     readonly OR: "Original";
 };
-export type StackAbbr = keyof typeof StackLookup;
-export type StackAbbrNullable = StackAbbr | null;
-export type Stack = Record<StackAbbr, string>;
 export type PlatformTag = 'Vita' | 'VR' | 'PS3' | 'PS4' | 'PS5';
-/** `rarityBase` and optionally `rarityDlc` */
-interface Rarity {
+/** `rarityBase`, `*rarityDlc`. */
+interface IRarity {
     /** Number (float) of the first displayed rarity; de facto 'platinum rarity'. */
     rarityBase: number;
     /** Number (float) of the second displayed rarity; de facto 'DLC rarity'. `undefined` if no DLC rarity is present. */
     rarityDlc?: number;
 }
+/** `*developer`, `*publisher`, `*genres`, `*themes`, `*modes`, and `*otherNames`. */
 export interface IMetadataFields {
     developer?: string;
     publisher?: string;
@@ -40,10 +42,7 @@ export interface IMetadataFields {
     modes?: string[];
     otherNames?: string[];
 }
-interface IMetadata {
-    metaData: IMetadataFields;
-}
-/** Represents a game's header stats. */
+/** `gameOwners`, `recentPlayers`, `avgCompletion`, `trophiesEarned`, `num100Percented`, `*numPlatted`. */
 export interface IHeaderStats {
     /** Number of game owners. */
     gameOwners: number;
@@ -58,10 +57,10 @@ export interface IHeaderStats {
     /** Number of tracked users that have 100%'d the game. For games without DLC, this is equivalent to {@link numPlatted}. */
     num100Percented: number;
 }
-/** Properties exclusive to games that display user progress. */
-interface IGameProgress {
-    /** Completion % (integer). Unplayed games don't have a progress bar, so they'll be marked `null`. */
-    percent: number | null;
+/** `*percent`, `*completionStatus`, `*completionSpeed`, and `*latestTrophy`. */
+interface IUserProgress {
+    /** Completion % (integer), or `undefined` if the game doesn't have a progress bar (e.g. unplayed games on series pages). */
+    percent?: number;
     /** Type of game completion based on game's `class` attribute.
      *
      * If a game is platted, it will have the `platinum` class regardless of whether there's DLC.
@@ -75,59 +74,62 @@ interface IGameProgress {
     /** Timestamp at which the most recent trophy was earned (ms). `undefined` for games at 0% (or unplayed series games). */
     latestTrophy?: number;
 }
-/** Properties universal to all game types. */
-export interface IGameBase extends IPsnpEntity {
-    /** Array of all PSNP platform tags. */
-    platforms: PlatformTag[];
-}
+/** `stackLabel`. */
 interface IStackLabel {
-    /** PSNP's abbreviated stack label (`StackAbbr`), or `null` if no label is present.
+    /** PSNP's abbreviated stack label (`StackAbbr`).
      *
-     * **Note:** Stored games may ocasionally have a value of `WW` even if no stack label is present.
-     * This indicates a correction, and should be respected. */
-    stackLabel: StackAbbrNullable;
+     * **Note:** Stored games may have a value of `WW` even if no stack label is present on PSNP.
+     * This indicates a manual correction, so exert caution when updating DB games using freshly-parsed DOM games. */
+    stackLabel: StackAbbr | null;
 }
-/** Only unplayed games have these properties. */
-interface IUnplayed {
-    /** Number of game owners. */
-    numOwners: number;
-    /** Number of trophies the game has. */
-    numTrophies: number;
-    /** Number of points the game is worth. */
-    points: number;
-}
-/** Games from Home page. */
-export interface IGamePartialHome extends IGameBase, ITrophyCount {
-    /** Number of points the game is worth. */
-    points: number;
-}
-/** Games from TrophyList pages ("Other Platforms and Regions"). */
-export interface IGamePartialTrophyList extends IGameBase, IStackLabel {
-}
-/** Games from Games and GameSearch pages. */
-export interface IGameStandard extends IGameBase, IStackLabel, ITrophyCount, IUnplayed {
-}
-/** Games from Profile and Series pages. */
-export interface IGamePlayable extends IGameBase, IStackLabel, Partial<ITrophyCount>, Rarity, IGameProgress {
-}
-/** Game details retrieved from its trophy list. */
-export interface IGamePage extends MakePropertiesOptional<IGameBase, '_imagePath'>, IStackLabel, IMetadata, Rarity {
+/** All page-specific game properties (`forumId`, `trophies`, `stacks`, `headerStats`, `metaData`). */
+interface IGamePageData {
     /** ID that uniquely identifies the game's PSNP subforum. */
     forumId: number;
-    /** List of {@link ITrophyGroup} */
-    trophyGroups: ITrophyGroup[];
+    /** Array of {@link ITrophyGroup} */
+    trophies: ITrophyGroup[];
     /** List of {@link IGamePartialTrophyList} */
     stacks: IGamePartialTrophyList[];
     /** Aggregate stats; see {@link IHeaderStats} */
-    completionStats: IHeaderStats;
+    headerStats: IHeaderStats;
+    /** Game metadata like `developer`, `genres`, etc. */
+    metaData: IMetadataFields;
 }
-/** Represents a neutral Game document containing all fields that should be stored. */
-export interface IGameStandardDoc extends IGameStandard, Rarity, Partial<IMetadata>, IMongoTimestamps {
-    /** List of {@link ITrophyGroup} */
-    trophyGroups: ITrophyGroup[];
+interface IBase extends IPsnpEntity {
+    /** Array of all PSNP platform tags. */
+    platforms: PlatformTag[];
 }
-/** Represents a user Game document containing all fields that should be stored. */
-export interface IGamePlayableDoc extends IGamePlayable, Partial<IUnplayed>, IMongoTimestamps {
+/** Properties universal to all game types (optional). */
+export interface IGameBase extends IBase, Partial<ITrophyCount & IStackLabel> {
+}
+/** Game parsed from 'Other Platforms and Regions' section of trophy lists. */
+export interface IGamePartialTrophyList extends IBase, IStackLabel {
+}
+/** Game parsed from 'Home' page. */
+export interface IGamePartialHome extends IBase, ITrophyCount {
+}
+/** Properties universal to all game types (required). */
+interface IGameBaseFull extends IGamePartialTrophyList, IGamePartialHome {
+}
+/** Game parsed from 'Games' or 'GameSearch' pages. */
+export interface IGameStandard extends IGameBaseFull {
+    /** Number of game owners. */
+    numOwners: number;
+}
+/** Game parsed from 'Profile' or 'Series' pages. */
+export interface IGamePlayable extends IGameBaseFull, IRarity, IUserProgress {
+}
+/** Game parsed from trophy list. */
+export interface IGamePage extends MakeOptional<IGameStandard, '_imagePath'>, IRarity, IGamePageData {
+}
+/** All *relevant* trophy list-specific game properties that supplement game listing data. */
+interface IPageSupplement extends Pick<IGamePageData, 'forumId' | 'trophies' | 'metaData'> {
+}
+/** Recommended MongoDB schema for standard games. */
+export interface IGameDoc extends IGameStandard, IRarity, IPageSupplement, Partial<IMongoTimestamps> {
+}
+/** Recommended MongoDB schema for playable games. */
+export interface IGamePlayableDoc extends IGamePlayable, Partial<IPageSupplement>, Partial<IMongoTimestamps> {
 }
 export {};
 //# sourceMappingURL=game.interface.d.ts.map

@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PsnpSeriesListing = void 0;
-const common_js_1 = require("./common.js");
-class PsnpSeriesListing extends common_js_1.PsnpEntity {
+exports.SeriesDoc = exports.PsnpSeriesListing = void 0;
+const psnpEntity_js_1 = require("./psnpEntity.js");
+class PsnpSeriesListing extends psnpEntity_js_1.PsnpEntity {
     trophyCount;
     numTrophies;
     numGames;
@@ -22,4 +22,19 @@ class PsnpSeriesListing extends common_js_1.PsnpEntity {
     }
 }
 exports.PsnpSeriesListing = PsnpSeriesListing;
+class SeriesDoc extends PsnpSeriesListing {
+    stages;
+    createdAt;
+    updatedAt;
+    constructor(data) {
+        super(data);
+        this.stages = data.stages;
+        this.createdAt = data.createdAt;
+        this.updatedAt = data.updatedAt;
+    }
+    diffUpdate(oldEntity, newEntity, update) {
+        return super.diffUpdate(oldEntity, newEntity, update);
+    }
+}
+exports.SeriesDoc = SeriesDoc;
 //# sourceMappingURL=series.impl.js.map

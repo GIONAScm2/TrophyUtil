@@ -1,4 +1,5 @@
 import { PsnpParser } from '../psnpParser.js';
+import { calculateTrophyPoints } from '../../models/common.js';
 import { ParserTrophyGroups } from '../trophies/trophyGroups.js';
 import { ParserGamePartialStack } from './gamePartialTrophyList.js';
 import { parseNum, getStackAbbr } from '../../util/util.js';
@@ -24,6 +25,10 @@ export class ParserGamePage extends PsnpParser {
         }
         const trophyGroupsParser = new ParserTrophyGroups();
         const trophyGroups = trophyGroupsParser.parse(doc);
+        const trophies = trophyGroups.flatMap(group => group.trophies);
+        const trophyCount = trophiesToTrophyCount(trophies);
+        const numTrophies = trophies.length;
+        const points = calculateTrophyPoints(trophyCount);
         const metaData = this.parseMetadata(doc);
         const stacks = [];
         const sideDivHeaders = [...doc.querySelectorAll('div.col-xs-4 >  div.title.flex.v-align > div.grow > h3')];
@@ -60,9 +65,13 @@ export class ParserGamePage extends PsnpParser {
             forumId,
             platforms,
             stackLabel,
+            trophyCount,
+            numTrophies,
+            points,
+            numOwners: completionStats.gameOwners,
             stacks,
-            trophyGroups,
-            completionStats,
+            trophies: trophyGroups,
+            headerStats: completionStats,
             rarityBase,
             rarityDlc,
             metaData,
@@ -106,5 +115,19 @@ export class ParserGamePage extends PsnpParser {
         const numPlatted = Number.isNaN(platAchievers) ? undefined : platAchievers;
         return { gameOwners, recentPlayers, numPlatted, avgCompletion, trophiesEarned, num100Percented };
     }
+}
+function trophiesToTrophyCount(trophies, trophyCount) {
+    let tc = trophyCount ?? { bronze: 0, silver: 0, gold: 0, platinum: 0 };
+    for (const trophy of trophies) {
+        if (trophy.grade === 'Bronze')
+            tc.bronze++;
+        else if (trophy.grade === 'Silver')
+            tc.silver++;
+        else if (trophy.grade === 'Gold')
+            tc.gold++;
+        else if (trophy.grade === 'Platinum')
+            tc.platinum++;
+    }
+    return tc;
 }
 //# sourceMappingURL=gamePage.js.map

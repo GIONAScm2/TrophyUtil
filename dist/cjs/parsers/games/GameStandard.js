@@ -24,9 +24,8 @@ class ParserGameStandard extends psnpParser_js_1.PsnpParser {
             return null;
         }
         const [_id, _nameSerialized] = hrefIdAndTitle;
-        const stackLabel = titleAnchorEl.parentElement
-            ?.querySelector('bullet')
-            ?.nextSibling?.textContent?.trim() ?? null;
+        const stackLabel = titleAnchorEl.parentElement?.querySelector('bullet')?.nextSibling?.textContent?.trim() ??
+            null;
         const numTrophies = (0, index_js_1.sumTrophyCount)(trophyCount);
         const points = (0, index_js_1.calculateTrophyPoints)(trophyCount);
         return {

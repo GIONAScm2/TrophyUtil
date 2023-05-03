@@ -1,4 +1,4 @@
-import {type IPsnpEntity} from '../models/common.js';
+import {type IPsnpEntity} from '../models/psnpEntity.js';
 
 /** Returns `true` if `x` is a standard POJO (or class instance), otherwise `false` if it's a primitive/null/array/function/Map/Set/etc. */
 export function isStandardObj(x: unknown): x is Record<string, unknown> {

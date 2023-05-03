@@ -13,4 +13,4 @@ class BrowserContext {
     }
 }
 exports.BrowserContext = BrowserContext;
-//# sourceMappingURL=BrowserContext.js.map
+//# sourceMappingURL=browserContext.js.map

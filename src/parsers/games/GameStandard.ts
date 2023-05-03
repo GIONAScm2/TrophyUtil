@@ -1,11 +1,5 @@
 import {PsnpParser} from '../psnpParser.js';
-import {
-	PlatformTag,
-	StackAbbrNullable,
-	IGameStandard,
-	calculateTrophyPoints,
-	sumTrophyCount,
-} from '../../models/index.js';
+import {PlatformTag, StackAbbr, IGameStandard, calculateTrophyPoints, sumTrophyCount} from '../../models/index.js';
 import {parseNum} from '../../util/util.js';
 
 /** Parses a standard game representation from Games and GameSearch pages. */
@@ -34,9 +28,8 @@ export class ParserGameStandard extends PsnpParser<IGameStandard, HTMLTableRowEl
 
 		const [_id, _nameSerialized] = hrefIdAndTitle;
 		const stackLabel =
-			(titleAnchorEl.parentElement
-				?.querySelector('bullet')
-				?.nextSibling?.textContent?.trim() as StackAbbrNullable) ?? null;
+			(titleAnchorEl.parentElement?.querySelector('bullet')?.nextSibling?.textContent?.trim() as StackAbbr) ??
+			null;
 		const numTrophies = sumTrophyCount(trophyCount);
 		const points = calculateTrophyPoints(trophyCount);
 

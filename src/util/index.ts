@@ -1,4 +1,4 @@
-export * from './BrowserContext.js';
+export * from './browserContext.js';
 export * from './objCompare.js';
-export * from './Select.js'
+export * from './select.js'
 export * from './util.js';

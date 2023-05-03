@@ -68,9 +68,9 @@ describe('Game Parsers', () => {
 		expect(game.platforms.length).toBe(1);
 		expect(game.stackLabel).toBeNull();
 		expect(game.stacks.length).toBe(6);
-		expect(game.trophyGroups.length).toBe(4);
+		expect(game.trophies.length).toBe(4);
 
-		expect(game.completionStats).toEqual({
+		expect(game.headerStats).toEqual({
 			gameOwners: 249094,
 			recentPlayers: 94,
 			numPlatted: 9903,

@@ -2,8 +2,7 @@ import {dirname, resolve} from 'path';
 import {fileURLToPath} from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 import fs from 'fs';
-import {ParserTrophy, ParserTrophyGroups} from '../../src/parsers/index';
-import {Select} from '../../src/util/index';
+import {ParserTrophyGroups} from '../../src/parsers/index';
 import {JSDOM} from 'jsdom';
 
 describe('Trophy Parsers', () => {
