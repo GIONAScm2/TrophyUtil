@@ -27,7 +27,7 @@ class SeriesDoc extends PsnpSeriesListing {
     createdAt;
     updatedAt;
     /** Flattens `stages` series stages, returning a 2D array of all games. */
-    get allTrophies() {
+    get allGames() {
         return this.stages.flatMap(s => s.games);
     }
     constructor(data) {
