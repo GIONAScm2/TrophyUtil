@@ -64,7 +64,7 @@ export declare class PsnpGameStandardDoc<T extends IGameDoc = IGameDoc> extends 
     metaData: IMetadataFields;
     createdAt?: MongoDateField;
     updatedAt?: MongoDateField;
-    /** Flattens {@link trophies} stages, returning a 2D array of all trophies. */
+    /** Flattens `trophies` trophy groups, returning a 2D array of all trophies. */
     get allTrophies(): import("./trophy.interface.js").ITrophy[] | undefined;
     constructor(data: IGameDoc);
     diffUpdate(oldGame: T | null | undefined, newGame: T, update: boolean): ChangeData<T>;

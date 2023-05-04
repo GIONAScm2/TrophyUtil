@@ -33,6 +33,11 @@ export class SeriesDoc extends PsnpSeriesListing<ISeriesDoc> implements ISeriesD
 	createdAt?: MongoDateField | undefined;
 	updatedAt?: MongoDateField | undefined;
 
+	/** Flattens `stages` series stages, returning a 2D array of all games. */
+	get allTrophies() {
+		return this.stages.flatMap(s => s.games);
+	}
+
 	constructor(data: ISeriesDoc) {
 		super(data);
 		this.stages = data.stages;

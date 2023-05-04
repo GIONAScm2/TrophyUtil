@@ -174,7 +174,7 @@ class PsnpGameStandardDoc extends PsnpGameStandard {
     metaData;
     createdAt;
     updatedAt;
-    /** Flattens {@link trophies} stages, returning a 2D array of all trophies. */
+    /** Flattens `trophies` trophy groups, returning a 2D array of all trophies. */
     get allTrophies() {
         if (!this.trophies)
             return;
