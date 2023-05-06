@@ -40,15 +40,14 @@ export class ParserGamePage extends PsnpParser {
             stacks.push(...games);
         }
         const headerStatElements = [...doc.querySelectorAll(`div.stats.flex > span.stat`)];
-        const completionStats = this.parseHeaderStats(headerStatElements);
-        if (!completionStats) {
+        const stats = this.parseHeaderStats(headerStatElements);
+        if (!stats) {
             return null;
         }
-        const rarityBaseVerbose = ((completionStats.numPlatted ?? completionStats.num100Percented) / completionStats.gameOwners) * 100;
-        const rarityBase = Math.round(rarityBaseVerbose * 100) / 100;
+        const rarityBase = calculatePercent(stats.numPlatted ?? stats.num100Percented, stats.gameOwners);
         let rarityDlc;
-        if (completionStats.numPlatted && completionStats.numPlatted !== completionStats.num100Percented) {
-            rarityDlc = Math.round((completionStats.num100Percented / completionStats.gameOwners) * 100 * 100) / 100;
+        if (stats.numPlatted && stats.numPlatted !== stats.num100Percented) {
+            rarityDlc = calculatePercent(stats.num100Percented, stats.gameOwners);
         }
         const platformTags = [...doc.querySelectorAll(`div.no-top-border div.platforms > span`)];
         const platforms = platformTags.map(span => span.textContent.trim());
@@ -68,10 +67,10 @@ export class ParserGamePage extends PsnpParser {
             trophyCount,
             numTrophies,
             points,
-            numOwners: completionStats.gameOwners,
+            numOwners: stats.gameOwners,
             stacks,
             trophies: trophyGroups,
-            headerStats: completionStats,
+            headerStats: stats,
             rarityBase,
             rarityDlc,
             metaData,
@@ -129,5 +128,12 @@ function trophiesToTrophyCount(trophies, trophyCount) {
             tc.platinum++;
     }
     return tc;
+}
+function calculatePercent(dividend, divisor) {
+    if (dividend === 0 && divisor === 0)
+        return 0;
+    const percent = (dividend / divisor) * 100;
+    const percentRounded = Math.round(percent * 100) / 100;
+    return percentRounded;
 }
 //# sourceMappingURL=gamePage.js.map

@@ -101,4 +101,24 @@ describe('Game Parsers', () => {
 			],
 		});
 	});
+
+	test(`should parse game details from NEW trophy list without error`, () => {
+		const html = fs.readFileSync(resolve(__dirname, '../fixtures/psnpTrophyListNew.html'), 'utf8');
+		const jsdom = new JSDOM(html);
+
+		const parser = new ParserGamePage();
+		const game = parser.parse(jsdom.window.document);
+
+		expect(game.headerStats).toEqual({
+			gameOwners: 0,
+			recentPlayers: 0,
+			numPlatted: 0,
+			avgCompletion: 0,
+			trophiesEarned: 0,
+			num100Percented: 0,
+		});
+
+		expect(game.rarityBase).toBe(0);
+		expect(game.rarityDlc).toBeUndefined();
+	});
 });

@@ -59,18 +59,16 @@ export class ParserGamePage extends PsnpParser<IGamePage, Document> {
 		}
 
 		const headerStatElements = [...doc.querySelectorAll<HTMLSpanElement>(`div.stats.flex > span.stat`)];
-		const completionStats = this.parseHeaderStats(headerStatElements);
-		if (!completionStats) {
+		const stats = this.parseHeaderStats(headerStatElements);
+		if (!stats) {
 			return null;
 		}
 
-		const rarityBaseVerbose =
-			((completionStats.numPlatted ?? completionStats.num100Percented) / completionStats.gameOwners) * 100;
-		const rarityBase = Math.round(rarityBaseVerbose * 100) / 100;
+		const rarityBase = calculatePercent(stats.numPlatted ?? stats.num100Percented, stats.gameOwners);
 
 		let rarityDlc: number | undefined;
-		if (completionStats.numPlatted && completionStats.numPlatted !== completionStats.num100Percented) {
-			rarityDlc = Math.round((completionStats.num100Percented / completionStats.gameOwners) * 100 * 100) / 100;
+		if (stats.numPlatted && stats.numPlatted !== stats.num100Percented) {
+			rarityDlc = calculatePercent(stats.num100Percented, stats.gameOwners);
 		}
 
 		const platformTags = [...doc.querySelectorAll<HTMLSpanElement>(`div.no-top-border div.platforms > span`)];
@@ -93,10 +91,10 @@ export class ParserGamePage extends PsnpParser<IGamePage, Document> {
 			trophyCount,
 			numTrophies,
 			points,
-			numOwners: completionStats.gameOwners,
+			numOwners: stats.gameOwners,
 			stacks,
 			trophies: trophyGroups,
-			headerStats: completionStats,
+			headerStats: stats,
 			rarityBase,
 			rarityDlc,
 			metaData,
@@ -165,4 +163,13 @@ function trophiesToTrophyCount(trophies: ITrophy[], trophyCount?: TrophyCount): 
 	}
 
 	return tc;
+}
+
+function calculatePercent(dividend: number, divisor: number): number {
+	if (dividend === 0 && divisor === 0) return 0;
+
+	const percent = (dividend / divisor) * 100;
+	const percentRounded = Math.round(percent * 100) / 100;
+
+	return percentRounded;
 }
