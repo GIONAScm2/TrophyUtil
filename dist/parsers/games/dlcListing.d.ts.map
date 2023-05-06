@@ -1,0 +1,1 @@
+{"version":3,"file":"dlcListing.d.ts","sourceRoot":"","sources":["../../../src/parsers/games/dlcListing.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,UAAU,EAAC,MAAM,kBAAkB,CAAC;AAC5C,OAAO,EAAc,WAAW,EAAC,MAAM,gCAAgC,CAAC;AAGxE,qBAAa,gBAAiB,SAAQ,UAAU,CAAC,WAAW,EAAE,mBAAmB,CAAC;IACjF,SAAS,CAAC,QAAQ,CAAC,IAAI,iBAAiB;IAExC,SAAS,CAAC,MAAM,CAAC,EAAE,EAAE,mBAAmB,GAAG,WAAW,GAAG,IAAI;CA0C7D"}

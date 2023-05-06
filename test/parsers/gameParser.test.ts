@@ -2,7 +2,13 @@ import {dirname, resolve} from 'path';
 import {fileURLToPath} from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 import fs from 'fs';
-import {ParserGameStandard, ParserGamePlayable, ParserGamePartialStack, ParserGamePage} from '../../src/parsers/index';
+import {
+	ParserGameStandard,
+	ParserGamePlayable,
+	ParserGamePartialStack,
+	ParserGamePage,
+	ParserDlcListing,
+} from '../../src/parsers/index';
 import {Select} from '../../src/util/index';
 import {JSDOM} from 'jsdom';
 
@@ -12,13 +18,12 @@ beforeAll(() => {
 });
 
 describe('Game Parsers', () => {
-	test('should parse trophy_list nodes without error', () => {
+	test('should parse trophy_list nodes', () => {
 		const parser = new ParserGamePartialStack();
 		const nodes = [...document.querySelectorAll<HTMLTableRowElement>('[data-page="trophy_list"] tr')];
 		const games = nodes.map(node => parser.parse(node));
 
-		const game1 = games[0];
-		expect(game1).toEqual({
+		expect(games[0]).toEqual({
 			_id: 9930,
 			_nameSerialized: 'star-wars-jedi-fallen-order',
 			name: 'Star Wars Jedi: Fallen Order',
@@ -28,7 +33,7 @@ describe('Game Parsers', () => {
 		});
 	});
 
-	test(`should parse game_home nodes without error`, () => {
+	test(`should parse game_home nodes`, () => {
 		const parser = new ParserGameStandard();
 		const nodes = [...document.querySelectorAll<HTMLTableRowElement>('[data-page="game_home"] tr')];
 
@@ -48,7 +53,25 @@ describe('Game Parsers', () => {
 		});
 	});
 
-	test(`should parse game_search nodes without error`, () => {
+	test(`should parse dlc nodes`, () => {
+		const parser = new ParserDlcListing();
+		const nodes = [...document.querySelectorAll<HTMLTableRowElement>('[data-page="dlc"] tr')];
+
+		const dlcs = nodes.map(node => parser.parse(node));
+		expect(dlcs[0]).toEqual({
+			_id: 16519,
+			_nameSerialized: 'kao-the-kangaroo#DLC-1',
+			name: 'Bend the Rooles',
+			_imagePath: '693320/S82409b',
+			groupNum: 1,
+			platforms: ['PS4'],
+			trophyCount: {bronze: 9, silver: 2, gold: 0, platinum: 0},
+			numTrophies: 11,
+			points: 195,
+		});
+	});
+
+	test(`should parse game_search nodes`, () => {
 		const parser = new ParserGameStandard();
 		const nodes = [...document.querySelectorAll<HTMLTableRowElement>('[data-page="game_search"] tr')];
 
@@ -56,7 +79,7 @@ describe('Game Parsers', () => {
 		expect(games.length).toBe(2);
 	});
 
-	test(`should parse profile nodes without error`, () => {
+	test(`should parse profile nodes`, () => {
 		const parser = new ParserGamePlayable();
 
 		const nodes = [...document.querySelectorAll<HTMLTableRowElement>(`[data-page="profile"] ${Select.TR}`)];
@@ -65,7 +88,7 @@ describe('Game Parsers', () => {
 		}).not.toThrow();
 	});
 
-	test(`should parse series game nodes without error`, () => {
+	test(`should parse series game nodes`, () => {
 		const parser = new ParserGamePlayable();
 
 		const nodes = [...document.querySelectorAll<HTMLTableRowElement>(`[data-page="series"] ${Select.TR}`)];
@@ -74,7 +97,7 @@ describe('Game Parsers', () => {
 		}).not.toThrow();
 	});
 
-	test(`should parse game details from trophy list without error`, () => {
+	test(`should parse game details from trophy list`, () => {
 		const html = fs.readFileSync(resolve(__dirname, '../fixtures/psnpTrophyListTEW.html'), 'utf8');
 		const jsdom = new JSDOM(html);
 
@@ -122,7 +145,7 @@ describe('Game Parsers', () => {
 		});
 	});
 
-	test(`should parse game details from NEW trophy list without error`, () => {
+	test(`should parse game details from NEW trophy list`, () => {
 		const html = fs.readFileSync(resolve(__dirname, '../fixtures/psnpTrophyListNew.html'), 'utf8');
 		const jsdom = new JSDOM(html);
 
@@ -142,7 +165,7 @@ describe('Game Parsers', () => {
 		expect(game.rarityDlc).toBeUndefined();
 	});
 
-	test(`should parse game details from NONPLAT trophy list without error`, () => {
+	test(`should parse game details from NONPLAT trophy list`, () => {
 		const html = fs.readFileSync(resolve(__dirname, '../fixtures/psnpTrophyListNonplat.html'), 'utf8');
 		const jsdom = new JSDOM(html);
 

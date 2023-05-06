@@ -131,5 +131,7 @@ export interface IGameDoc extends IGameStandard, IRarity, IPageSupplement, Parti
 /** Recommended MongoDB schema for playable games. */
 export interface IGamePlayableDoc extends IGamePlayable, Partial<IPageSupplement>, Partial<IMongoTimestamps> {
 }
+export interface IDlcListing extends IBase, ITrophyCount, Omit<ITrophyGroup, 'trophies'> {
+}
 export {};
 //# sourceMappingURL=game.interface.d.ts.map
