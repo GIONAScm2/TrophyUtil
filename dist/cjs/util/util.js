@@ -23,6 +23,8 @@ function parseNum(input) {
     const inputAsNonNull = input ?? '';
     const inputAsString = typeof inputAsNonNull === 'string' ? inputAsNonNull : inputAsNonNull.textContent ?? '';
     const inputAsParsable = inputAsString.trim().replaceAll(/%|,|\s.+/g, '');
+    if (inputAsParsable === '')
+        return Number.NaN;
     return +inputAsParsable;
 }
 exports.parseNum = parseNum;

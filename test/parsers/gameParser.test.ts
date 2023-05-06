@@ -15,25 +15,45 @@ describe('Game Parsers', () => {
 	test('should parse trophy_list nodes without error', () => {
 		const parser = new ParserGamePartialStack();
 		const nodes = [...document.querySelectorAll<HTMLTableRowElement>('[data-page="trophy_list"] tr')];
-		expect(() => {
-			const games = nodes.map(node => parser.parse(node));
-		}).not.toThrow();
+		const games = nodes.map(node => parser.parse(node));
+
+		const game1 = games[0];
+		expect(game1).toEqual({
+			_id: 9930,
+			_nameSerialized: 'star-wars-jedi-fallen-order',
+			name: 'Star Wars Jedi: Fallen Order',
+			_imagePath: '673a4c/Sc4da58',
+			stackLabel: 'EU',
+			platforms: ['PS4'],
+		});
 	});
 
 	test(`should parse game_home nodes without error`, () => {
 		const parser = new ParserGameStandard();
 		const nodes = [...document.querySelectorAll<HTMLTableRowElement>('[data-page="game_home"] tr')];
-		expect(() => {
-			const games = nodes.map(node => parser.parse(node));
-		}).not.toThrow();
+
+		const games = nodes.map(node => parser.parse(node));
+		const game = games[0];
+		expect(game).toEqual({
+			_id: 21982,
+			_nameSerialized: 'tin-can',
+			name: 'Tin Can',
+			_imagePath: 'a2d2ab/Sb08232',
+			stackLabel: null,
+			platforms: ['PS5'],
+			trophyCount: {bronze: 4, silver: 5, gold: 9, platinum: 1},
+			numOwners: 0,
+			numTrophies: 19,
+			points: 1320,
+		});
 	});
 
 	test(`should parse game_search nodes without error`, () => {
 		const parser = new ParserGameStandard();
 		const nodes = [...document.querySelectorAll<HTMLTableRowElement>('[data-page="game_search"] tr')];
-		expect(() => {
-			const games = nodes.map(node => parser.parse(node));
-		}).not.toThrow();
+
+		const games = nodes.map(node => parser.parse(node));
+		expect(games.length).toBe(2);
 	});
 
 	test(`should parse profile nodes without error`, () => {
@@ -119,6 +139,17 @@ describe('Game Parsers', () => {
 		});
 
 		expect(game.rarityBase).toBe(0);
+		expect(game.rarityDlc).toBeUndefined();
+	});
+
+	test(`should parse game details from NONPLAT trophy list without error`, () => {
+		const html = fs.readFileSync(resolve(__dirname, '../fixtures/psnpTrophyListNonplat.html'), 'utf8');
+		const jsdom = new JSDOM(html);
+
+		const parser = new ParserGamePage();
+		const game = parser.parse(jsdom.window.document);
+
+		expect(game.rarityBase).toBe(1.62);
 		expect(game.rarityDlc).toBeUndefined();
 	});
 });

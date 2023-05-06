@@ -26,11 +26,11 @@ export type MakeRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K
  * @template K - A union of keys from the object type `T` that should be made optional. */
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
-/** 
+/**
  * Parses a numerical value from a string or DOM Node, returning said value or `NaN`.
- * 
- * Prior to parsing, strings are trimmed and occurrences of `,`, `%`, and `\s.+` are removed. 
- * 
+ *
+ * Prior to parsing, strings are trimmed and occurrences of `,`, `%`, and `\s.+` are removed.
+ *
  * @example
  * parseNum("5,001.5% (25.99%)") // 5001.5
  */
@@ -38,6 +38,7 @@ export function parseNum(input: string | Node | null | undefined): number {
 	const inputAsNonNull = input ?? '';
 	const inputAsString = typeof inputAsNonNull === 'string' ? inputAsNonNull : inputAsNonNull.textContent ?? '';
 	const inputAsParsable = inputAsString.trim().replaceAll(/%|,|\s.+/g, '');
+	if (inputAsParsable === '') return Number.NaN;
 	return +inputAsParsable;
 }
 

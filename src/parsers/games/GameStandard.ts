@@ -7,6 +7,8 @@ export class ParserGameStandard extends PsnpParser<IGameStandard, HTMLTableRowEl
 	protected readonly type = 'Standard Game';
 
 	protected _parse(tr: HTMLTableRowElement): IGameStandard | null {
+		const isSearchResult = !!tr.querySelector(`td:nth-of-type(5) > span.separator.left > span.typo-top`);
+
 		const titleAnchorEl = tr.querySelector(`a.title`);
 		const href = titleAnchorEl?.getAttribute('href');
 		const hrefIdAndTitle = this._extractIdAndTitleFromPsnpUrl({url: href});
@@ -19,8 +21,8 @@ export class ParserGameStandard extends PsnpParser<IGameStandard, HTMLTableRowEl
 		const _imagePath = /\w+\/\w+(?=\.[A-z]{3}$)/.exec(imageSrc)?.at(0);
 		const name = titleAnchorEl.textContent.trim();
 		const platforms = [...tr.querySelectorAll('span.tag.platform')].map(tag => tag.textContent) as PlatformTag[];
-		const trophyCount = this.parseTrophyCount(tr);
-		const numOwners = parseNumOwners(tr);
+		const trophyCount = this.parseTrophyCount(tr, isSearchResult);
+		const numOwners = parseNumOwners(tr, isSearchResult);
 
 		if (!_imagePath || !name || !platforms.length || !trophyCount || numOwners === null) {
 			return null;
@@ -49,8 +51,8 @@ export class ParserGameStandard extends PsnpParser<IGameStandard, HTMLTableRowEl
 }
 
 /** Parses the number of owners from a Games or GameSearch game. */
-function parseNumOwners(tr: HTMLTableRowElement, isGameSearch = false): number | null {
-	const selector = isGameSearch
+function parseNumOwners(tr: HTMLTableRowElement, isSearchResult = false): number | null {
+	const selector = isSearchResult
 		? `td:nth-of-type(5) > span.separator.left > span.typo-top`
 		: `td > span > b:first-of-type`;
 	const numOwners = parseNum(tr.querySelector(selector));
