@@ -105,12 +105,12 @@ export class ParserGamePage extends PsnpParser {
     /** Parses `stats` to return {@link IHeaderStats} or `null`. */
     parseHeaderStats(stats) {
         const findStat = (statName) => stats.find(span => span.textContent?.includes(statName));
-        const gameOwners = parseNum(findStat('Game Owners')?.firstChild);
-        const recentPlayers = parseNum(findStat('Recent Players')?.firstChild);
+        const gameOwners = parseNum(findStat('Game Owner')?.firstChild);
+        const recentPlayers = parseNum(findStat('Recent Player')?.firstChild);
         const avgCompletion = parseNum(findStat('Average Completion')?.firstChild);
-        const trophiesEarned = parseNum(findStat('Trophies Earned')?.firstChild);
+        const trophiesEarned = parseNum(findStat('Earned')?.firstChild);
         const num100Percented = parseNum(findStat('100% Completed')?.firstChild);
-        const platAchievers = parseNum(findStat('Platinum Achievers')?.firstChild);
+        const platAchievers = parseNum(findStat('Platinum Achiever')?.firstChild);
         const numPlatted = Number.isNaN(platAchievers) ? undefined : platAchievers;
         return { gameOwners, recentPlayers, numPlatted, avgCompletion, trophiesEarned, num100Percented };
     }

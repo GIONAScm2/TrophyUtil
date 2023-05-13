@@ -17,7 +17,10 @@ class PsnpEntity {
     toString() {
         return `${this.name} (ID ${this._id})`;
     }
-    /** Updates fields and returns a log of changes. */
+    /** Updates fields and returns a log of changes.
+     *
+     * **Note:** "new" operations return an empty `changes` array.
+     */
     diffUpdate(oldEntity, newEntity, update) {
         const commonChanges = { id: newEntity._id, changes: [] };
         if (!oldEntity) {

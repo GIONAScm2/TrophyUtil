@@ -108,12 +108,12 @@ class ParserGamePage extends psnpParser_js_1.PsnpParser {
     /** Parses `stats` to return {@link IHeaderStats} or `null`. */
     parseHeaderStats(stats) {
         const findStat = (statName) => stats.find(span => span.textContent?.includes(statName));
-        const gameOwners = (0, util_js_1.parseNum)(findStat('Game Owners')?.firstChild);
-        const recentPlayers = (0, util_js_1.parseNum)(findStat('Recent Players')?.firstChild);
+        const gameOwners = (0, util_js_1.parseNum)(findStat('Game Owner')?.firstChild);
+        const recentPlayers = (0, util_js_1.parseNum)(findStat('Recent Player')?.firstChild);
         const avgCompletion = (0, util_js_1.parseNum)(findStat('Average Completion')?.firstChild);
-        const trophiesEarned = (0, util_js_1.parseNum)(findStat('Trophies Earned')?.firstChild);
+        const trophiesEarned = (0, util_js_1.parseNum)(findStat('Earned')?.firstChild);
         const num100Percented = (0, util_js_1.parseNum)(findStat('100% Completed')?.firstChild);
-        const platAchievers = (0, util_js_1.parseNum)(findStat('Platinum Achievers')?.firstChild);
+        const platAchievers = (0, util_js_1.parseNum)(findStat('Platinum Achiever')?.firstChild);
         const numPlatted = Number.isNaN(platAchievers) ? undefined : platAchievers;
         return { gameOwners, recentPlayers, numPlatted, avgCompletion, trophiesEarned, num100Percented };
     }
