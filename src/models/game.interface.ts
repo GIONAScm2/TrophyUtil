@@ -93,8 +93,10 @@ interface IStackLabel {
 }
 /** All page-specific game properties (`forumId`, `trophies`, `stacks`, `headerStats`, `metaData`). */
 interface IGamePageData {
-	/** ID that uniquely identifies the game's PSNP subforum. */
-	forumId: number;
+	/** ID that uniquely identifies the game's PSNP subforum.
+	 *
+	 * **Note:** Some lists may not have a subforum. */
+	forumId: number | null;
 	/** Array of {@link ITrophyGroup} */
 	trophies: ITrophyGroup[];
 	/** List of {@link IGamePartialTrophyList} */

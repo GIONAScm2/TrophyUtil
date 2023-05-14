@@ -15,11 +15,11 @@ class ParserGamePage extends psnpParser_js_1.PsnpParser {
         const forumIdAndGameName = this._extractIdAndTitleFromPsnpUrl({ url: forumLink?.href });
         const trophyListLink = navTabs.find(anchor => anchor.textContent?.trim() === 'Trophies');
         const hrefIdAndTitle = this._extractIdAndTitleFromPsnpUrl({ url: trophyListLink?.href });
-        if (!hrefIdAndTitle || !forumIdAndGameName) {
+        if (!hrefIdAndTitle) {
             return null;
         }
         const [_id, _nameSerialized] = hrefIdAndTitle;
-        const [forumId] = forumIdAndGameName;
+        const forumId = forumIdAndGameName?.at(0) || null;
         const name = doc
             .querySelector(`#banner > div.banner-overlay > div > div.title-bar.flex.v-align > div.grow > h3 > span`)
             ?.nextSibling?.textContent?.trim();

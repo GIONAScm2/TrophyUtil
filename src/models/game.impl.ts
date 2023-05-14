@@ -209,7 +209,7 @@ export class PsnpGameStandardDoc<T extends IGameDoc = IGameDoc> extends PsnpGame
 	trophies: ITrophyGroup[];
 	rarityBase: number;
 	rarityDlc?: number;
-	forumId: number;
+	forumId: number | null;
 	metaData: IMetadataFields;
 	createdAt?: MongoDateField;
 	updatedAt?: MongoDateField;
