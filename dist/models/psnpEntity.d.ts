@@ -26,8 +26,7 @@ export declare abstract class PsnpEntity<T extends IPsnpEntity> implements IPsnp
     toString(): string;
     /** Updates fields and returns a log of changes.
      *
-     * **Note:** "new" operations return an empty `changes` array.
-     */
+     * **Note:** "new" operations return an empty `changes` array. */
     diffUpdate(oldEntity: T | null | undefined, newEntity: T, update: boolean): ChangeData<T>;
 }
 //# sourceMappingURL=psnpEntity.d.ts.map

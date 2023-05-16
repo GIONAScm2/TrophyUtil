@@ -33,13 +33,12 @@ export abstract class PsnpEntity<T extends IPsnpEntity> implements IPsnpEntity {
 	}
 
 	toString() {
-		return `${this.name} (ID ${this._id})`;
+		return `${this.name} (${this._id})`;
 	}
 
 	/** Updates fields and returns a log of changes.
 	 * 
-	 * **Note:** "new" operations return an empty `changes` array.
-	 */
+	 * **Note:** "new" operations return an empty `changes` array. */
 	diffUpdate(oldEntity: T | null | undefined, newEntity: T, update: boolean): ChangeData<T> {
 		const commonChanges = {id: newEntity._id, changes: []};
 
