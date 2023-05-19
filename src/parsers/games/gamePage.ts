@@ -72,7 +72,7 @@ export class ParserGamePage extends PsnpParser<IGamePage, Document> {
 		}
 
 		const platformTags = [...doc.querySelectorAll<HTMLSpanElement>(`div.no-top-border div.platforms > span`)];
-		const platforms = platformTags.map(span => span.textContent!.trim() as PlatformTag);
+		const platforms = platformTags.map(span => span.textContent!.trim() as PlatformTag).sort();
 		if (!platforms.length) {
 			return null;
 		}
