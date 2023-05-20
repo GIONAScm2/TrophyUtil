@@ -131,7 +131,7 @@ interface IPageSupplement extends Pick<IGamePageData, 'forumId' | 'trophies' | '
 export interface IGameDoc extends IGameStandard, IRarity, IPageSupplement, Partial<IMongoTimestamps> {
 }
 /** Recommended MongoDB schema for playable games. */
-export interface IGamePlayableDoc extends IGamePlayable, Partial<IPageSupplement>, Partial<IMongoTimestamps> {
+export interface IGameDocPlayable extends IGameDoc, IRarity, IUserProgress {
 }
 export interface IDlcListing extends IBase, ITrophyCount, Omit<ITrophyGroup, 'trophies'> {
 }

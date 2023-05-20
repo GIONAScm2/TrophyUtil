@@ -1,4 +1,4 @@
-import {IPsnpEntity, ITrophyCount, IMongoTimestamps, MakeOptional} from '../index.js';
+import {IPsnpEntity, ITrophyCount, IMongoTimestamps, MakeOptional, MongoDateField, TrophyCount} from '../index.js';
 import {ITrophyGroup} from './trophy.interface.js';
 
 /** Abbreviated stack label that PSNP uses. */
@@ -143,6 +143,6 @@ interface IPageSupplement extends Pick<IGamePageData, 'forumId' | 'trophies' | '
 /** Recommended MongoDB schema for standard games. */
 export interface IGameDoc extends IGameStandard, IRarity, IPageSupplement, Partial<IMongoTimestamps> {}
 /** Recommended MongoDB schema for playable games. */
-export interface IGamePlayableDoc extends IGamePlayable, Partial<IPageSupplement>, Partial<IMongoTimestamps> {}
+export interface IGameDocPlayable extends IGameDoc, IRarity, IUserProgress {}
 
 export interface IDlcListing extends IBase, ITrophyCount, Omit<ITrophyGroup, 'trophies'> {}
