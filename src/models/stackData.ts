@@ -60,7 +60,6 @@ export class StackData {
 			return stacks.map(s => ({...s, stack: s.stackLabels.join(separator)}));
 		}
 
-		// We MUST break them down by platform, since we don't want to apply a `WW` label to, say, a PS5 list that doesn't have any other PS5 stacks.
 		// Map platforms to stacks
 		stacks.forEach(game => {
 			if (!gamesByPlatform[game.platformString]) gamesByPlatform[game.platformString] = [game];
@@ -98,12 +97,6 @@ export class StackData {
 		return stacks.map(s => ({...s, stack: s.stackLabels.join(separator)}));
 	}
 }
-/**
- * [] Get list of unique StackAbbrvs
- * [] Get list of unique platforms (to know whether platform should be included in the stack string)
- * 		- If only one unique platform
- * 		* Persona 5 is a good test case.
- */
 
 // async function updateStacks({
 // 	_settings,
