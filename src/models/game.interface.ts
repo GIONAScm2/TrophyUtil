@@ -11,6 +11,7 @@ export const StackLookup = {
 	NA: 'North American',
 	EU: 'European',
 	WW: 'Worldwide',
+	HK: 'Hong Kong',
 	AS: 'Asian',
 	JP: 'Japanese',
 	CN: 'Chinese',
@@ -35,6 +36,11 @@ export type PlatformTag = 'Vita' | 'VR' | 'PS3' | 'PS4' | 'PS5';
 // Base interfaces
 //
 
+/** `platforms` */
+interface IPlatforms {
+	/** Array of all PSNP platform tags. */
+	platforms: PlatformTag[];
+}
 /** `rarityBase`, `*rarityDlc`. */
 interface IRarity {
 	/** Number (float) of the first displayed rarity; de facto 'platinum rarity'. */
@@ -111,10 +117,16 @@ interface IGamePageData {
 // Composite interfaces
 //
 
-interface IBase extends IPsnpEntity {
-	/** Array of all PSNP platform tags. */
-	platforms: PlatformTag[];
+/** Only the essential stack-related properties to properly label stacks. */
+export interface IGameStack extends IPlatforms, IStackLabel {
+	/** Distinguishes stacks better than `stackLabel` by including other details (like platform) when necessary.
+	 *
+	 * For example, 2 games might both have a `stackLabel` of "EU", but their `stack` value could be "PS4EU" and "PS5EU". */
+	stack?: string;
+	platformString?: string;
 }
+
+interface IBase extends IPsnpEntity, IPlatforms {}
 /** Properties universal to all game types (optional). */
 export interface IGameBase extends IBase, Partial<ITrophyCount & IStackLabel> {}
 

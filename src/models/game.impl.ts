@@ -1,5 +1,5 @@
 import {PsnpEntity} from './psnpEntity.js';
-import {calculateTrophyPoints, type MongoDateField, type TrophyCount} from './common.js';
+import {type MongoDateField, type TrophyCount} from './common.js';
 import type {ChangeData, ITrophyGroup, PsnpPageType, PsnpPageWithGames} from '../index.js';
 import {Select} from '../index.js';
 import type {

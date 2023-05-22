@@ -20,7 +20,7 @@ export class ParserDlcListing extends PsnpParser<IDlcListing, HTMLTableRowElemen
 		const groupNumMatch = _nameSerialized.match(/DLC-(\d+)/);
 
 		const _imagePath = /\w+\/\w+(?=\.[A-z]{3}$)/.exec(imageSrc)?.at(0);
-		const platforms = [...tr.querySelectorAll('span.tag.platform')].map(tag => tag.textContent) as PlatformTag[];
+		const platforms = [...tr.querySelectorAll('span.tag.platform')].map(tag => tag.textContent).sort() as PlatformTag[];
 
 		if (!_imagePath || !name || !platforms.length || !groupNumMatch) {
 			return null;
