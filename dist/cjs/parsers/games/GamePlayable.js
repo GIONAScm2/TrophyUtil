@@ -17,7 +17,7 @@ class ParserGamePlayable extends psnpParser_js_1.PsnpParser {
         }
         const _imagePath = /\w+\/\w+(?=\.[A-z]{3}$)/.exec(imageSrc)?.at(0);
         const name = titleAnchorEl.textContent.trim();
-        const platforms = [...tr.querySelectorAll('span.tag.platform')].map(tag => tag.textContent);
+        const platforms = [...tr.querySelectorAll('span.tag.platform')].map(tag => tag.textContent).sort();
         if (!_imagePath || !name || !platforms.length) {
             return null;
         }

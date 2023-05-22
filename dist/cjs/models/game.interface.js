@@ -6,6 +6,7 @@ exports.StackLookup = {
     NA: 'North American',
     EU: 'European',
     WW: 'Worldwide',
+    HK: 'Hong Kong',
     AS: 'Asian',
     JP: 'Japanese',
     CN: 'Chinese',

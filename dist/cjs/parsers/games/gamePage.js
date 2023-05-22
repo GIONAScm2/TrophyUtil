@@ -53,7 +53,7 @@ class ParserGamePage extends psnpParser_js_1.PsnpParser {
             rarityDlc = calculatePercent(stats.num100Percented, stats.gameOwners);
         }
         const platformTags = [...doc.querySelectorAll(`div.no-top-border div.platforms > span`)];
-        const platforms = platformTags.map(span => span.textContent.trim());
+        const platforms = platformTags.map(span => span.textContent.trim()).sort();
         if (!platforms.length) {
             return null;
         }

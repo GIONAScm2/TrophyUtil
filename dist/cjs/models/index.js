@@ -20,6 +20,7 @@ __exportStar(require("./game.interface.js"), exports);
 __exportStar(require("./psnpEntity.js"), exports);
 __exportStar(require("./series.impl.js"), exports);
 __exportStar(require("./series.interface.js"), exports);
+__exportStar(require("./stackData.js"), exports);
 __exportStar(require("./trophy.impl.js"), exports);
 __exportStar(require("./trophy.interface.js"), exports);
 //# sourceMappingURL=index.js.map

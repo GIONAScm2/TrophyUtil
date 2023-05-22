@@ -14,7 +14,7 @@ export class ParserDlcListing extends PsnpParser {
         const name = titleAnchorEl?.firstChild?.textContent?.trim();
         const groupNumMatch = _nameSerialized.match(/DLC-(\d+)/);
         const _imagePath = /\w+\/\w+(?=\.[A-z]{3}$)/.exec(imageSrc)?.at(0);
-        const platforms = [...tr.querySelectorAll('span.tag.platform')].map(tag => tag.textContent);
+        const platforms = [...tr.querySelectorAll('span.tag.platform')].map(tag => tag.textContent).sort();
         if (!_imagePath || !name || !platforms.length || !groupNumMatch) {
             return null;
         }
