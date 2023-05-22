@@ -111,7 +111,7 @@ describe('Game Parsers', () => {
 		expect(game.platforms.length).toBe(1);
 		expect(game.stackLabel).toBeNull();
 		expect(game.stacks.length).toBe(6);
-		expect(game.trophies.length).toBe(4);
+		expect(game.trophyGroups.length).toBe(4);
 
 		expect(game.headerStats).toEqual({
 			gameOwners: 249094,

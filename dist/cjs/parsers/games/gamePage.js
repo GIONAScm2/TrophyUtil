@@ -72,7 +72,7 @@ class ParserGamePage extends psnpParser_js_1.PsnpParser {
             points,
             numOwners: stats.gameOwners,
             stacks,
-            trophies: trophyGroups,
+            trophyGroups: trophyGroups,
             headerStats: stats,
             rarityBase,
             rarityDlc,

@@ -98,7 +98,7 @@ interface IGamePageData {
 	 * **Note:** Some lists may not have a subforum. */
 	forumId: number | null;
 	/** Array of {@link ITrophyGroup} */
-	trophies: ITrophyGroup[];
+	trophyGroups: ITrophyGroup[];
 	/** List of {@link IGamePartialTrophyList} */
 	stacks: IGamePartialTrophyList[];
 	/** Aggregate stats; see {@link IHeaderStats} */
@@ -138,7 +138,7 @@ export interface IGamePlayable extends IGameBaseFull, IRarity, IUserProgress {}
 export interface IGamePage extends MakeOptional<IGameStandard, '_imagePath'>, IRarity, IGamePageData {}
 
 /** All *relevant* trophy list-specific game properties that supplement game listing data. */
-interface IPageSupplement extends Pick<IGamePageData, 'forumId' | 'trophies' | 'metaData'> {}
+interface IPageSupplement extends Pick<IGamePageData, 'forumId' | 'trophyGroups' | 'metaData'> {}
 
 /** Recommended MongoDB schema for standard games. */
 export interface IGameDoc extends IGameStandard, IRarity, IPageSupplement, Partial<IMongoTimestamps> {}

@@ -69,7 +69,7 @@ export class ParserGamePage extends PsnpParser {
             points,
             numOwners: stats.gameOwners,
             stacks,
-            trophies: trophyGroups,
+            trophyGroups: trophyGroups,
             headerStats: stats,
             rarityBase,
             rarityDlc,

@@ -167,7 +167,7 @@ class PsnpGamePlayable extends PsnpGameBase {
 }
 exports.PsnpGamePlayable = PsnpGamePlayable;
 class PsnpGameStandardDoc extends PsnpGameStandard {
-    trophies;
+    trophyGroups;
     rarityBase;
     rarityDlc;
     forumId;
@@ -176,13 +176,13 @@ class PsnpGameStandardDoc extends PsnpGameStandard {
     updatedAt;
     /** Flattens `trophies` trophy groups, returning a 2D array of all trophies. */
     get allTrophies() {
-        if (!this.trophies)
+        if (!this.trophyGroups)
             return;
-        return this.trophies.flatMap(s => s.trophies);
+        return this.trophyGroups.flatMap(s => s.trophies);
     }
     constructor(data) {
         super(data);
-        this.trophies = data.trophies;
+        this.trophyGroups = data.trophyGroups;
         this.rarityBase = data.rarityBase;
         this.rarityDlc = data.rarityDlc;
         this.forumId = data.forumId;

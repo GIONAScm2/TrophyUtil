@@ -206,7 +206,7 @@ export class PsnpGamePlayable<T extends IGamePlayable = IGamePlayable>
 }
 
 export class PsnpGameStandardDoc<T extends IGameDoc = IGameDoc> extends PsnpGameStandard<T> implements IGameDoc {
-	trophies: ITrophyGroup[];
+	trophyGroups: ITrophyGroup[];
 	rarityBase: number;
 	rarityDlc?: number;
 	forumId: number | null;
@@ -216,13 +216,13 @@ export class PsnpGameStandardDoc<T extends IGameDoc = IGameDoc> extends PsnpGame
 
 	/** Flattens `trophies` trophy groups, returning a 2D array of all trophies. */
 	get allTrophies() {
-		if (!this.trophies) return;
-		return this.trophies.flatMap(s => s.trophies);
+		if (!this.trophyGroups) return;
+		return this.trophyGroups.flatMap(s => s.trophies);
 	}
 
 	constructor(data: IGameDoc) {
 		super(data);
-		this.trophies = data.trophies;
+		this.trophyGroups = data.trophyGroups;
 		this.rarityBase = data.rarityBase;
 		this.rarityDlc = data.rarityDlc;
 		this.forumId = data.forumId;

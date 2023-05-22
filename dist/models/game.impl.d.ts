@@ -57,7 +57,7 @@ export declare class PsnpGamePlayable<T extends IGamePlayable = IGamePlayable> e
     static timestampFromDatePlayed(element: HTMLElement): number | null;
 }
 export declare class PsnpGameStandardDoc<T extends IGameDoc = IGameDoc> extends PsnpGameStandard<T> implements IGameDoc {
-    trophies: ITrophyGroup[];
+    trophyGroups: ITrophyGroup[];
     rarityBase: number;
     rarityDlc?: number;
     forumId: number | null;
