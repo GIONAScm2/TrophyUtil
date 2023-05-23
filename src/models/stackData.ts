@@ -1,12 +1,12 @@
 import {IGameStack, PlatformTag} from './game.interface.js';
 import {MakeRequired} from '../util/util.js';
 
-interface IGameStackFull extends MakeRequired<IGameStack, 'stack' | 'platformString'> {}
+interface IGameStackFull extends MakeRequired<IGameStack, 'stack' | 'platformString' | 'stackLabels'> {}
 
 export class StackData {
 	stacks: IGameStackFull[];
 	constructor(stacks: IGameStack[]) {
-		this.stacks = this.label(stacks);
+		this.stacks = this.labelStacks(stacks);
 	}
 
 	static buildPlatformTag(platforms: PlatformTag[]) {
@@ -18,36 +18,26 @@ export class StackData {
 		return platforms.join('/');
 	}
 
-	/** Given an assumedly comprehensive* array of game stacks, mutates it by adding a `stack` property
+	/**
+	 * Given an assumedly comprehensive* array of game stacks, mutates it by adding a `stack` property
 	 * to each that distinguishes them from each other.
 	 *
 	 * *Stacks should be validated beforehand so that 'Additional Trophies' DLCs are not interpreted as stacks.
 	 * */
-	private label(_stacks: IGameStack[]): IGameStackFull[] {
-		const stacks = _stacks.map(stack => ({
-			...stack,
-			platformString: StackData.buildPlatformTag(stack.platforms),
-			stack: '',
-			stackLabels: [] as string[],
-		}));
-
+	private labelStacks(_stacks: IGameStack[]): IGameStackFull[] {
+		const stacks = this.buildDetailedStacks(_stacks);
 		const separator = '_';
-		const gamesByPlatform: {[index: string]: typeof stacks} = {};
-		const gamesByStackLabel: {[index: string]: typeof stacks} = {};
 
+		// Case 1: No stack labels since only 0-1 stacks passed.
 		if (stacks.length <= 1) {
 			return stacks.map(s => ({...s, stack: s.stackLabels.join(separator)}));
 		}
 
-		// Map stackLabels to stacks
-		stacks.forEach(game => {
-			const label = game.stackLabel ?? '';
-			if (!gamesByStackLabel[label]) gamesByStackLabel[label] = [game];
-			else gamesByStackLabel[label].push(game);
-		});
+		const gamesByStackLabel = this.mapGamesToStackLabel(stacks);
 		const numStackLabels = Object.keys(gamesByStackLabel).length;
 
-		if (stacks.length === numStackLabels) {
+		// Case 2: Label stacks exclusively by `stackLabel` since number of games == number of stack labels.
+		if (numStackLabels === stacks.length) {
 			for (const stack of stacks) {
 				let label = stack.stackLabel ?? '';
 				if (!label && !gamesByStackLabel['NA']) {
@@ -56,19 +46,13 @@ export class StackData {
 				}
 				stack.stackLabels.push(label || 'WW');
 			}
-
 			return stacks.map(s => ({...s, stack: s.stackLabels.join(separator)}));
 		}
 
-		// Map platforms to stacks
-		stacks.forEach(game => {
-			if (!gamesByPlatform[game.platformString]) gamesByPlatform[game.platformString] = [game];
-			else gamesByPlatform[game.platformString].push(game);
-		});
+		const gamesByPlatform = this.mapGamesToPlatform(stacks);
 		const numPlatforms = Object.keys(gamesByPlatform).length;
 
-		console.log(gamesByPlatform);
-		// STEP 2: Iterate through each platform group to assess its `StackAbbr`s and relabel `this.stack` accordingly.
+		// Case 3: Iterate through each platform group to assess its `StackAbbr`s and relabel `stack` accordingly.
 		for (const [platform, games] of Object.entries(gamesByPlatform)) {
 			// CASE A: Platform only has one game
 			if (games.length === 1) {
@@ -95,6 +79,44 @@ export class StackData {
 		}
 
 		return stacks.map(s => ({...s, stack: s.stackLabels.join(separator)}));
+	}
+
+	/** Creates and returns a shallow copy of `stacks` containing additional properties useful for stack differentiation. */
+	private buildDetailedStacks(stacks: IGameStack[]): IGameStackFull[] {
+		const detailedStacks = stacks.map(stack => ({
+			...stack,
+			platformString: StackData.buildPlatformTag(stack.platforms),
+			stack: '',
+			stackLabels: [],
+		}));
+		return detailedStacks;
+	}
+
+	/** Creates and returns a plain object map of `stackLabel` strings (keys) to corresponding games (values).
+	 *
+	 * Nullish `stackLabel`s are keyed as an empty string. */
+	private mapGamesToStackLabel(stacks: IGameStackFull[]) {
+		const gamesByStackLabel: {[index: string]: IGameStackFull[]} = {};
+
+		stacks.forEach(game => {
+			const label = game.stackLabel ?? '';
+			if (!gamesByStackLabel[label]) gamesByStackLabel[label] = [game];
+			else gamesByStackLabel[label].push(game);
+		});
+
+		return gamesByStackLabel;
+	}
+
+	/** Creates and returns a plain object map of `platformString` strings (keys) to corresponding games (values). */
+	private mapGamesToPlatform(stacks: IGameStackFull[]) {
+		const gamesByPlatform: {[index: string]: IGameStackFull[]} = {};
+
+		stacks.forEach(game => {
+			if (!gamesByPlatform[game.platformString]) gamesByPlatform[game.platformString] = [game];
+			else gamesByPlatform[game.platformString].push(game);
+		});
+
+		return gamesByPlatform;
 	}
 }
 

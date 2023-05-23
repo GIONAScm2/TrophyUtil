@@ -110,6 +110,7 @@ export interface IGameStack extends IPlatforms, IStackLabel {
      * For example, 2 games might both have a `stackLabel` of "EU", but their `stack` value could be "PS4EU" and "PS5EU". */
     stack?: string;
     platformString?: string;
+    stackLabels?: string[];
 }
 interface IBase extends IPsnpEntity, IPlatforms {
 }
