@@ -11,12 +11,12 @@ export declare class Select {
      *
      * **Note:** Array values are necessary to replace pseudo-class `:is()` since it's not currently supported by JSDOM. */
     static gameNodes: {
-        6: string[];
-        7: string[];
-        8: string[];
-        9: string[];
-        10: string[];
-        17: string[];
+        SeriesCatalog: string[];
+        SeriesPage: string[];
+        Games: string[];
+        GameSearch: string[];
+        GameTrophyList: string[];
+        Profile: string[];
     };
 }
 //# sourceMappingURL=select.d.ts.map

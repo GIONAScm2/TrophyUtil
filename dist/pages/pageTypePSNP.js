@@ -2,43 +2,43 @@
 export var PsnpPageType;
 (function (PsnpPageType) {
     /** Navbar "Home" (`psnprofiles.com/`) */
-    PsnpPageType[PsnpPageType["Home"] = 0] = "Home";
+    PsnpPageType["Home"] = "Home";
     /** Browsing trophy guides (`psnprofiles.com/guides`) */
-    PsnpPageType[PsnpPageType["Guides"] = 1] = "Guides";
+    PsnpPageType["Guides"] = "Guides";
     /** Search results for trophy guides */
-    PsnpPageType[PsnpPageType["GuideSearch"] = 2] = "GuideSearch";
+    PsnpPageType["GuideSearch"] = "GuideSearch";
     /** Viewing an individual trophy guide */
-    PsnpPageType[PsnpPageType["Guide"] = 3] = "Guide";
+    PsnpPageType["Guide"] = "Guide";
     /** Viewing a leaderboard */
-    PsnpPageType[PsnpPageType["Leaderboard"] = 4] = "Leaderboard";
+    PsnpPageType["Leaderboard"] = "Leaderboard";
     /** Search results for users */
-    PsnpPageType[PsnpPageType["LeaderboardSearch"] = 5] = "LeaderboardSearch";
+    PsnpPageType["LeaderboardSearch"] = "LeaderboardSearch";
     /** Browsing series */
-    PsnpPageType[PsnpPageType["SeriesCatalog"] = 6] = "SeriesCatalog";
+    PsnpPageType["SeriesCatalog"] = "SeriesCatalog";
     /** Viewing an individual series page */
-    PsnpPageType[PsnpPageType["SeriesPage"] = 7] = "SeriesPage";
+    PsnpPageType["SeriesPage"] = "SeriesPage";
     /** Browsing games */
-    PsnpPageType[PsnpPageType["Games"] = 8] = "Games";
+    PsnpPageType["Games"] = "Games";
     /** Search results for games */
-    PsnpPageType[PsnpPageType["GameSearch"] = 9] = "GameSearch";
+    PsnpPageType["GameSearch"] = "GameSearch";
     /** Viewing a game's trophy list */
-    PsnpPageType[PsnpPageType["GameTrophyList"] = 10] = "GameTrophyList";
+    PsnpPageType["GameTrophyList"] = "GameTrophyList";
     /** Viewing an individual trophy */
-    PsnpPageType[PsnpPageType["GameTrophy"] = 11] = "GameTrophy";
+    PsnpPageType["GameTrophy"] = "GameTrophy";
     /** Viewing a game's leaderboard, where users are ranked by completion % */
-    PsnpPageType[PsnpPageType["GameLeaderboard"] = 12] = "GameLeaderboard";
+    PsnpPageType["GameLeaderboard"] = "GameLeaderboard";
     /** Viewing a game's 100% Club */
-    PsnpPageType[PsnpPageType["Game100Club"] = 13] = "Game100Club";
+    PsnpPageType["Game100Club"] = "Game100Club";
     /** Browsing trophies */
-    PsnpPageType[PsnpPageType["Trophies"] = 14] = "Trophies";
+    PsnpPageType["Trophies"] = "Trophies";
     /** Search results for trophies */
-    PsnpPageType[PsnpPageType["TrophySearch"] = 15] = "TrophySearch";
+    PsnpPageType["TrophySearch"] = "TrophySearch";
     /** Gaming Sessions (`psnprofiles.com/sessions`) */
-    PsnpPageType[PsnpPageType["Sessions"] = 16] = "Sessions";
+    PsnpPageType["Sessions"] = "Sessions";
     /** A user's PSN Profile
      *
      * Excludes subpaths and hashes, like `.../log` or `...#gamelists` */
-    PsnpPageType[PsnpPageType["Profile"] = 17] = "Profile";
+    PsnpPageType["Profile"] = "Profile";
 })(PsnpPageType || (PsnpPageType = {}));
 /** Identifies the PSNProfiles page type of a given URL. */
 export function getPsnpPageType(url) {
@@ -81,10 +81,5 @@ export function getPsnpPageType(url) {
         return PsnpPageType.Profile;
     else
         throw new Error(`Unable to determine page type of '${url.href}'`);
-}
-/** Returns the stringified {@link PsnpPageType} */
-export function getPsnpPageTypeKey(pageType) {
-    return (Object.keys(PsnpPageType).find(key => PsnpPageType[key] === pageType) ||
-        '');
 }
 //# sourceMappingURL=pageTypePSNP.js.map

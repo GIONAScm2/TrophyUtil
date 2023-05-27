@@ -1,47 +1,45 @@
 /** Type of PSNProfiles page. */
 export declare enum PsnpPageType {
     /** Navbar "Home" (`psnprofiles.com/`) */
-    Home = 0,
+    Home = "Home",
     /** Browsing trophy guides (`psnprofiles.com/guides`) */
-    Guides = 1,
+    Guides = "Guides",
     /** Search results for trophy guides */
-    GuideSearch = 2,
+    GuideSearch = "GuideSearch",
     /** Viewing an individual trophy guide */
-    Guide = 3,
+    Guide = "Guide",
     /** Viewing a leaderboard */
-    Leaderboard = 4,
+    Leaderboard = "Leaderboard",
     /** Search results for users */
-    LeaderboardSearch = 5,
+    LeaderboardSearch = "LeaderboardSearch",
     /** Browsing series */
-    SeriesCatalog = 6,
+    SeriesCatalog = "SeriesCatalog",
     /** Viewing an individual series page */
-    SeriesPage = 7,
+    SeriesPage = "SeriesPage",
     /** Browsing games */
-    Games = 8,
+    Games = "Games",
     /** Search results for games */
-    GameSearch = 9,
+    GameSearch = "GameSearch",
     /** Viewing a game's trophy list */
-    GameTrophyList = 10,
+    GameTrophyList = "GameTrophyList",
     /** Viewing an individual trophy */
-    GameTrophy = 11,
+    GameTrophy = "GameTrophy",
     /** Viewing a game's leaderboard, where users are ranked by completion % */
-    GameLeaderboard = 12,
+    GameLeaderboard = "GameLeaderboard",
     /** Viewing a game's 100% Club */
-    Game100Club = 13,
+    Game100Club = "Game100Club",
     /** Browsing trophies */
-    Trophies = 14,
+    Trophies = "Trophies",
     /** Search results for trophies */
-    TrophySearch = 15,
+    TrophySearch = "TrophySearch",
     /** Gaming Sessions (`psnprofiles.com/sessions`) */
-    Sessions = 16,
+    Sessions = "Sessions",
     /** A user's PSN Profile
      *
      * Excludes subpaths and hashes, like `.../log` or `...#gamelists` */
-    Profile = 17
+    Profile = "Profile"
 }
 /** Identifies the PSNProfiles page type of a given URL. */
 export declare function getPsnpPageType(url: URL): PsnpPageType;
-/** Returns the stringified {@link PsnpPageType} */
-export declare function getPsnpPageTypeKey(pageType: PsnpPageType): string;
 export type PsnpPageWithGames = PsnpPageType.Games | PsnpPageType.SeriesCatalog | PsnpPageType.GameSearch | PsnpPageType.Profile | PsnpPageType.SeriesPage | PsnpPageType.GameTrophyList;
 //# sourceMappingURL=pageTypePSNP.d.ts.map

@@ -1,44 +1,45 @@
 /** Type of PSNProfiles page. */
 export enum PsnpPageType {
 	/** Navbar "Home" (`psnprofiles.com/`) */
-	Home,
+	Home = "Home",
 	/** Browsing trophy guides (`psnprofiles.com/guides`) */
-	Guides,
+	Guides = "Guides",
 	/** Search results for trophy guides */
-	GuideSearch,
+	GuideSearch = "GuideSearch",
 	/** Viewing an individual trophy guide */
-	Guide,
+	Guide = "Guide",
 	/** Viewing a leaderboard */
-	Leaderboard,
+	Leaderboard = "Leaderboard",
 	/** Search results for users */
-	LeaderboardSearch,
+	LeaderboardSearch = "LeaderboardSearch",
 	/** Browsing series */
-	SeriesCatalog,
+	SeriesCatalog = "SeriesCatalog",
 	/** Viewing an individual series page */
-	SeriesPage,
+	SeriesPage = "SeriesPage",
 	/** Browsing games */
-	Games,
+	Games = "Games",
 	/** Search results for games */
-	GameSearch,
+	GameSearch = "GameSearch",
 	/** Viewing a game's trophy list */
-	GameTrophyList,
+	GameTrophyList = "GameTrophyList",
 	/** Viewing an individual trophy */
-	GameTrophy,
+	GameTrophy = "GameTrophy",
 	/** Viewing a game's leaderboard, where users are ranked by completion % */
-	GameLeaderboard,
+	GameLeaderboard = "GameLeaderboard",
 	/** Viewing a game's 100% Club */
-	Game100Club,
+	Game100Club = "Game100Club",
 	/** Browsing trophies */
-	Trophies,
+	Trophies = "Trophies",
 	/** Search results for trophies */
-	TrophySearch,
+	TrophySearch = "TrophySearch",
 	/** Gaming Sessions (`psnprofiles.com/sessions`) */
-	Sessions,
+	Sessions = "Sessions",
 	/** A user's PSN Profile
 	 *
 	 * Excludes subpaths and hashes, like `.../log` or `...#gamelists` */
-	Profile,
+	Profile = "Profile",
 }
+
 
 /** Identifies the PSNProfiles page type of a given URL. */
 export function getPsnpPageType(url: URL): PsnpPageType {
@@ -63,14 +64,6 @@ export function getPsnpPageType(url: URL): PsnpPageType {
 	else if (path === '/sessions') return PsnpPageType.Sessions;
 	else if (/^\/[^\/]+$/.test(path) && url.hash === '') return PsnpPageType.Profile;
 	else throw new Error(`Unable to determine page type of '${url.href}'`);
-}
-
-/** Returns the stringified {@link PsnpPageType} */
-export function getPsnpPageTypeKey(pageType: PsnpPageType): string {
-	return (
-		(Object.keys(PsnpPageType) as Array<keyof typeof PsnpPageType>).find(key => PsnpPageType[key] === pageType) ||
-		''
-	);
 }
 
 export type PsnpPageWithGames =
