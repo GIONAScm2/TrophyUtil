@@ -1,4 +1,3 @@
-import { type ChangeData } from '../util/objCompare.js';
 /** Represents a generic PSNP entity (`_id`, `name`, `_nameSerialized`, `_imagePath`). */
 export interface IPsnpEntity {
     /** ID that uniquely identifies the entity on PSNP. */
@@ -24,9 +23,5 @@ export declare abstract class PsnpEntity<T extends IPsnpEntity> implements IPsnp
     abstract get src(): string;
     constructor(data: IPsnpEntity);
     toString(): string;
-    /** Updates fields and returns a log of changes.
-     *
-     * **Note:** "new" operations return an empty `changes` array. */
-    diffUpdate(oldEntity: T | null | undefined, newEntity: T, update: boolean): ChangeData<T>;
 }
 //# sourceMappingURL=psnpEntity.d.ts.map

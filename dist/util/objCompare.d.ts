@@ -29,6 +29,10 @@ export type ChangeData<T> = {
 /** Finds all shared properties (keys) between `target` and `source` and returns an array of changes.
  *  Setting the `update` flag will also update the shared properties of `source` accordingly. */
 export declare function diffAndUpdateSharedProps<T extends object>(target: T, source: Partial<T>, update?: boolean, parentKey?: string): FieldChanges<T>;
-/** Updates `oldEntity` with shared properties of `newEntity` and returns the {@link ChangeData}. */
-export declare function diffUpdate<T extends IPsnpEntity>(oldEntity: T | null | undefined, newEntity: T, update: boolean): ChangeData<T>;
+/**
+ * Compares `oldEntity` to `newEntity` and returns a log of changes based on their shared properties.
+ * The `update` flag will also update `oldEntity` with any differing shared property values.
+ *
+ * **Note:** "new" operations return an empty `changes` array. */
+export declare function diffUpdate<E extends IPsnpEntity>(oldEntity: E | null | undefined, newEntity: E, update: boolean): ChangeData<E>;
 //# sourceMappingURL=objCompare.d.ts.map

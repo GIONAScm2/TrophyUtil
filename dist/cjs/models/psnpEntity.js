@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PsnpEntity = void 0;
-const objCompare_js_1 = require("../util/objCompare.js");
 /** Abstract class containing properties and methods applicable to all PSNP entities. */
 class PsnpEntity {
     _id;
@@ -16,24 +15,6 @@ class PsnpEntity {
     }
     toString() {
         return `${this.name} (${this._id})`;
-    }
-    /** Updates fields and returns a log of changes.
-     *
-     * **Note:** "new" operations return an empty `changes` array. */
-    diffUpdate(oldEntity, newEntity, update) {
-        const commonChanges = { id: newEntity._id, changes: [] };
-        if (!oldEntity) {
-            return { ...commonChanges, operation: 'add' };
-        }
-        if (oldEntity._id !== newEntity._id) {
-            throw new Error(`ID mismatch: Cannot update entity '${oldEntity.toString()}' using entity '${newEntity.toString()}'`);
-        }
-        const changes = (0, objCompare_js_1.diffAndUpdateSharedProps)(oldEntity, newEntity, update);
-        return {
-            ...commonChanges,
-            operation: 'update',
-            changes,
-        };
     }
 }
 exports.PsnpEntity = PsnpEntity;

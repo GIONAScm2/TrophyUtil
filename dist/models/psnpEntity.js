@@ -1,4 +1,3 @@
-import { diffAndUpdateSharedProps } from '../util/objCompare.js';
 /** Abstract class containing properties and methods applicable to all PSNP entities. */
 export class PsnpEntity {
     _id;
@@ -13,24 +12,6 @@ export class PsnpEntity {
     }
     toString() {
         return `${this.name} (${this._id})`;
-    }
-    /** Updates fields and returns a log of changes.
-     *
-     * **Note:** "new" operations return an empty `changes` array. */
-    diffUpdate(oldEntity, newEntity, update) {
-        const commonChanges = { id: newEntity._id, changes: [] };
-        if (!oldEntity) {
-            return { ...commonChanges, operation: 'add' };
-        }
-        if (oldEntity._id !== newEntity._id) {
-            throw new Error(`ID mismatch: Cannot update entity '${oldEntity.toString()}' using entity '${newEntity.toString()}'`);
-        }
-        const changes = diffAndUpdateSharedProps(oldEntity, newEntity, update);
-        return {
-            ...commonChanges,
-            operation: 'update',
-            changes,
-        };
     }
 }
 //# sourceMappingURL=psnpEntity.js.map

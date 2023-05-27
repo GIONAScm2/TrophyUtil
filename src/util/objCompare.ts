@@ -108,21 +108,20 @@ export function diffAndUpdateSharedProps<T extends object>(
 	return changes;
 }
 
-/** Updates `oldEntity` with shared properties of `newEntity` and returns the {@link ChangeData}. */
-export function diffUpdate<T extends IPsnpEntity>(
-	oldEntity: T | null | undefined,
-	newEntity: T,
-	update: boolean
-): ChangeData<T> {
+/**
+ * Compares `oldEntity` to `newEntity` and returns a log of changes based on their shared properties.
+ * The `update` flag will also update `oldEntity` with any differing shared property values.
+ *
+ * **Note:** "new" operations return an empty `changes` array. */
+export function diffUpdate<E extends IPsnpEntity>(oldEntity: E | null | undefined, newEntity: E, update: boolean): ChangeData<E> {
 	const commonChanges = {id: newEntity._id, changes: []};
 
 	if (!oldEntity) {
 		return {...commonChanges, operation: 'add'};
 	}
+
 	if (oldEntity._id !== newEntity._id) {
-		throw new Error(
-			`ID mismatch: Cannot update entity '${oldEntity.toString()}' using entity '${newEntity.toString()}'`
-		);
+		throw new Error(`ID mismatch: Cannot update entity '${oldEntity.toString()}' using entity '${newEntity.toString()}'`);
 	}
 
 	const changes = diffAndUpdateSharedProps(oldEntity, newEntity, update);

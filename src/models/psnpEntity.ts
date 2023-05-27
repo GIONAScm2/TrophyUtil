@@ -35,29 +35,5 @@ export abstract class PsnpEntity<T extends IPsnpEntity> implements IPsnpEntity {
 	toString() {
 		return `${this.name} (${this._id})`;
 	}
-
-	/** Updates fields and returns a log of changes.
-	 * 
-	 * **Note:** "new" operations return an empty `changes` array. */
-	diffUpdate(oldEntity: T | null | undefined, newEntity: T, update: boolean): ChangeData<T> {
-		const commonChanges = {id: newEntity._id, changes: []};
-
-		if (!oldEntity) {
-			return {...commonChanges, operation: 'add'};
-		}
-
-		if (oldEntity._id !== newEntity._id) {
-			throw new Error(
-				`ID mismatch: Cannot update entity '${oldEntity.toString()}' using entity '${newEntity.toString()}'`
-			);
-		}
-
-		const changes = diffAndUpdateSharedProps(oldEntity, newEntity, update);
-
-		return {
-			...commonChanges,
-			operation: 'update',
-			changes,
-		};
-	}
 }
+

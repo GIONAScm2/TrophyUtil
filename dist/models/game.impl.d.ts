@@ -1,6 +1,6 @@
 import { PsnpEntity } from './psnpEntity.js';
 import { type MongoDateField, type TrophyCount } from './common.js';
-import type { ChangeData, ITrophyGroup, PsnpPageType } from '../index.js';
+import type { ITrophyGroup, PsnpPageType } from '../index.js';
 import type { StackAbbr, PlatformTag, IGameDoc, IGamePartialHome, IGamePartialTrophyList, IGamePlayable, IGameStandard, IMetadataFields, IGameBase } from './game.interface.js';
 /** Class containing properties and methods applicable to all PSNP game types. */
 export declare class PsnpGameBase<T extends IGameBase = IGameBase> extends PsnpEntity<T> implements IGameBase {
@@ -67,6 +67,5 @@ export declare class PsnpGameStandardDoc<T extends IGameDoc = IGameDoc> extends 
     /** Flattens `trophies` trophy groups, returning a 2D array of all trophies. */
     get allTrophies(): import("./trophy.interface.js").ITrophy[] | undefined;
     constructor(data: IGameDoc);
-    diffUpdate(oldGame: T | null | undefined, newGame: T, update: boolean): ChangeData<T>;
 }
 //# sourceMappingURL=game.impl.d.ts.map

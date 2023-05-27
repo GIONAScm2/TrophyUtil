@@ -71,7 +71,11 @@ function diffAndUpdateSharedProps(target, source, update = false, parentKey = ''
     return changes;
 }
 exports.diffAndUpdateSharedProps = diffAndUpdateSharedProps;
-/** Updates `oldEntity` with shared properties of `newEntity` and returns the {@link ChangeData}. */
+/**
+ * Compares `oldEntity` to `newEntity` and returns a log of changes based on their shared properties.
+ * The `update` flag will also update `oldEntity` with any differing shared property values.
+ *
+ * **Note:** "new" operations return an empty `changes` array. */
 function diffUpdate(oldEntity, newEntity, update) {
     const commonChanges = { id: newEntity._id, changes: [] };
     if (!oldEntity) {

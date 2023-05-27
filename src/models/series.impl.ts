@@ -44,12 +44,4 @@ export class SeriesDoc extends PsnpSeriesListing<ISeriesDoc> implements ISeriesD
 		this.createdAt = data.createdAt;
 		this.updatedAt = data.updatedAt;
 	}
-
-	diffUpdate(
-		oldEntity: ISeriesDoc | null | undefined,
-		newEntity: ISeriesDoc,
-		update: boolean
-	): ChangeData<ISeriesDoc> {
-		return super.diffUpdate(oldEntity, newEntity, update);
-	}
 }

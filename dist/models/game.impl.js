@@ -184,8 +184,5 @@ export class PsnpGameStandardDoc extends PsnpGameStandard {
         this.createdAt = data.createdAt;
         this.updatedAt = data.updatedAt;
     }
-    diffUpdate(oldGame, newGame, update) {
-        return super.diffUpdate(oldGame, newGame, update);
-    }
 }
 //# sourceMappingURL=game.impl.js.map

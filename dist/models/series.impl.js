@@ -32,8 +32,5 @@ export class SeriesDoc extends PsnpSeriesListing {
         this.createdAt = data.createdAt;
         this.updatedAt = data.updatedAt;
     }
-    diffUpdate(oldEntity, newEntity, update) {
-        return super.diffUpdate(oldEntity, newEntity, update);
-    }
 }
 //# sourceMappingURL=series.impl.js.map

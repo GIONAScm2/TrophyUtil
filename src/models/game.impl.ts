@@ -73,10 +73,7 @@ export class PsnpGameBase<T extends IGameBase = IGameBase> extends PsnpEntity<T>
 }
 
 /** Class representing a standard PSNP game from `Games` or `GameSearch` */
-export class PsnpGameStandard<T extends IGameStandard = IGameStandard>
-	extends PsnpGameBase<T>
-	implements IGameStandard
-{
+export class PsnpGameStandard<T extends IGameStandard = IGameStandard> extends PsnpGameBase<T> implements IGameStandard {
 	stackLabel: StackAbbr | null;
 	trophyCount: TrophyCount;
 	numTrophies: number;
@@ -93,10 +90,7 @@ export class PsnpGameStandard<T extends IGameStandard = IGameStandard>
 	}
 }
 
-export class PsnpGamePlayable<T extends IGamePlayable = IGamePlayable>
-	extends PsnpGameBase<T>
-	implements IGamePlayable
-{
+export class PsnpGamePlayable<T extends IGamePlayable = IGamePlayable> extends PsnpGameBase<T> implements IGamePlayable {
 	stackLabel: StackAbbr | null;
 	trophyCount: TrophyCount;
 	numTrophies: number;
@@ -229,9 +223,5 @@ export class PsnpGameStandardDoc<T extends IGameDoc = IGameDoc> extends PsnpGame
 		this.metaData = data.metaData;
 		this.createdAt = data.createdAt;
 		this.updatedAt = data.updatedAt;
-	}
-
-	diffUpdate(oldGame: T | null | undefined, newGame: T, update: boolean): ChangeData<T> {
-		return super.diffUpdate(oldGame, newGame, update);
 	}
 }
