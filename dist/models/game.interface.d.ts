@@ -37,16 +37,16 @@ interface IRarity {
     /** Number (float) of the first displayed rarity; de facto 'platinum rarity'. */
     rarityBase: number;
     /** Number (float) of the second displayed rarity; de facto 'DLC rarity'. `undefined` if no DLC rarity is present. */
-    rarityDlc?: number;
+    rarityDlc?: number | undefined;
 }
 /** `*developer`, `*publisher`, `*genres`, `*themes`, `*modes`, and `*otherNames`. */
 export interface IMetadataFields {
-    developer?: string;
-    publisher?: string;
-    genres?: string[];
-    themes?: string[];
-    modes?: string[];
-    otherNames?: string[];
+    developer?: string | undefined;
+    publisher?: string | undefined;
+    genres?: string[] | undefined;
+    themes?: string[] | undefined;
+    modes?: string[] | undefined;
+    otherNames?: string[] | undefined;
 }
 /** `gameOwners`, `recentPlayers`, `avgCompletion`, `trophiesEarned`, `num100Percented`, `*numPlatted`. */
 export interface IHeaderStats {
@@ -55,7 +55,7 @@ export interface IHeaderStats {
     /** Number of recent players. */
     recentPlayers: number;
     /** Number of tracked users that platted the game, or `undefined` if game is a nonplat. */
-    numPlatted?: number;
+    numPlatted: number | undefined;
     /** Average completion percentage. */
     avgCompletion: number;
     /** Total number of trophies tracked users have earned across the site. */
@@ -66,19 +66,21 @@ export interface IHeaderStats {
 /** `*percent`, `*completionStatus`, `*completionSpeed`, and `*latestTrophy`. */
 interface IUserProgress {
     /** Completion % (integer), or `undefined` if the game doesn't have a progress bar (e.g. unplayed games on series pages). */
-    percent?: number;
+    percent?: number | undefined;
     /** Type of game completion based on game's `class` attribute.
      *
      * If a game is platted, it will have the `platinum` class regardless of whether there's DLC.
      * If a game is a 100%'d nonplat, it will have the `completed` class. */
-    completionStatus?: 'platinum' | 'completed';
+    completionStatus?: 'platinum' | 'completed' | undefined;
     /** Completion speed in seconds, or `undefined` if game is incomplete.
      *
      * Note that 'platinum in [SPEED 1]' changes to 'completed in [SPEED 2]' if a game has
      * DLC trophies that the user completes. */
-    completionSpeed?: number;
+    completionSpeed?: number | undefined;
+    /** One of 7 letters (F, E, D, C, B, A, S) that ranks a user's completion percentage relative to that of the entire community. */
+    completionRank?: string | undefined;
     /** Timestamp at which the most recent trophy was earned (ms). `undefined` for games at 0% (or unplayed series games). */
-    latestTrophy?: number;
+    latestTrophy?: number | undefined;
 }
 /** `stackLabel`. */
 interface IStackLabel {
@@ -146,7 +148,8 @@ export interface IGameDoc extends IGameStandard, IRarity, IPageSupplement, Parti
 /** Recommended MongoDB schema for playable games. */
 export interface IGameDocPlayable extends IGameDoc, IRarity, IUserProgress {
 }
-export interface IDlcListing extends IBase, ITrophyCount, Omit<ITrophyGroup, 'trophies'> {
+export interface IGameDlc extends IBase, ITrophyCount, Omit<ITrophyGroup, 'trophies'> {
+    dlcName: string;
 }
 export {};
 //# sourceMappingURL=game.interface.d.ts.map

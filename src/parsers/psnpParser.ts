@@ -54,18 +54,4 @@ export abstract class PsnpParser<T, E> {
 		const nameSerialized = parts.slice(1).join('-');
 		return [id, nameSerialized];
 	}
-
-	protected parseTrophyCount(tr: HTMLTableRowElement, isHomeOrGameSearch = false): TrophyCount | null {
-		const suffix = isHomeOrGameSearch ? '.icon-sprite' : '.icon-sprite + span';
-
-		const bronze = parseNum(tr.querySelector(`.bronze${suffix}`));
-		const silver = parseNum(tr.querySelector(`.silver${suffix}`));
-		const gold = parseNum(tr.querySelector(`.gold${suffix}`));
-		if (Number.isNaN(bronze + silver + gold)) {
-			return null;
-		}
-		const platCount = parseNum(tr.querySelector(`.platinum${suffix}`));
-		const platinum = Number.isNaN(platCount) ? 0 : platCount;
-		return {bronze, silver, gold, platinum};
-	}
 }

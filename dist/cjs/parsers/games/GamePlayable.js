@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ParserGamePlayable = void 0;
 const psnpParser_js_1 = require("../psnpParser.js");
 const index_js_1 = require("../../index.js");
+const trophyCount_js_1 = require("../common/trophyCount.js");
 /** Parses a 'playable' game containing user progress from Profile and Series pages. */
 class ParserGamePlayable extends psnpParser_js_1.PsnpParser {
     type = 'Playable Game';
@@ -22,9 +23,8 @@ class ParserGamePlayable extends psnpParser_js_1.PsnpParser {
             return null;
         }
         const [_id, _nameSerialized] = hrefIdAndTitle;
-        const stackLabel = titleAnchorEl.parentElement?.querySelector('bullet')?.nextSibling?.textContent?.trim() ??
-            null;
-        const trophyCount = this.parseTrophyCount(tr);
+        const stackLabel = titleAnchorEl.parentElement?.querySelector('bullet')?.nextSibling?.textContent?.trim() ?? null;
+        const trophyCount = (0, trophyCount_js_1.parseTrophyCount)(tr);
         const progressPercent = (0, index_js_1.parseNum)(tr.querySelector(`div.progress-bar > span`));
         const percent = Number.isNaN(progressPercent) ? undefined : progressPercent;
         const rarityBase = (0, index_js_1.parseNum)(rarityBaseEl);
@@ -38,10 +38,15 @@ class ParserGamePlayable extends psnpParser_js_1.PsnpParser {
         const dateHolder = tr.querySelector('td > div.small-info:nth-of-type(3)');
         if (dateHolder) {
             const speedString = dateHolder.querySelector('bullet + b')?.textContent?.trim() || '';
-            completionSpeed = speedString ? index_js_1.PsnpGamePlayable.speedStringToSeconds(speedString) : undefined;
+            completionSpeed = speedString ? index_js_1.PsnpGamePlayable.speedStringToMs(speedString) : undefined;
             const day = dateHolder.childNodes[0]?.textContent?.trim();
             const monthYear = dateHolder.childNodes[2]?.textContent?.trim();
             latestTrophyTimestamp = day && monthYear ? new Date(`${day} ${monthYear}`).valueOf() : undefined;
+        }
+        let completionRank;
+        const completionRankEl = tr.querySelector('td .game-rank');
+        if (completionRankEl) {
+            completionRank = completionRankEl.textContent?.trim();
         }
         const numTrophies = (0, index_js_1.sumTrophyCount)(trophyCount);
         const points = (0, index_js_1.calculateTrophyPoints)(trophyCount);
@@ -60,6 +65,7 @@ class ParserGamePlayable extends psnpParser_js_1.PsnpParser {
             percent,
             completionStatus,
             completionSpeed,
+            completionRank,
             latestTrophy: latestTrophyTimestamp,
         };
     }

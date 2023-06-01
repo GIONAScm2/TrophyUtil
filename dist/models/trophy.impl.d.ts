@@ -15,7 +15,7 @@ export declare class PsnpTrophy implements ITrophy {
     get src(): string;
     /** Trophy rarity formatted with two decimal places. */
     get rarityString(): string;
-    /** Parses a trophy element's 'date earned' into a date timestamp. */
+    /** Parses a trophy element's 'date earned' into a date timestamp (ms). */
     static timestampFromDateEarned(element: HTMLElement): number;
 }
 //# sourceMappingURL=trophy.impl.d.ts.map

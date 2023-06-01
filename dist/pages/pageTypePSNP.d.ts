@@ -20,6 +20,8 @@ export declare enum PsnpPageType {
     Games = "Games",
     /** Search results for games */
     GameSearch = "GameSearch",
+    /** Browsing DLCs */
+    DLC = "DLC",
     /** Viewing a game's trophy list */
     GameTrophyList = "GameTrophyList",
     /** Viewing an individual trophy */

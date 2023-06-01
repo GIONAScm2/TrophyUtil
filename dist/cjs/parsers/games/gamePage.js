@@ -4,7 +4,7 @@ exports.ParserGamePage = void 0;
 const psnpParser_js_1 = require("../psnpParser.js");
 const common_js_1 = require("../../models/common.js");
 const trophyGroups_js_1 = require("../trophies/trophyGroups.js");
-const gamePartialTrophyList_js_1 = require("./gamePartialTrophyList.js");
+const gameFromStackPanel_js_1 = require("./gameFromStackPanel.js");
 const util_js_1 = require("../../util/util.js");
 /** Parses a partial game representation from TrophyList pages. */
 class ParserGamePage extends psnpParser_js_1.PsnpParser {
@@ -38,7 +38,7 @@ class ParserGamePage extends psnpParser_js_1.PsnpParser {
         const stackDivHeader = sideDivHeaders.find(h3 => h3.textContent?.trim() === 'Other Platforms and Regions');
         const stackTable = stackDivHeader?.closest(`div.title.flex.v-align`)?.nextElementSibling;
         if (stackTable) {
-            const gameParser = new gamePartialTrophyList_js_1.ParserGamePartialStack();
+            const gameParser = new gameFromStackPanel_js_1.ParserGamePartialStack();
             const games = [...stackTable.querySelectorAll('tr')].map(tr => gameParser.parse(tr));
             stacks.push(...games);
         }

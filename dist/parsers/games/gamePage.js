@@ -1,7 +1,7 @@
 import { PsnpParser } from '../psnpParser.js';
 import { calculateTrophyPoints } from '../../models/common.js';
 import { ParserTrophyGroups } from '../trophies/trophyGroups.js';
-import { ParserGamePartialStack } from './gamePartialTrophyList.js';
+import { ParserGamePartialStack } from './gameFromStackPanel.js';
 import { parseNum, getStackAbbr } from '../../util/util.js';
 /** Parses a partial game representation from TrophyList pages. */
 export class ParserGamePage extends PsnpParser {

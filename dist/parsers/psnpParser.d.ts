@@ -1,4 +1,3 @@
-import { TrophyCount } from '../models/index.js';
 /** Parses an entity `T` from `E`. */
 export declare abstract class PsnpParser<T, E> {
     /** Entity identifier to aid subclass debugging. */
@@ -28,6 +27,5 @@ export declare abstract class PsnpParser<T, E> {
         /** Index of the `.split("/")` pathname where the ID and serialized name are expected */
         index?: 2 | 3;
     }): [number, string] | undefined;
-    protected parseTrophyCount(tr: HTMLTableRowElement, isHomeOrGameSearch?: boolean): TrophyCount | null;
 }
 //# sourceMappingURL=psnpParser.d.ts.map

@@ -1,5 +1,6 @@
 import {calculateTrophyPoints, parseNum, sumTrophyCount} from '../../index.js';
 import {ISeriesListing} from '../../models/series.interface.js';
+import { parseTrophyCount } from '../common/trophyCount.js';
 import {PsnpParser} from '../psnpParser.js';
 
 export class ParserSeriesListing extends PsnpParser<ISeriesListing, HTMLTableRowElement> {
@@ -19,7 +20,7 @@ export class ParserSeriesListing extends PsnpParser<ISeriesListing, HTMLTableRow
 		const [_id, _nameSerialized] = hrefIdAndTitle;
 		const name = titleAnchorEl.textContent.trim();
 		const numGames = parseNum(tr.querySelector(`td > span.small-info > b`));
-		const trophyCount = this.parseTrophyCount(tr);
+		const trophyCount = parseTrophyCount(tr);
 
 		if (!_imagePath || !name || Number.isNaN(numGames) || !trophyCount) {
 			return null;

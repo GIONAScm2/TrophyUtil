@@ -1,5 +1,6 @@
 import { PsnpParser } from '../psnpParser.js';
 import { PsnpGamePlayable, parseNum, sumTrophyCount, calculateTrophyPoints, } from '../../index.js';
+import { parseTrophyCount } from '../common/trophyCount.js';
 /** Parses a 'playable' game containing user progress from Profile and Series pages. */
 export class ParserGamePlayable extends PsnpParser {
     type = 'Playable Game';
@@ -19,9 +20,8 @@ export class ParserGamePlayable extends PsnpParser {
             return null;
         }
         const [_id, _nameSerialized] = hrefIdAndTitle;
-        const stackLabel = titleAnchorEl.parentElement?.querySelector('bullet')?.nextSibling?.textContent?.trim() ??
-            null;
-        const trophyCount = this.parseTrophyCount(tr);
+        const stackLabel = titleAnchorEl.parentElement?.querySelector('bullet')?.nextSibling?.textContent?.trim() ?? null;
+        const trophyCount = parseTrophyCount(tr);
         const progressPercent = parseNum(tr.querySelector(`div.progress-bar > span`));
         const percent = Number.isNaN(progressPercent) ? undefined : progressPercent;
         const rarityBase = parseNum(rarityBaseEl);
@@ -35,10 +35,15 @@ export class ParserGamePlayable extends PsnpParser {
         const dateHolder = tr.querySelector('td > div.small-info:nth-of-type(3)');
         if (dateHolder) {
             const speedString = dateHolder.querySelector('bullet + b')?.textContent?.trim() || '';
-            completionSpeed = speedString ? PsnpGamePlayable.speedStringToSeconds(speedString) : undefined;
+            completionSpeed = speedString ? PsnpGamePlayable.speedStringToMs(speedString) : undefined;
             const day = dateHolder.childNodes[0]?.textContent?.trim();
             const monthYear = dateHolder.childNodes[2]?.textContent?.trim();
             latestTrophyTimestamp = day && monthYear ? new Date(`${day} ${monthYear}`).valueOf() : undefined;
+        }
+        let completionRank;
+        const completionRankEl = tr.querySelector('td .game-rank');
+        if (completionRankEl) {
+            completionRank = completionRankEl.textContent?.trim();
         }
         const numTrophies = sumTrophyCount(trophyCount);
         const points = calculateTrophyPoints(trophyCount);
@@ -57,6 +62,7 @@ export class ParserGamePlayable extends PsnpParser {
             percent,
             completionStatus,
             completionSpeed,
+            completionRank,
             latestTrophy: latestTrophyTimestamp,
         };
     }

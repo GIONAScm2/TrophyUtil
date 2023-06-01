@@ -1,12 +1,8 @@
 import {PsnpEntity} from './psnpEntity.js';
 import {MongoDateField, TrophyCount} from './common.js';
 import {ISeriesDoc, ISeriesListing, IStage} from './series.interface.js';
-import {type ChangeData} from '../util/objCompare.js';
 
-export class PsnpSeriesListing<T extends ISeriesListing = ISeriesListing>
-	extends PsnpEntity<T>
-	implements ISeriesListing
-{
+export class PsnpSeriesListing extends PsnpEntity implements ISeriesListing {
 	trophyCount: TrophyCount;
 	numTrophies: number;
 	numGames: number;
@@ -28,7 +24,7 @@ export class PsnpSeriesListing<T extends ISeriesListing = ISeriesListing>
 	}
 }
 
-export class SeriesDoc extends PsnpSeriesListing<ISeriesDoc> implements ISeriesDoc {
+export class SeriesDoc extends PsnpSeriesListing implements ISeriesDoc {
 	stages: IStage[];
 	createdAt?: MongoDateField | undefined;
 	updatedAt?: MongoDateField | undefined;

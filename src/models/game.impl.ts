@@ -1,31 +1,24 @@
 import {PsnpEntity} from './psnpEntity.js';
 import {type MongoDateField, type TrophyCount} from './common.js';
-import type {ChangeData, ITrophyGroup, PsnpPageType, PsnpPageWithGames} from '../index.js';
+import type {ITrophyGroup, PsnpPageType, PsnpPageWithGames} from '../index.js';
 import {Select} from '../index.js';
 import type {
 	StackAbbr,
 	PlatformTag,
 	IGameDoc,
-	IGamePartialHome,
-	IGamePartialTrophyList,
 	IGamePlayable,
 	IGameStandard,
 	IMetadataFields,
 	IGameBase,
 } from './game.interface.js';
 
-// These variables protect type predicates by throwing errors if the property names ever change.
-const percentKey: keyof IGamePlayable = 'percent';
-const trophyCountKey: keyof IGamePartialHome = 'trophyCount';
-const stackLabelKey: keyof IGameStandard = 'stackLabel';
-
 /** Class containing properties and methods applicable to all PSNP game types. */
-export class PsnpGameBase<T extends IGameBase = IGameBase> extends PsnpEntity<T> implements IGameBase {
+export class PsnpGameBase extends PsnpEntity implements IGameBase {
 	platforms: PlatformTag[];
-	stackLabel?: StackAbbr | null;
-	trophyCount?: TrophyCount;
-	numTrophies?: number;
-	points?: number;
+	stackLabel?: StackAbbr | null | undefined;
+	trophyCount?: TrophyCount | undefined;
+	numTrophies?: number | undefined;
+	points?: number | undefined;
 
 	get url() {
 		return `https://psnprofiles.com/trophies/${this._id}-${this._nameSerialized}`;
@@ -53,27 +46,10 @@ export class PsnpGameBase<T extends IGameBase = IGameBase> extends PsnpEntity<T>
 		const nodes = selectors.flatMap(selector => [...doc.querySelectorAll<HTMLTableRowElement>(selector)]);
 		return nodes;
 	}
-
-	/** Type predicate to narrow `game` type as a {@link IGamePartialTrophyList} */
-	isGameFromStacks(game: any): game is IGamePartialTrophyList {
-		return !(percentKey in game) && !(trophyCountKey in game);
-	}
-	/** Type predicate to narrow `game` type as a {@link IGamePartialHome} */
-	isGameFromHome(game: any): game is IGamePartialHome {
-		return !(percentKey in game) && trophyCountKey in game;
-	}
-	/** Type predicate to narrow `game` type as a {@link IGameStandard} */
-	isGameStandard(game: any): game is IGameStandard {
-		return !(percentKey in game) && trophyCountKey in game && stackLabelKey in game;
-	}
-	/** Type predicate to narrow `game` type as a {@link IGamePlayable} */
-	isGamePlayable(game: any): game is IGamePlayable {
-		return percentKey in game;
-	}
 }
 
 /** Class representing a standard PSNP game from `Games` or `GameSearch` */
-export class PsnpGameStandard<T extends IGameStandard = IGameStandard> extends PsnpGameBase<T> implements IGameStandard {
+export class PsnpGameStandard extends PsnpGameBase implements IGameStandard {
 	stackLabel: StackAbbr | null;
 	trophyCount: TrophyCount;
 	numTrophies: number;
@@ -90,17 +66,18 @@ export class PsnpGameStandard<T extends IGameStandard = IGameStandard> extends P
 	}
 }
 
-export class PsnpGamePlayable<T extends IGamePlayable = IGamePlayable> extends PsnpGameBase<T> implements IGamePlayable {
+export class PsnpGamePlayable extends PsnpGameBase implements IGamePlayable {
 	stackLabel: StackAbbr | null;
 	trophyCount: TrophyCount;
 	numTrophies: number;
 	points: number;
 	rarityBase: number;
-	rarityDlc?: number;
-	percent?: number;
-	completionStatus?: 'platinum' | 'completed';
-	completionSpeed?: number;
-	latestTrophy?: number;
+	rarityDlc?: number | undefined;
+	percent?: number | undefined;
+	completionStatus?: 'platinum' | 'completed' | undefined;
+	completionSpeed?: number | undefined;
+	completionRank?: string | undefined;
+	latestTrophy: number | undefined;
 
 	constructor(data: IGamePlayable) {
 		super(data);
@@ -113,15 +90,18 @@ export class PsnpGamePlayable<T extends IGamePlayable = IGamePlayable> extends P
 		this.percent = data.percent;
 		this.completionStatus = data.completionStatus;
 		this.completionSpeed = data.completionSpeed;
+		this.completionRank = data.completionRank;
 		this.latestTrophy = data.latestTrophy;
 	}
 
-	/** Converts seconds into a PSNP speedString of the form `<num> <timeMetric>(s), <num> <timeMetric>(s)`.
+	/** Converts `ms` into a PSNP speedString of the form `<num> <timeMetric>(s), <num> <timeMetric>(s)`.
 	 *  The largest metrics are always used (EG: `2 years, 1 month`, even if it omits an additional 3 weeks). */
-	static secondsToSpeedString(seconds: number): string {
-		if (seconds === 0) {
+	static msToSpeedString(ms: number): string {
+		if (ms === 0) {
 			return '0 seconds';
 		}
+
+		let seconds = ms / 1000;
 
 		const timeUnits = [
 			{unit: 'year', value: 31536000},
@@ -156,8 +136,8 @@ export class PsnpGamePlayable<T extends IGamePlayable = IGamePlayable> extends P
 		return speedString;
 	}
 
-	/** Parses a Fastest Achiever's speed as seconds. speedString is always of the form `<num> <timeMetric>(s), <num> <timeMetric>(s)`. */
-	static speedStringToSeconds(speedString: string): number {
+	/** Parses a Fastest Achiever's speed into ms. `speedString` is always of the form `<num> <timeMetric>(s), <num> <timeMetric>(s)`. */
+	static speedStringToMs(speedString: string): number {
 		type TimeUnit = keyof typeof timeUnits;
 		const timeUnits = {
 			sec: 1,
@@ -179,7 +159,7 @@ export class PsnpGamePlayable<T extends IGamePlayable = IGamePlayable> extends P
 
 			seconds += timeUnits[timeUnit] * timeValue;
 		}
-		return seconds;
+		return seconds * 1000;
 	}
 
 	/** Takes in a 'date played' element: \<div class="small-info" [...] */
@@ -199,18 +179,17 @@ export class PsnpGamePlayable<T extends IGamePlayable = IGamePlayable> extends P
 	}
 }
 
-export class PsnpGameStandardDoc<T extends IGameDoc = IGameDoc> extends PsnpGameStandard<T> implements IGameDoc {
+export class PsnpGameStandardDoc extends PsnpGameStandard implements IGameDoc {
 	trophyGroups: ITrophyGroup[];
 	rarityBase: number;
-	rarityDlc?: number;
+	rarityDlc?: number | undefined;
 	forumId: number | null;
 	metaData: IMetadataFields;
-	createdAt?: MongoDateField;
-	updatedAt?: MongoDateField;
+	createdAt?: MongoDateField | undefined;
+	updatedAt?: MongoDateField | undefined;
 
 	/** Flattens `trophies` trophy groups, returning a 2D array of all trophies. */
 	get allTrophies() {
-		if (!this.trophyGroups) return;
 		return this.trophyGroups.flatMap(s => s.trophies);
 	}
 

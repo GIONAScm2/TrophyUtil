@@ -1,6 +1,7 @@
 import { PsnpParser } from '../psnpParser.js';
 import { calculateTrophyPoints, sumTrophyCount } from '../../models/index.js';
 import { parseNum } from '../../util/util.js';
+import { parseTrophyCount } from '../common/trophyCount.js';
 /** Parses a standard game representation from Games and GameSearch pages. */
 export class ParserGameStandard extends PsnpParser {
     type = 'Standard Game';
@@ -16,7 +17,7 @@ export class ParserGameStandard extends PsnpParser {
         const _imagePath = /\w+\/\w+(?=\.[A-z]{3}$)/.exec(imageSrc)?.at(0);
         const name = titleAnchorEl.textContent.trim();
         const platforms = [...tr.querySelectorAll('span.tag.platform')].map(tag => tag.textContent).sort();
-        const trophyCount = this.parseTrophyCount(tr, isSearchResult);
+        const trophyCount = parseTrophyCount(tr, isSearchResult);
         const numOwners = parseNumOwners(tr, isSearchResult);
         if (!_imagePath || !name || !platforms.length || !trophyCount || numOwners === null) {
             return null;

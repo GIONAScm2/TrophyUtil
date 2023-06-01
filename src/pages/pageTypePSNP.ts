@@ -1,45 +1,46 @@
 /** Type of PSNProfiles page. */
 export enum PsnpPageType {
 	/** Navbar "Home" (`psnprofiles.com/`) */
-	Home = "Home",
+	Home = 'Home',
 	/** Browsing trophy guides (`psnprofiles.com/guides`) */
-	Guides = "Guides",
+	Guides = 'Guides',
 	/** Search results for trophy guides */
-	GuideSearch = "GuideSearch",
+	GuideSearch = 'GuideSearch',
 	/** Viewing an individual trophy guide */
-	Guide = "Guide",
+	Guide = 'Guide',
 	/** Viewing a leaderboard */
-	Leaderboard = "Leaderboard",
+	Leaderboard = 'Leaderboard',
 	/** Search results for users */
-	LeaderboardSearch = "LeaderboardSearch",
+	LeaderboardSearch = 'LeaderboardSearch',
 	/** Browsing series */
-	SeriesCatalog = "SeriesCatalog",
+	SeriesCatalog = 'SeriesCatalog',
 	/** Viewing an individual series page */
-	SeriesPage = "SeriesPage",
+	SeriesPage = 'SeriesPage',
 	/** Browsing games */
-	Games = "Games",
+	Games = 'Games',
 	/** Search results for games */
-	GameSearch = "GameSearch",
+	GameSearch = 'GameSearch',
+	/** Browsing DLCs */
+	DLC = 'DLC',
 	/** Viewing a game's trophy list */
-	GameTrophyList = "GameTrophyList",
+	GameTrophyList = 'GameTrophyList',
 	/** Viewing an individual trophy */
-	GameTrophy = "GameTrophy",
+	GameTrophy = 'GameTrophy',
 	/** Viewing a game's leaderboard, where users are ranked by completion % */
-	GameLeaderboard = "GameLeaderboard",
+	GameLeaderboard = 'GameLeaderboard',
 	/** Viewing a game's 100% Club */
-	Game100Club = "Game100Club",
+	Game100Club = 'Game100Club',
 	/** Browsing trophies */
-	Trophies = "Trophies",
+	Trophies = 'Trophies',
 	/** Search results for trophies */
-	TrophySearch = "TrophySearch",
+	TrophySearch = 'TrophySearch',
 	/** Gaming Sessions (`psnprofiles.com/sessions`) */
-	Sessions = "Sessions",
+	Sessions = 'Sessions',
 	/** A user's PSN Profile
 	 *
 	 * Excludes subpaths and hashes, like `.../log` or `...#gamelists` */
-	Profile = "Profile",
+	Profile = 'Profile',
 }
-
 
 /** Identifies the PSNProfiles page type of a given URL. */
 export function getPsnpPageType(url: URL): PsnpPageType {
@@ -54,6 +55,7 @@ export function getPsnpPageType(url: URL): PsnpPageType {
 	else if (path === '/series') return PsnpPageType.SeriesCatalog;
 	else if (path.startsWith('/series/')) return PsnpPageType.SeriesPage;
 	else if (path === '/games') return PsnpPageType.Games;
+	else if (path === '/games/dlc') return PsnpPageType.DLC;
 	else if (path === '/search' || path === '/search/games') return PsnpPageType.GameSearch;
 	else if (path.startsWith(`/trophies/`)) return PsnpPageType.GameTrophyList;
 	else if (path.startsWith('/trophy/')) return PsnpPageType.GameTrophy;

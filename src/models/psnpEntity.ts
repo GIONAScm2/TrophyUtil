@@ -1,5 +1,3 @@
-import {diffAndUpdateSharedProps, type ChangeData} from '../util/objCompare.js';
-
 /** Represents a generic PSNP entity (`_id`, `name`, `_nameSerialized`, `_imagePath`). */
 export interface IPsnpEntity {
 	/** ID that uniquely identifies the entity on PSNP. */
@@ -13,8 +11,9 @@ export interface IPsnpEntity {
 	 * For games, size is 100x100 for PS5 games and 100x56 for other platforms. */
 	_imagePath: string;
 }
+
 /** Abstract class containing properties and methods applicable to all PSNP entities. */
-export abstract class PsnpEntity<T extends IPsnpEntity> implements IPsnpEntity {
+export abstract class PsnpEntity implements IPsnpEntity {
 	readonly _id: number;
 	name: string;
 	_nameSerialized: string;
@@ -36,4 +35,3 @@ export abstract class PsnpEntity<T extends IPsnpEntity> implements IPsnpEntity {
 		return `${this.name} (${this._id})`;
 	}
 }
-

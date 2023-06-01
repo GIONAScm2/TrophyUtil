@@ -24,6 +24,8 @@ var PsnpPageType;
     PsnpPageType["Games"] = "Games";
     /** Search results for games */
     PsnpPageType["GameSearch"] = "GameSearch";
+    /** Browsing DLCs */
+    PsnpPageType["DLC"] = "DLC";
     /** Viewing a game's trophy list */
     PsnpPageType["GameTrophyList"] = "GameTrophyList";
     /** Viewing an individual trophy */
@@ -64,6 +66,8 @@ function getPsnpPageType(url) {
         return PsnpPageType.SeriesPage;
     else if (path === '/games')
         return PsnpPageType.Games;
+    else if (path === '/games/dlc')
+        return PsnpPageType.DLC;
     else if (path === '/search' || path === '/search/games')
         return PsnpPageType.GameSearch;
     else if (path.startsWith(`/trophies/`))

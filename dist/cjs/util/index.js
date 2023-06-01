@@ -17,5 +17,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./browserContext.js"), exports);
 __exportStar(require("./objCompare.js"), exports);
 __exportStar(require("./select.js"), exports);
+__exportStar(require("./typeGuards.js"), exports);
 __exportStar(require("./util.js"), exports);
 //# sourceMappingURL=index.js.map

@@ -12,7 +12,7 @@ export interface IPsnpEntity {
     _imagePath: string;
 }
 /** Abstract class containing properties and methods applicable to all PSNP entities. */
-export declare abstract class PsnpEntity<T extends IPsnpEntity> implements IPsnpEntity {
+export declare abstract class PsnpEntity implements IPsnpEntity {
     readonly _id: number;
     name: string;
     _nameSerialized: string;

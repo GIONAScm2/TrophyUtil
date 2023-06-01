@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ParserDlcListing = void 0;
 const psnpParser_js_1 = require("../psnpParser.js");
 const common_js_1 = require("../../models/common.js");
+const trophyCount_js_1 = require("../common/trophyCount.js");
 class ParserDlcListing extends psnpParser_js_1.PsnpParser {
     type = 'DLC Listing';
     _parse(tr) {
@@ -14,15 +15,16 @@ class ParserDlcListing extends psnpParser_js_1.PsnpParser {
             return null;
         }
         const [_id, _nameSerialized] = hrefIdAndTitle;
-        const name = titleAnchorEl?.firstChild?.textContent?.trim();
+        const name = titleAnchorEl?.lastChild?.textContent?.trim();
+        const dlcName = titleAnchorEl?.firstChild?.textContent?.trim();
         const groupNumMatch = _nameSerialized.match(/DLC-(\d+)/);
         const _imagePath = /\w+\/\w+(?=\.[A-z]{3}$)/.exec(imageSrc)?.at(0);
         const platforms = [...tr.querySelectorAll('span.tag.platform')].map(tag => tag.textContent).sort();
-        if (!_imagePath || !name || !platforms.length || !groupNumMatch) {
+        if (!_imagePath || !name || !dlcName || !platforms.length || !groupNumMatch) {
             return null;
         }
         const groupNum = +groupNumMatch[1];
-        const trophyCount = this.parseTrophyCount(tr, true);
+        const trophyCount = (0, trophyCount_js_1.parseTrophyCount)(tr, true);
         if (!trophyCount) {
             return null;
         }
@@ -30,9 +32,10 @@ class ParserDlcListing extends psnpParser_js_1.PsnpParser {
         const points = (0, common_js_1.calculateTrophyPoints)(trophyCount);
         return {
             _id,
-            _nameSerialized,
+            _nameSerialized: _nameSerialized.replace(/#DLC.+/, ''),
             name,
             _imagePath,
+            dlcName,
             groupNum,
             platforms,
             trophyCount,

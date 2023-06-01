@@ -1,4 +1,3 @@
-import { parseNum } from '../util/util.js';
 /** Parses an entity `T` from `E`. */
 export class PsnpParser {
     /** Parses an entity from a DOM target (Document or Element).
@@ -35,18 +34,6 @@ export class PsnpParser {
         const id = +parts[0];
         const nameSerialized = parts.slice(1).join('-');
         return [id, nameSerialized];
-    }
-    parseTrophyCount(tr, isHomeOrGameSearch = false) {
-        const suffix = isHomeOrGameSearch ? '.icon-sprite' : '.icon-sprite + span';
-        const bronze = parseNum(tr.querySelector(`.bronze${suffix}`));
-        const silver = parseNum(tr.querySelector(`.silver${suffix}`));
-        const gold = parseNum(tr.querySelector(`.gold${suffix}`));
-        if (Number.isNaN(bronze + silver + gold)) {
-            return null;
-        }
-        const platCount = parseNum(tr.querySelector(`.platinum${suffix}`));
-        const platinum = Number.isNaN(platCount) ? 0 : platCount;
-        return { bronze, silver, gold, platinum };
     }
 }
 //# sourceMappingURL=psnpParser.js.map

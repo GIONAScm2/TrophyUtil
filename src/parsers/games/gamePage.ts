@@ -1,7 +1,7 @@
 import {PsnpParser} from '../psnpParser.js';
 import {TrophyCount, calculateTrophyPoints} from '../../models/common.js';
 import {ParserTrophyGroups} from '../trophies/trophyGroups.js';
-import {ParserGamePartialStack} from './gamePartialTrophyList.js';
+import {ParserGamePartialStack} from './gameFromStackPanel.js';
 import {
 	PlatformTag,
 	IGamePage,

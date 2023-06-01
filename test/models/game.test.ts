@@ -43,32 +43,32 @@ describe('PsnpGamePlayable', () => {
 		expect(game).toBeInstanceOf(PsnpGamePlayable);
 	});
 
-	it('should convert seconds to speed string', () => {
+	it('should convert ms to speed string', () => {
 		const seconds = 0;
-		const speedString = PsnpGamePlayable.secondsToSpeedString(seconds);
+		const speedString = PsnpGamePlayable.msToSpeedString(seconds);
 		expect(speedString).toBe('0 seconds');
 	});
-	it('should convert seconds to speed string', () => {
-		const seconds = 1;
-		const speedString = PsnpGamePlayable.secondsToSpeedString(seconds);
+	it('should convert ms to speed string', () => {
+		const seconds = 1000;
+		const speedString = PsnpGamePlayable.msToSpeedString(seconds);
 		expect(speedString).toBe('1 second');
 	});
-	it('should convert seconds to speed string', () => {
-		const seconds = 3661;
-		const speedString = PsnpGamePlayable.secondsToSpeedString(seconds);
+	it('should convert ms to speed string', () => {
+		const seconds = 3661000;
+		const speedString = PsnpGamePlayable.msToSpeedString(seconds);
 		expect(speedString).toBe('1 hour, 1 minute');
 	});
 
 	it('should convert speed string to seconds', () => {
-		const seconds = PsnpGamePlayable.speedStringToSeconds('0 seconds');
+		const seconds = PsnpGamePlayable.speedStringToMs('0 seconds');
 		expect(seconds).toBe(0);
 	});
 	it('should convert speed string to seconds', () => {
-		const seconds = PsnpGamePlayable.speedStringToSeconds('1 second');
-		expect(seconds).toBe(1);
+		const seconds = PsnpGamePlayable.speedStringToMs('1 second');
+		expect(seconds).toBe(1000);
 	});
 	it('should convert speed string to seconds', () => {
-		const seconds = PsnpGamePlayable.speedStringToSeconds('1 hour, 1 minute');
-		expect(seconds).toBe(3660);
+		const seconds = PsnpGamePlayable.speedStringToMs('1 hour, 1 minute');
+		expect(seconds).toBe(3660000);
 	});
 });

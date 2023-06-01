@@ -24,7 +24,9 @@ export interface TrophyCount {
 }
 /** Trophy count-related properties (`trophyCount`, `points`, `numTrophies`.). */
 export interface ITrophyCount {
-	/** The aggregated number of trophies of each grade. */
+	/** The aggregated number of trophies of each grade. 
+	 * 
+	 * For played games, these numbers only reflect *earned* trophies, so exert caution when updating database entities. */
 	trophyCount: TrophyCount;
 	/** Number of points the game is worth. */
 	points: number;

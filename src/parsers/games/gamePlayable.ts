@@ -8,6 +8,7 @@ import {
 	sumTrophyCount,
 	calculateTrophyPoints,
 } from '../../index.js';
+import {parseTrophyCount} from '../common/trophyCount.js';
 
 /** Parses a 'playable' game containing user progress from Profile and Series pages. */
 export class ParserGamePlayable extends PsnpParser<IGamePlayable, HTMLTableRowElement> {
@@ -34,10 +35,9 @@ export class ParserGamePlayable extends PsnpParser<IGamePlayable, HTMLTableRowEl
 
 		const [_id, _nameSerialized] = hrefIdAndTitle;
 		const stackLabel =
-			(titleAnchorEl.parentElement?.querySelector('bullet')?.nextSibling?.textContent?.trim() as StackAbbr) ??
-			null;
+			(titleAnchorEl.parentElement?.querySelector('bullet')?.nextSibling?.textContent?.trim() as StackAbbr) ?? null;
 
-		const trophyCount = this.parseTrophyCount(tr);
+		const trophyCount = parseTrophyCount(tr);
 
 		const progressPercent = parseNum(tr.querySelector(`div.progress-bar > span`));
 		const percent = Number.isNaN(progressPercent) ? undefined : progressPercent;
@@ -55,11 +55,17 @@ export class ParserGamePlayable extends PsnpParser<IGamePlayable, HTMLTableRowEl
 		const dateHolder = tr.querySelector('td > div.small-info:nth-of-type(3)');
 		if (dateHolder) {
 			const speedString = dateHolder.querySelector('bullet + b')?.textContent?.trim() || '';
-			completionSpeed = speedString ? PsnpGamePlayable.speedStringToSeconds(speedString) : undefined;
+			completionSpeed = speedString ? PsnpGamePlayable.speedStringToMs(speedString) : undefined;
 
 			const day = dateHolder.childNodes[0]?.textContent?.trim();
 			const monthYear = dateHolder.childNodes[2]?.textContent?.trim();
 			latestTrophyTimestamp = day && monthYear ? new Date(`${day} ${monthYear}`).valueOf() : undefined;
+		}
+
+		let completionRank: string | undefined;
+		const completionRankEl = tr.querySelector('td .game-rank');
+		if (completionRankEl) {
+			completionRank = completionRankEl.textContent?.trim();
 		}
 
 		const numTrophies = sumTrophyCount(trophyCount);
@@ -80,6 +86,7 @@ export class ParserGamePlayable extends PsnpParser<IGamePlayable, HTMLTableRowEl
 			percent,
 			completionStatus,
 			completionSpeed,
+			completionRank,
 			latestTrophy: latestTrophyTimestamp,
 		};
 	}

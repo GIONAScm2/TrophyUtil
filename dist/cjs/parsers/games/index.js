@@ -16,7 +16,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./dlcListing.js"), exports);
 __exportStar(require("./gamePage.js"), exports);
-__exportStar(require("./gamePartialTrophyList.js"), exports);
+__exportStar(require("./gameFromStackPanel.js"), exports);
 __exportStar(require("./gamePlayable.js"), exports);
 __exportStar(require("./gameStandard.js"), exports);
 //# sourceMappingURL=index.js.map

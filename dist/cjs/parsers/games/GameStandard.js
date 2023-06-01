@@ -4,6 +4,7 @@ exports.ParserGameStandard = void 0;
 const psnpParser_js_1 = require("../psnpParser.js");
 const index_js_1 = require("../../models/index.js");
 const util_js_1 = require("../../util/util.js");
+const trophyCount_js_1 = require("../common/trophyCount.js");
 /** Parses a standard game representation from Games and GameSearch pages. */
 class ParserGameStandard extends psnpParser_js_1.PsnpParser {
     type = 'Standard Game';
@@ -19,7 +20,7 @@ class ParserGameStandard extends psnpParser_js_1.PsnpParser {
         const _imagePath = /\w+\/\w+(?=\.[A-z]{3}$)/.exec(imageSrc)?.at(0);
         const name = titleAnchorEl.textContent.trim();
         const platforms = [...tr.querySelectorAll('span.tag.platform')].map(tag => tag.textContent).sort();
-        const trophyCount = this.parseTrophyCount(tr, isSearchResult);
+        const trophyCount = (0, trophyCount_js_1.parseTrophyCount)(tr, isSearchResult);
         const numOwners = parseNumOwners(tr, isSearchResult);
         if (!_imagePath || !name || !platforms.length || !trophyCount || numOwners === null) {
             return null;

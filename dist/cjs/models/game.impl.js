@@ -3,10 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PsnpGameStandardDoc = exports.PsnpGamePlayable = exports.PsnpGameStandard = exports.PsnpGameBase = void 0;
 const psnpEntity_js_1 = require("./psnpEntity.js");
 const index_js_1 = require("../index.js");
-// These variables protect type predicates by throwing errors if the property names ever change.
-const percentKey = 'percent';
-const trophyCountKey = 'trophyCount';
-const stackLabelKey = 'stackLabel';
 /** Class containing properties and methods applicable to all PSNP game types. */
 class PsnpGameBase extends psnpEntity_js_1.PsnpEntity {
     platforms;
@@ -38,22 +34,6 @@ class PsnpGameBase extends psnpEntity_js_1.PsnpEntity {
         const nodes = selectors.flatMap(selector => [...doc.querySelectorAll(selector)]);
         return nodes;
     }
-    /** Type predicate to narrow `game` type as a {@link IGamePartialTrophyList} */
-    isGameFromStacks(game) {
-        return !(percentKey in game) && !(trophyCountKey in game);
-    }
-    /** Type predicate to narrow `game` type as a {@link IGamePartialHome} */
-    isGameFromHome(game) {
-        return !(percentKey in game) && trophyCountKey in game;
-    }
-    /** Type predicate to narrow `game` type as a {@link IGameStandard} */
-    isGameStandard(game) {
-        return !(percentKey in game) && trophyCountKey in game && stackLabelKey in game;
-    }
-    /** Type predicate to narrow `game` type as a {@link IGamePlayable} */
-    isGamePlayable(game) {
-        return percentKey in game;
-    }
 }
 exports.PsnpGameBase = PsnpGameBase;
 /** Class representing a standard PSNP game from `Games` or `GameSearch` */
@@ -83,6 +63,7 @@ class PsnpGamePlayable extends PsnpGameBase {
     percent;
     completionStatus;
     completionSpeed;
+    completionRank;
     latestTrophy;
     constructor(data) {
         super(data);
@@ -95,14 +76,16 @@ class PsnpGamePlayable extends PsnpGameBase {
         this.percent = data.percent;
         this.completionStatus = data.completionStatus;
         this.completionSpeed = data.completionSpeed;
+        this.completionRank = data.completionRank;
         this.latestTrophy = data.latestTrophy;
     }
-    /** Converts seconds into a PSNP speedString of the form `<num> <timeMetric>(s), <num> <timeMetric>(s)`.
+    /** Converts `ms` into a PSNP speedString of the form `<num> <timeMetric>(s), <num> <timeMetric>(s)`.
      *  The largest metrics are always used (EG: `2 years, 1 month`, even if it omits an additional 3 weeks). */
-    static secondsToSpeedString(seconds) {
-        if (seconds === 0) {
+    static msToSpeedString(ms) {
+        if (ms === 0) {
             return '0 seconds';
         }
+        let seconds = ms / 1000;
         const timeUnits = [
             { unit: 'year', value: 31536000 },
             { unit: 'month', value: 2626560 },
@@ -130,8 +113,8 @@ class PsnpGamePlayable extends PsnpGameBase {
         }
         return speedString;
     }
-    /** Parses a Fastest Achiever's speed as seconds. speedString is always of the form `<num> <timeMetric>(s), <num> <timeMetric>(s)`. */
-    static speedStringToSeconds(speedString) {
+    /** Parses a Fastest Achiever's speed into ms. `speedString` is always of the form `<num> <timeMetric>(s), <num> <timeMetric>(s)`. */
+    static speedStringToMs(speedString) {
         const timeUnits = {
             sec: 1,
             min: 60,
@@ -149,7 +132,7 @@ class PsnpGamePlayable extends PsnpGameBase {
             const timeUnit = timeMetric.substring(0, 3);
             seconds += timeUnits[timeUnit] * timeValue;
         }
-        return seconds;
+        return seconds * 1000;
     }
     /** Takes in a 'date played' element: \<div class="small-info" [...] */
     static timestampFromDatePlayed(element) {
@@ -176,8 +159,6 @@ class PsnpGameStandardDoc extends PsnpGameStandard {
     updatedAt;
     /** Flattens `trophies` trophy groups, returning a 2D array of all trophies. */
     get allTrophies() {
-        if (!this.trophyGroups)
-            return;
         return this.trophyGroups.flatMap(s => s.trophies);
     }
     constructor(data) {

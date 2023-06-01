@@ -33,7 +33,7 @@ export class PsnpTrophy implements ITrophy {
 		return this.rarity.toFixed(2);
 	}
 
-	/** Parses a trophy element's 'date earned' into a date timestamp. */
+	/** Parses a trophy element's 'date earned' into a date timestamp (ms). */
 	static timestampFromDateEarned(element: HTMLElement): number {
 		const dateAndTimeNodes = [
 			...element.querySelectorAll(`td:nth-of-type(3) :is(.typo-top-date, .typo-bottom-date) > nobr`),
