@@ -1,5 +1,5 @@
-import { IPsnpEntity } from '../models/psnpEntity';
-import { IGamePartialTrophyList, IGamePartialHome, IGameStandard, IGamePlayable, IGameDlc } from '../models/game.interface';
+import { IPsnpEntity } from '../models/psnpEntity.js';
+import { IGamePartialTrophyList, IGamePartialHome, IGameStandard, IGamePlayable, IGameDlc } from '../models/game.interface.js';
 /** Verifies whether `entity` implements {@link IPsnpEntity} */
 export declare function isPsnpEntity(entity: unknown): entity is IPsnpEntity;
 /** Verifies whether `game` implements {@link IGamePartialTrophyList} */

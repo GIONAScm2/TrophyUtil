@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isGamePlayable = exports.isGameStandard = exports.isGameDlc = exports.isGameFromHome = exports.isGameFromStacks = exports.isPsnpEntity = void 0;
-const objCompare_1 = require("./objCompare");
+const objCompare_js_1 = require("./objCompare.js");
 /** Verifies whether `entity` implements {@link IPsnpEntity} */
 function isPsnpEntity(entity) {
     const keys = ['_id', 'name', '_nameSerialized', '_imagePath'];
-    return (0, objCompare_1.isStandardObj)(entity) && keys.every(key => key in entity);
+    return (0, objCompare_js_1.isStandardObj)(entity) && keys.every(key => key in entity);
 }
 exports.isPsnpEntity = isPsnpEntity;
 // These variables protect type predicates by throwing errors if the property names ever change.

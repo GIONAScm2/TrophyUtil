@@ -1,4 +1,4 @@
-import { parseNum } from '../../util/util';
+import { parseNum } from '../../util/util.js';
 export function parseTrophyCount(tr, isHomeOrGameSearch = false) {
     const suffix = isHomeOrGameSearch ? '.icon-sprite' : '.icon-sprite + span';
     const bronze = parseNum(tr.querySelector(`.bronze${suffix}`));

@@ -1,4 +1,4 @@
-import { isStandardObj } from './objCompare';
+import { isStandardObj } from './objCompare.js';
 /** Verifies whether `entity` implements {@link IPsnpEntity} */
 export function isPsnpEntity(entity) {
     const keys = ['_id', 'name', '_nameSerialized', '_imagePath'];

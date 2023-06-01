@@ -1,1 +1,1 @@
-{"version":3,"file":"trophyCount.d.ts","sourceRoot":"","sources":["../../../src/parsers/common/trophyCount.ts"],"names":[],"mappings":"AACA,OAAO,EAAC,WAAW,EAAC,MAAM,cAAc,CAAC;AAEzC,wBAAgB,gBAAgB,CAAC,EAAE,EAAE,mBAAmB,EAAE,kBAAkB,UAAQ,GAAG,WAAW,GAAG,IAAI,CAuBxG"}
+{"version":3,"file":"trophyCount.d.ts","sourceRoot":"","sources":["../../../src/parsers/common/trophyCount.ts"],"names":[],"mappings":"AACA,OAAO,EAAC,WAAW,EAAC,MAAM,wBAAwB,CAAC;AAEnD,wBAAgB,gBAAgB,CAAC,EAAE,EAAE,mBAAmB,EAAE,kBAAkB,UAAQ,GAAG,WAAW,GAAG,IAAI,CAuBxG"}

@@ -1,5 +1,5 @@
-import {parseNum} from '../../util/util';
-import {TrophyCount} from '../../models';
+import {parseNum} from '../../util/util.js';
+import {TrophyCount} from '../../models/common.js';
 
 export function parseTrophyCount(tr: HTMLTableRowElement, isHomeOrGameSearch = false): TrophyCount | null {
 	const suffix = isHomeOrGameSearch ? '.icon-sprite' : '.icon-sprite + span';
