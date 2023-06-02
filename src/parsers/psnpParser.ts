@@ -1,6 +1,3 @@
-import {TrophyCount} from '../models/index.js';
-import {parseNum} from '../util/util.js';
-
 /** Parses an entity `T` from `E`. */
 export abstract class PsnpParser<T, E> {
 	/** Entity identifier to aid subclass debugging. */

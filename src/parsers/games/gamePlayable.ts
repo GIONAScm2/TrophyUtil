@@ -1,14 +1,7 @@
 import {PsnpParser} from '../psnpParser.js';
-import {
-	IGamePlayable,
-	PlatformTag,
-	StackAbbr,
-	PsnpGamePlayable,
-	parseNum,
-	sumTrophyCount,
-	calculateTrophyPoints,
-} from '../../index.js';
+import {IGamePlayable, PlatformTag, StackAbbr, parseNum, sumTrophyCount, calculateTrophyPoints} from '../../index.js';
 import {parseTrophyCount} from '../common/trophyCount.js';
+import {speedStringToMs} from '../../util/psnp/conversions.js';
 
 /** Parses a 'playable' game containing user progress from Profile and Series pages. */
 export class ParserGamePlayable extends PsnpParser<IGamePlayable, HTMLTableRowElement> {
@@ -55,7 +48,7 @@ export class ParserGamePlayable extends PsnpParser<IGamePlayable, HTMLTableRowEl
 		const dateHolder = tr.querySelector('td > div.small-info:nth-of-type(3)');
 		if (dateHolder) {
 			const speedString = dateHolder.querySelector('bullet + b')?.textContent?.trim() || '';
-			completionSpeed = speedString ? PsnpGamePlayable.speedStringToMs(speedString) : undefined;
+			completionSpeed = speedString ? speedStringToMs(speedString) : undefined;
 
 			const day = dateHolder.childNodes[0]?.textContent?.trim();
 			const monthYear = dateHolder.childNodes[2]?.textContent?.trim();

@@ -1,7 +1,8 @@
 import { PsnpEntity } from './psnpEntity.js';
 import { type MongoDateField, type TrophyCount } from './common.js';
-import type { ITrophyGroup, PsnpPageType } from '../index.js';
+import type { ITrophyGroup } from '../index.js';
 import type { StackAbbr, PlatformTag, IGameDoc, IGamePlayable, IGameStandard, IMetadataFields, IGameBase } from './game.interface.js';
+import { PsnpPageType } from '../util/psnp/pageType.js';
 /** Class containing properties and methods applicable to all PSNP game types. */
 export declare class PsnpGameBase extends PsnpEntity implements IGameBase {
     platforms: PlatformTag[];
@@ -41,13 +42,6 @@ export declare class PsnpGamePlayable extends PsnpGameBase implements IGamePlaya
     completionRank?: string | undefined;
     latestTrophy: number | undefined;
     constructor(data: IGamePlayable);
-    /** Converts `ms` into a PSNP speedString of the form `<num> <timeMetric>(s), <num> <timeMetric>(s)`.
-     *  The largest metrics are always used (EG: `2 years, 1 month`, even if it omits an additional 3 weeks). */
-    static msToSpeedString(ms: number): string;
-    /** Parses a Fastest Achiever's speed into ms. `speedString` is always of the form `<num> <timeMetric>(s), <num> <timeMetric>(s)`. */
-    static speedStringToMs(speedString: string): number;
-    /** Takes in a 'date played' element: \<div class="small-info" [...] */
-    static timestampFromDatePlayed(element: HTMLElement): number | null;
 }
 export declare class PsnpGameStandardDoc extends PsnpGameStandard implements IGameDoc {
     trophyGroups: ITrophyGroup[];

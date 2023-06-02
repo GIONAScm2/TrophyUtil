@@ -4,7 +4,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 import fs from 'fs';
 import {ParserSeriesListing, ParserSeriesPageNeutral} from '../../src/parsers/index';
 import {PsnpGameBase} from '../../src/models/game.impl';
-import {PsnpPageType} from '../../src/pages/pageTypePSNP';
+import {PsnpPageType} from '../../src/util/psnp/pageType';
 import {JSDOM} from 'jsdom';
 
 describe('Series Parsers', () => {

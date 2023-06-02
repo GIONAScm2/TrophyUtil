@@ -9,10 +9,9 @@ import {
 	ParserGamePage,
 	ParserDlcListing,
 } from '../../src/parsers/index';
-import {Select, isGameStandard, isGameFromStacks, isGamePlayable, isGameDlc} from '../../src/util/index';
+import {Select, isGameStandard, isGameFromStacks, isGamePlayable, isGameDlc, msToSpeedString} from '../../src/util/index';
 import {JSDOM} from 'jsdom';
 import {IGameStandard, IGamePartialTrophyList, IGamePlayable, IGameDlc} from '../../src/models/game.interface';
-import {PsnpGamePlayable} from '../../src/models/game.impl';
 
 beforeAll(() => {
 	const html = fs.readFileSync(resolve(__dirname, '../fixtures/psnpGameVariety.html'), 'utf8');
@@ -206,7 +205,7 @@ describe('Parsing from PROFILE pages', () => {
 			completionRank: 'S',
 			latestTrophy: 1682136000000,
 		});
-		expect(PsnpGamePlayable.msToSpeedString(hasPlatNoDlcAllEarned.completionSpeed!)).toBe('4 years, 9 months');
+		expect(msToSpeedString(hasPlatNoDlcAllEarned.completionSpeed!)).toBe('4 years, 9 months');
 
 		expect(hasPlatAndDlcNoneEarned).toEqual({
 			_id: 2783,
@@ -262,7 +261,7 @@ describe('Parsing from PROFILE pages', () => {
 			completionRank: 'A',
 			latestTrophy: 1612760400000,
 		});
-		expect(PsnpGamePlayable.msToSpeedString(hasPlatAndDlcPlatEarned.completionSpeed!)).toBe('3 years, 1 month');
+		expect(msToSpeedString(hasPlatAndDlcPlatEarned.completionSpeed!)).toBe('3 years, 1 month');
 		expect(hasPlatAndDlcAllEarned).toEqual({
 			_id: 2251,
 			_nameSerialized: 'sound-shapes',
@@ -281,7 +280,7 @@ describe('Parsing from PROFILE pages', () => {
 			completionRank: 'S',
 			latestTrophy: 1470196800000,
 		});
-		expect(PsnpGamePlayable.msToSpeedString(hasPlatAndDlcAllEarned.completionSpeed!)).toBe('11 months, 4 weeks');
+		expect(msToSpeedString(hasPlatAndDlcAllEarned.completionSpeed!)).toBe('11 months, 4 weeks');
 
 		expect(noPlatNoneEarned).toEqual({
 			_id: 4046,
@@ -337,7 +336,7 @@ describe('Parsing from PROFILE pages', () => {
 			completionRank: 'S',
 			latestTrophy: 1386133200000,
 		});
-		expect(PsnpGamePlayable.msToSpeedString(noPlatAllEarned.completionSpeed!)).toBe('17 hours, 18 minutes');
+		expect(msToSpeedString(noPlatAllEarned.completionSpeed!)).toBe('17 hours, 18 minutes');
 	});
 });
 

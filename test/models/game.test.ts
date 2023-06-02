@@ -1,5 +1,6 @@
 import {PsnpGameBase, PsnpGamePlayable} from '../../src/models/game.impl';
 import {IGamePartialTrophyList, IGamePlayable} from '../../src/models/game.interface';
+import { msToSpeedString, speedStringToMs } from '../../src/util/psnp';
 
 const mockPsnpGame: IGamePartialTrophyList = {
 	_id: 1,
@@ -45,30 +46,30 @@ describe('PsnpGamePlayable', () => {
 
 	it('should convert ms to speed string', () => {
 		const seconds = 0;
-		const speedString = PsnpGamePlayable.msToSpeedString(seconds);
+		const speedString = msToSpeedString(seconds);
 		expect(speedString).toBe('0 seconds');
 	});
 	it('should convert ms to speed string', () => {
 		const seconds = 1000;
-		const speedString = PsnpGamePlayable.msToSpeedString(seconds);
+		const speedString = msToSpeedString(seconds);
 		expect(speedString).toBe('1 second');
 	});
 	it('should convert ms to speed string', () => {
 		const seconds = 3661000;
-		const speedString = PsnpGamePlayable.msToSpeedString(seconds);
+		const speedString = msToSpeedString(seconds);
 		expect(speedString).toBe('1 hour, 1 minute');
 	});
 
 	it('should convert speed string to seconds', () => {
-		const seconds = PsnpGamePlayable.speedStringToMs('0 seconds');
+		const seconds = speedStringToMs('0 seconds');
 		expect(seconds).toBe(0);
 	});
 	it('should convert speed string to seconds', () => {
-		const seconds = PsnpGamePlayable.speedStringToMs('1 second');
+		const seconds = speedStringToMs('1 second');
 		expect(seconds).toBe(1000);
 	});
 	it('should convert speed string to seconds', () => {
-		const seconds = PsnpGamePlayable.speedStringToMs('1 hour, 1 minute');
+		const seconds = speedStringToMs('1 hour, 1 minute');
 		expect(seconds).toBe(3660000);
 	});
 });

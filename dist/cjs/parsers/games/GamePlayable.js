@@ -4,6 +4,7 @@ exports.ParserGamePlayable = void 0;
 const psnpParser_js_1 = require("../psnpParser.js");
 const index_js_1 = require("../../index.js");
 const trophyCount_js_1 = require("../common/trophyCount.js");
+const conversions_js_1 = require("../../util/psnp/conversions.js");
 /** Parses a 'playable' game containing user progress from Profile and Series pages. */
 class ParserGamePlayable extends psnpParser_js_1.PsnpParser {
     type = 'Playable Game';
@@ -38,7 +39,7 @@ class ParserGamePlayable extends psnpParser_js_1.PsnpParser {
         const dateHolder = tr.querySelector('td > div.small-info:nth-of-type(3)');
         if (dateHolder) {
             const speedString = dateHolder.querySelector('bullet + b')?.textContent?.trim() || '';
-            completionSpeed = speedString ? index_js_1.PsnpGamePlayable.speedStringToMs(speedString) : undefined;
+            completionSpeed = speedString ? (0, conversions_js_1.speedStringToMs)(speedString) : undefined;
             const day = dateHolder.childNodes[0]?.textContent?.trim();
             const monthYear = dateHolder.childNodes[2]?.textContent?.trim();
             latestTrophyTimestamp = day && monthYear ? new Date(`${day} ${monthYear}`).valueOf() : undefined;
