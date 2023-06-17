@@ -30,41 +30,40 @@ function sharedPropsAreEqual(obj1, obj2) {
     });
 }
 exports.sharedPropsAreEqual = sharedPropsAreEqual;
-/** Finds all shared properties (keys) between `target` and `source` and returns an array of changes.
- *  Setting the `update` flag will also update the shared properties of `source` accordingly. */
-function diffAndUpdateSharedProps(target, source, update = false, parentKey = '') {
+/** Finds all shared properties (keys) between `oldEntity` and `newEntity` and returns an array of changes.
+ *  Setting the `update` flag will also update `oldEntity` with the values of properties shared with `newEntity`. */
+function diffAndUpdateSharedProps(oldEntity, newEntity, update = false, parentKey = '') {
     const changes = [];
-    const sharedKeys = Object.keys(target).filter(key => key in source);
+    const sharedKeys = Object.keys(oldEntity).filter(key => key in newEntity);
     sharedKeys.forEach(key => {
         const fullKey = parentKey ? `${parentKey}.${key}` : key;
-        const sourceVal = source[key];
-        const targetVal = target[key];
-        if (isStandardObj(sourceVal) && isStandardObj(targetVal)) {
-            const subChanges = diffAndUpdateSharedProps(targetVal, sourceVal, update, fullKey);
-            if (subChanges) {
-                changes.push(...subChanges);
-            }
+        const newVal = newEntity[key];
+        const oldVal = oldEntity[key];
+        if (isStandardObj(newVal) && isStandardObj(oldVal)) {
+            const subChanges = diffAndUpdateSharedProps(oldVal, newVal, update, fullKey);
+            changes.push(...subChanges);
         }
-        else if (Array.isArray(sourceVal) && Array.isArray(targetVal)) {
-            if (sourceVal.length !== targetVal.length) {
+        else if (Array.isArray(newVal) && Array.isArray(oldVal)) {
+            if (newVal.length !== oldVal.length) {
                 changes.push({
                     key: fullKey,
-                    oldValue: targetVal.length,
-                    newValue: sourceVal.length,
+                    oldValue: oldVal.length,
+                    newValue: newVal.length,
                 });
             }
             if (update) {
-                target[key] = sourceVal.slice();
+                oldEntity[key] = newVal.slice();
             }
+            // Primitive value change where newVal is not nullish nor an empty string.
         }
-        else if (sourceVal !== targetVal) {
+        else if ((newVal ?? '') !== '' && newVal !== oldVal) {
             changes.push({
                 key: fullKey,
-                oldValue: targetVal,
-                newValue: sourceVal,
+                oldValue: oldVal,
+                newValue: newVal,
             });
             if (update) {
-                target[key] = sourceVal;
+                oldEntity[key] = newVal;
             }
         }
     });

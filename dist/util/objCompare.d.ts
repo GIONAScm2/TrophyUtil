@@ -26,9 +26,9 @@ export type ChangeData<T> = {
     operation: 'add' | 'update';
     changes: FieldChanges<T>;
 };
-/** Finds all shared properties (keys) between `target` and `source` and returns an array of changes.
- *  Setting the `update` flag will also update the shared properties of `source` accordingly. */
-export declare function diffAndUpdateSharedProps<T extends object>(target: T, source: Partial<T>, update?: boolean, parentKey?: string): FieldChanges<T>;
+/** Finds all shared properties (keys) between `oldEntity` and `newEntity` and returns an array of changes.
+ *  Setting the `update` flag will also update `oldEntity` with the values of properties shared with `newEntity`. */
+export declare function diffAndUpdateSharedProps<T extends object>(oldEntity: T, newEntity: Partial<T>, update?: boolean, parentKey?: string): FieldChanges<T>;
 /**
  * Compares `oldEntity` to `newEntity` and returns a log of changes based on their shared properties.
  * The `update` flag will also update `oldEntity` with any differing shared property values.

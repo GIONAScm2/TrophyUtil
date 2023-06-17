@@ -55,52 +55,51 @@ export type ChangeData<T> = {
 	changes: FieldChanges<T>;
 };
 
-/** Finds all shared properties (keys) between `target` and `source` and returns an array of changes.
- *  Setting the `update` flag will also update the shared properties of `source` accordingly. */
+/** Finds all shared properties (keys) between `oldEntity` and `newEntity` and returns an array of changes.
+ *  Setting the `update` flag will also update `oldEntity` with the values of properties shared with `newEntity`. */
 export function diffAndUpdateSharedProps<T extends object>(
-	target: T,
-	source: Partial<T>,
+	oldEntity: T,
+	newEntity: Partial<T>,
 	update: boolean = false,
 	parentKey: string = ''
 ): FieldChanges<T> {
 	const changes: FieldChanges<T> = [];
 
-	const sharedKeys = Object.keys(target).filter(key => key in source);
+	const sharedKeys = Object.keys(oldEntity).filter(key => key in newEntity);
 
 	sharedKeys.forEach(key => {
 		const fullKey = parentKey ? `${parentKey}.${key}` : key;
-		const sourceVal = source[key as keyof T];
-		const targetVal = target[key as keyof T];
+		const newVal = newEntity[key as keyof T];
+		const oldVal = oldEntity[key as keyof T];
 
-		if (isStandardObj(sourceVal) && isStandardObj(targetVal)) {
+		if (isStandardObj(newVal) && isStandardObj(oldVal)) {
 			const subChanges = diffAndUpdateSharedProps(
-				targetVal as Record<string, unknown>,
-				sourceVal as Record<string, unknown>,
+				oldVal as Record<string, unknown>,
+				newVal as Record<string, unknown>,
 				update,
 				fullKey
 			);
-			if (subChanges) {
-				changes.push(...(subChanges as FieldChanges<T>));
-			}
-		} else if (Array.isArray(sourceVal) && Array.isArray(targetVal)) {
-			if (sourceVal.length !== targetVal.length) {
+			changes.push(...(subChanges as FieldChanges<T>));
+		} else if (Array.isArray(newVal) && Array.isArray(oldVal)) {
+			if (newVal.length !== oldVal.length) {
 				changes.push({
 					key: fullKey as keyof T,
-					oldValue: targetVal.length,
-					newValue: sourceVal.length,
+					oldValue: oldVal.length,
+					newValue: newVal.length,
 				} as ArrayLengthChange<Extract<keyof T, string>>);
 			}
 			if (update) {
-				target[key as keyof T] = sourceVal.slice() as T[keyof T];
+				oldEntity[key as keyof T] = newVal.slice() as T[keyof T];
 			}
-		} else if (sourceVal !== targetVal) {
+			// Primitive value change where newVal is not nullish nor an empty string.
+		} else if ((newVal ?? '') !== '' && newVal !== oldVal) {
 			changes.push({
 				key: fullKey as Extract<keyof T, string>,
-				oldValue: targetVal,
-				newValue: sourceVal,
+				oldValue: oldVal,
+				newValue: newVal,
 			} as FieldChange<T, Extract<keyof T, string>>);
 			if (update) {
-				target[key as keyof T] = sourceVal as T[keyof T];
+				oldEntity[key as keyof T] = newVal as T[keyof T];
 			}
 		}
 	});

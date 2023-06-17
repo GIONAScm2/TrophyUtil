@@ -56,4 +56,12 @@ describe('diffAndUpdateSharedProps', () => {
 		const equalityAfter = sharedPropsAreEqual(oldSeries, newSeries);
 		expect(!equalityBefore && equalityAfter).toBe(true);
 	});
+
+	test(`should NOT register a 'change' when newValue is nullish`, () => {
+		const dbItem = {numOwners: 0, title: 'CoD'};
+		const domItem = {numOwners: undefined, title: ''};
+		const fieldChanges = diffAndUpdateSharedProps(dbItem, domItem, true);
+		console.log(fieldChanges);
+		expect(fieldChanges.length).toBe(0);
+	});
 });

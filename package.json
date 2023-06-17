@@ -25,7 +25,7 @@
 	"types": "./dist/index.d.ts",
 	"scripts": {
 		"test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-		"test:stacks": "node --experimental-vm-modules node_modules/jest/bin/jest.js test/models/stackData.test",
+		"test:file": "node --experimental-vm-modules node_modules/jest/bin/jest.js test/util/objCompare.test",
 		"build": "tsc && tsc -p tsconfig.cjs.json",
 		"start": "ts-node-esm src/index.ts",
 		"start:prod": "npm run build && node dist/index.js"
