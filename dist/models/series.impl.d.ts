@@ -15,7 +15,7 @@ export declare class SeriesDoc extends PsnpSeriesListing implements ISeriesDoc {
     createdAt?: MongoDateField | undefined;
     updatedAt?: MongoDateField | undefined;
     /** Flattens `stages` series stages, returning a 2D array of all games. */
-    get allGames(): import("./game.interface.js").IGamePlayable[];
+    get allGames(): number[];
     constructor(data: ISeriesDoc);
 }
 //# sourceMappingURL=series.impl.d.ts.map

@@ -31,7 +31,7 @@ export class SeriesDoc extends PsnpSeriesListing implements ISeriesDoc {
 
 	/** Flattens `stages` series stages, returning a 2D array of all games. */
 	get allGames() {
-		return this.stages.flatMap(s => s.games);
+		return this.stages.flatMap(s => s.gameIds);
 	}
 
 	constructor(data: ISeriesDoc) {

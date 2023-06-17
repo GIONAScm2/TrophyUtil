@@ -26,8 +26,9 @@ export class ParserSeriesPageNeutral extends PsnpParser<ISeriesPageNeutral, Wind
 			const stageNum = stageNumString === 'NO' ? 0 : +stageNumString;
 
 			const games = [...el.querySelectorAll('tr')].map(tr => gameParser.parse(tr));
+			const gameIds = games.map(g => g._id);
 
-			return {stageNum, games};
+			return {stageNum, gameIds};
 		});
 		const trophyCount = aggregateSeriesTrophyCount(stages);
 
@@ -37,7 +38,7 @@ export class ParserSeriesPageNeutral extends PsnpParser<ISeriesPageNeutral, Wind
 
 		const points = calculateTrophyPoints(trophyCount);
 		const numTrophies = sumTrophyCount(trophyCount);
-		const numGames = stages.reduce((acc, stage) => acc + stage.games.length, 0);
+		const numGames = stages.reduce((acc, stage) => acc + stage.gameIds.length, 0);
 
 		return {
 			_id,
@@ -62,16 +63,17 @@ function aggregateSeriesTrophyCount(stages: IStage[]): TrophyCount | undefined {
 	};
 
 	for (const stage of stages) {
-		for (const game of stage.games) {
-			if (game.trophyCount) {
-				aggregateTrophyCount.bronze += game.trophyCount.bronze;
-				aggregateTrophyCount.silver += game.trophyCount.silver;
-				aggregateTrophyCount.gold += game.trophyCount.gold;
-				aggregateTrophyCount.platinum += game.trophyCount.platinum;
-			} else {
-				return;
+		if (stage.games)
+			for (const game of stage.games) {
+				if (game.trophyCount) {
+					aggregateTrophyCount.bronze += game.trophyCount.bronze;
+					aggregateTrophyCount.silver += game.trophyCount.silver;
+					aggregateTrophyCount.gold += game.trophyCount.gold;
+					aggregateTrophyCount.platinum += game.trophyCount.platinum;
+				} else {
+					return;
+				}
 			}
-		}
 	}
 	return aggregateTrophyCount;
 }

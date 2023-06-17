@@ -17,7 +17,8 @@ export class ParserSeriesPageNeutral extends PsnpParser {
             const stageNumString = el.querySelector(`tr:first-of-type > td:first-of-type span.typo-top`)?.textContent?.trim() ?? '';
             const stageNum = stageNumString === 'NO' ? 0 : +stageNumString;
             const games = [...el.querySelectorAll('tr')].map(tr => gameParser.parse(tr));
-            return { stageNum, games };
+            const gameIds = games.map(g => g._id);
+            return { stageNum, gameIds };
         });
         const trophyCount = aggregateSeriesTrophyCount(stages);
         if (!_imagePath || !stages.length || !trophyCount) {
@@ -25,7 +26,7 @@ export class ParserSeriesPageNeutral extends PsnpParser {
         }
         const points = calculateTrophyPoints(trophyCount);
         const numTrophies = sumTrophyCount(trophyCount);
-        const numGames = stages.reduce((acc, stage) => acc + stage.games.length, 0);
+        const numGames = stages.reduce((acc, stage) => acc + stage.gameIds.length, 0);
         return {
             _id,
             _nameSerialized,
@@ -47,17 +48,18 @@ function aggregateSeriesTrophyCount(stages) {
         platinum: 0,
     };
     for (const stage of stages) {
-        for (const game of stage.games) {
-            if (game.trophyCount) {
-                aggregateTrophyCount.bronze += game.trophyCount.bronze;
-                aggregateTrophyCount.silver += game.trophyCount.silver;
-                aggregateTrophyCount.gold += game.trophyCount.gold;
-                aggregateTrophyCount.platinum += game.trophyCount.platinum;
+        if (stage.games)
+            for (const game of stage.games) {
+                if (game.trophyCount) {
+                    aggregateTrophyCount.bronze += game.trophyCount.bronze;
+                    aggregateTrophyCount.silver += game.trophyCount.silver;
+                    aggregateTrophyCount.gold += game.trophyCount.gold;
+                    aggregateTrophyCount.platinum += game.trophyCount.platinum;
+                }
+                else {
+                    return;
+                }
             }
-            else {
-                return;
-            }
-        }
     }
     return aggregateTrophyCount;
 }

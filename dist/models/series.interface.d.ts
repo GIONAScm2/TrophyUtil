@@ -20,7 +20,8 @@ export interface IStage {
      * Many series have a "No stage" stage for spinoffs that precedes Stage 1. These stages should be assigned `0`. */
     stageNum: number;
     /** Array of PSNP Game IDs. */
-    games: IGamePlayable[];
+    gameIds: number[];
+    games?: IGamePlayable[] | undefined;
 }
 /** Parsed, neutral series page */
 export interface ISeriesPageNeutral extends ISeriesListing, IStages {
