@@ -6,7 +6,7 @@ var PsnpForumPageType;
 (function (PsnpForumPageType) {
     PsnpForumPageType[PsnpForumPageType["GameSubforum"] = 0] = "GameSubforum";
     PsnpForumPageType[PsnpForumPageType["Topic"] = 1] = "Topic";
-})(PsnpForumPageType = exports.PsnpForumPageType || (exports.PsnpForumPageType = {}));
+})(PsnpForumPageType || (exports.PsnpForumPageType = PsnpForumPageType = {}));
 /** Identifies the PSNProfiles page type of a given URL. */
 function getPsnpForumPageType(url) {
     const path = url.pathname;

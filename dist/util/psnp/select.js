@@ -1,5 +1,5 @@
 import { PsnpPageType as Page } from './pageType.js';
-class Select {
+export class Select {
     /** Selects all valid table rows. */
     static TR = `tr:not(:empty, [id*='load'])`;
     static tr(parent) {
@@ -26,5 +26,4 @@ class Select {
         [Page.GameTrophyList]: [`${Select.SUFFIX}`],
     };
 }
-export { Select };
 //# sourceMappingURL=select.js.map

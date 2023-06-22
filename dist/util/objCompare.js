@@ -84,4 +84,35 @@ export function diffUpdate(oldEntity, newEntity, update) {
         changes,
     };
 }
+/**
+ * Removes extraneous properties from `target` that don't exist on `exemplar`.
+ * This includes properties nested within objects.
+ * Outputs log for every omitted property.
+ *
+ * @param {Record<string, unknown>} exemplar - The object that holds the desired structure.
+ * @param {unknown} target - The object from which extraneous properties are to be pruned.
+ * @returns {Record<string, unknown> | null} - The pruned object, or null if the target wasn't an object.
+ */
+export function pruneExtraneousProperties(exemplar, target) {
+    if (!isStandardObj(target)) {
+        return null;
+    }
+    const result = {};
+    Object.keys(target).forEach(key => {
+        if (key in exemplar) {
+            const exemplarVal = exemplar[key];
+            const targetVal = target[key];
+            if (isStandardObj(targetVal) && isStandardObj(exemplarVal)) {
+                result[key] = pruneExtraneousProperties(exemplarVal, targetVal);
+            }
+            else {
+                result[key] = targetVal;
+            }
+        }
+        else {
+            console.log(`Omitting deprecated key '${key}'`);
+        }
+    });
+    return result;
+}
 //# sourceMappingURL=objCompare.js.map

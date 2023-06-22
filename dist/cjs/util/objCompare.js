@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.diffUpdate = exports.diffAndUpdateSharedProps = exports.sharedPropsAreEqual = exports.isStandardObj = void 0;
+exports.pruneExtraneousProperties = exports.diffUpdate = exports.diffAndUpdateSharedProps = exports.sharedPropsAreEqual = exports.isStandardObj = void 0;
 /** Returns `true` if `x` is a standard POJO (or class instance), otherwise `false` if it's a primitive/null/array/function/Map/Set/etc. */
 function isStandardObj(x) {
     return Object.prototype.toString.call(x) === '[object Object]';
@@ -91,4 +91,36 @@ function diffUpdate(oldEntity, newEntity, update) {
     };
 }
 exports.diffUpdate = diffUpdate;
+/**
+ * Removes extraneous properties from `target` that don't exist on `exemplar`.
+ * This includes properties nested within objects.
+ * Outputs log for every omitted property.
+ *
+ * @param {Record<string, unknown>} exemplar - The object that holds the desired structure.
+ * @param {unknown} target - The object from which extraneous properties are to be pruned.
+ * @returns {Record<string, unknown> | null} - The pruned object, or null if the target wasn't an object.
+ */
+function pruneExtraneousProperties(exemplar, target) {
+    if (!isStandardObj(target)) {
+        return null;
+    }
+    const result = {};
+    Object.keys(target).forEach(key => {
+        if (key in exemplar) {
+            const exemplarVal = exemplar[key];
+            const targetVal = target[key];
+            if (isStandardObj(targetVal) && isStandardObj(exemplarVal)) {
+                result[key] = pruneExtraneousProperties(exemplarVal, targetVal);
+            }
+            else {
+                result[key] = targetVal;
+            }
+        }
+        else {
+            console.log(`Omitting deprecated key '${key}'`);
+        }
+    });
+    return result;
+}
+exports.pruneExtraneousProperties = pruneExtraneousProperties;
 //# sourceMappingURL=objCompare.js.map

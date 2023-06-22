@@ -44,7 +44,7 @@ var PsnpPageType;
      *
      * Excludes subpaths and hashes, like `.../log` or `...#gamelists` */
     PsnpPageType["Profile"] = "Profile";
-})(PsnpPageType = exports.PsnpPageType || (exports.PsnpPageType = {}));
+})(PsnpPageType || (exports.PsnpPageType = PsnpPageType = {}));
 /** Identifies the PSNProfiles page type of a given URL. */
 function getPsnpPageType(url) {
     const path = url.pathname;

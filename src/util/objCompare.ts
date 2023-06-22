@@ -30,40 +30,37 @@ export function sharedPropsAreEqual(obj1: Record<string, unknown>, obj2: Record<
 }
 
 /** Represents an object key's change in value. */
-export type FieldChange<T, K extends keyof T> = {
+export type FieldChange = {
 	key: string;
-	oldValue: T[K] | undefined;
-	newValue: T[K] | undefined;
+	oldValue: unknown;
+	newValue: unknown;
 };
 /** Represents an object key's change in value length, when the value is an array. */
-export type ArrayLengthChange<K extends string> = {
-	key: K;
+export type ArrayLengthChange = {
+	key: string;
 	oldValue: number;
 	newValue: number;
 };
 
 /** An array of {@link FieldChange} and/or {@link ArrayLengthChange} */
-export type FieldChanges<T, K extends Extract<keyof T, string> = Extract<keyof T, string>> = (
-	| FieldChange<T, K>
-	| ArrayLengthChange<K>
-)[];
+export type FieldChanges = (FieldChange | ArrayLengthChange)[];
 
 /** Represents the aggregate change of an object. */
-export type ChangeData<T> = {
+export type ChangeData = {
 	id: number;
 	operation: 'add' | 'update';
-	changes: FieldChanges<T>;
+	changes: FieldChanges;
 };
 
 /** Finds all shared properties (keys) between `oldEntity` and `newEntity` and returns an array of changes.
  *  Setting the `update` flag will also update `oldEntity` with the values of properties shared with `newEntity`. */
 export function diffAndUpdateSharedProps<T extends object>(
-	oldEntity: T,
+	oldEntity: Partial<T>,
 	newEntity: Partial<T>,
 	update: boolean = false,
 	parentKey: string = ''
-): FieldChanges<T> {
-	const changes: FieldChanges<T> = [];
+): FieldChanges {
+	const changes: FieldChanges = [];
 
 	const sharedKeys = Object.keys(oldEntity).filter(key => key in newEntity);
 
@@ -73,20 +70,15 @@ export function diffAndUpdateSharedProps<T extends object>(
 		const oldVal = oldEntity[key as keyof T];
 
 		if (isStandardObj(newVal) && isStandardObj(oldVal)) {
-			const subChanges = diffAndUpdateSharedProps(
-				oldVal as Record<string, unknown>,
-				newVal as Record<string, unknown>,
-				update,
-				fullKey
-			);
-			changes.push(...(subChanges as FieldChanges<T>));
+			const subChanges = diffAndUpdateSharedProps(oldVal, newVal, update, fullKey);
+			changes.push(...(subChanges as FieldChanges));
 		} else if (Array.isArray(newVal) && Array.isArray(oldVal)) {
 			if (newVal.length !== oldVal.length) {
 				changes.push({
 					key: fullKey as keyof T,
 					oldValue: oldVal.length,
 					newValue: newVal.length,
-				} as ArrayLengthChange<Extract<keyof T, string>>);
+				} as ArrayLengthChange);
 			}
 			if (update) {
 				oldEntity[key as keyof T] = newVal.slice() as T[keyof T];
@@ -97,7 +89,7 @@ export function diffAndUpdateSharedProps<T extends object>(
 				key: fullKey as Extract<keyof T, string>,
 				oldValue: oldVal,
 				newValue: newVal,
-			} as FieldChange<T, Extract<keyof T, string>>);
+			} as FieldChange);
 			if (update) {
 				oldEntity[key as keyof T] = newVal as T[keyof T];
 			}
@@ -112,7 +104,7 @@ export function diffAndUpdateSharedProps<T extends object>(
  * The `update` flag will also update `oldEntity` with any differing shared property values.
  *
  * **Note:** "new" operations return an empty `changes` array. */
-export function diffUpdate<E extends IPsnpEntity>(oldEntity: E | null | undefined, newEntity: E, update: boolean): ChangeData<E> {
+export function diffUpdate<E extends IPsnpEntity>(oldEntity: E | null | undefined, newEntity: E, update: boolean): ChangeData {
 	const commonChanges = {id: newEntity._id, changes: []};
 
 	if (!oldEntity) {
@@ -130,4 +122,37 @@ export function diffUpdate<E extends IPsnpEntity>(oldEntity: E | null | undefine
 		operation: 'update',
 		changes,
 	};
+}
+
+/**
+ * Removes extraneous properties from `target` that don't exist on `exemplar`.
+ * This includes properties nested within objects.
+ * Outputs log for every omitted property.
+ *
+ * @param {Record<string, unknown>} exemplar - The object that holds the desired structure.
+ * @param {unknown} target - The object from which extraneous properties are to be pruned.
+ * @returns {Record<string, unknown> | null} - The pruned object, or null if the target wasn't an object.
+ */
+export function pruneExtraneousProperties(exemplar: Record<string, unknown>, target: unknown): Record<string, unknown> | null {
+	if (!isStandardObj(target)) {
+		return null;
+	}
+
+	const result: Record<string, unknown> = {};
+
+	Object.keys(target).forEach(key => {
+		if (key in exemplar) {
+			const exemplarVal = exemplar[key];
+			const targetVal = target[key];
+			if (isStandardObj(targetVal) && isStandardObj(exemplarVal)) {
+				result[key] = pruneExtraneousProperties(exemplarVal, targetVal);
+			} else {
+				result[key] = targetVal;
+			}
+		} else {
+			console.log(`Omitting deprecated key '${key}'`);
+		}
+	});
+
+	return result;
 }

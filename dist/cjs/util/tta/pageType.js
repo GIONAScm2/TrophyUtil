@@ -7,7 +7,7 @@ var TTAPageType;
     TTAPageType[TTAPageType["GameAchievements"] = 0] = "GameAchievements";
     TTAPageType[TTAPageType["GameAchievementSolutions"] = 1] = "GameAchievementSolutions";
     TTAPageType[TTAPageType["Walkthrough"] = 2] = "Walkthrough";
-})(TTAPageType = exports.TTAPageType || (exports.TTAPageType = {}));
+})(TTAPageType || (exports.TTAPageType = TTAPageType = {}));
 /** Identifies the PSNProfiles page type of a given URL. */
 function getTTAPageType(url) {
     const path = url.pathname;
