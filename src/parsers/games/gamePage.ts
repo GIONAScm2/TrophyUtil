@@ -2,13 +2,7 @@ import {PsnpParser} from '../psnpParser.js';
 import {TrophyCount, calculateTrophyPoints} from '../../models/common.js';
 import {ParserTrophyGroups} from '../trophies/trophyGroups.js';
 import {ParserGamePartialStack} from './gameFromStackPanel.js';
-import {
-	PlatformTag,
-	IGamePage,
-	IMetadataFields,
-	IGamePartialTrophyList,
-	IHeaderStats,
-} from '../../models/game.interface.js';
+import {PlatformTag, IGamePage, IMetadataFields, IGamePartialTrophyList, IHeaderStats} from '../../models/game.interface.js';
 import {parseNum, getStackAbbr} from '../../util/util.js';
 import {ITrophy} from '../../models/trophy.interface.js';
 
@@ -58,6 +52,15 @@ export class ParserGamePage extends PsnpParser<IGamePage, Document> {
 			stacks.push(...games);
 		}
 
+		let seriesIds: number[] | undefined;
+		const seriesElements = [...doc.querySelectorAll<HTMLAnchorElement>('a.series-info')];
+		if (seriesElements.length) {
+			seriesIds = seriesElements.map(el => {
+				const match = el.href.match(/series\/(\d+)/) ?? [];
+				return +match[1];
+			});
+		}
+
 		const headerStatElements = [...doc.querySelectorAll<HTMLSpanElement>(`div.stats.flex > span.stat`)];
 		const stats = this.parseHeaderStats(headerStatElements);
 		if (!stats) {
@@ -93,11 +96,13 @@ export class ParserGamePage extends PsnpParser<IGamePage, Document> {
 			points,
 			numOwners: stats.gameOwners,
 			stacks,
+			stackIds: stacks.map(s => s._id),
 			trophyGroups: trophyGroups,
 			headerStats: stats,
 			rarityBase,
 			rarityDlc,
 			metaData,
+			seriesIds,
 		};
 	}
 

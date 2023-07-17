@@ -42,6 +42,14 @@ class ParserGamePage extends psnpParser_js_1.PsnpParser {
             const games = [...stackTable.querySelectorAll('tr')].map(tr => gameParser.parse(tr));
             stacks.push(...games);
         }
+        let seriesIds;
+        const seriesElements = [...doc.querySelectorAll('a.series-info')];
+        if (seriesElements.length) {
+            seriesIds = seriesElements.map(el => {
+                const match = el.href.match(/series\/(\d+)/) ?? [];
+                return +match[1];
+            });
+        }
         const headerStatElements = [...doc.querySelectorAll(`div.stats.flex > span.stat`)];
         const stats = this.parseHeaderStats(headerStatElements);
         if (!stats) {
@@ -72,11 +80,13 @@ class ParserGamePage extends psnpParser_js_1.PsnpParser {
             points,
             numOwners: stats.gameOwners,
             stacks,
+            stackIds: stacks.map(s => s._id),
             trophyGroups: trophyGroups,
             headerStats: stats,
             rarityBase,
             rarityDlc,
             metaData,
+            seriesIds,
         };
     }
     /** Parses {@link IMetadataFields} from the trophy list. */

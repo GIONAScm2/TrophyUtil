@@ -104,6 +104,7 @@ export class PsnpGameStandardDoc extends PsnpGameStandard implements IGameDoc {
 	metaData: IMetadataFields;
 	createdAt?: MongoDateField | undefined;
 	updatedAt?: MongoDateField | undefined;
+	stackIds?: number[] | undefined;
 
 	/** Flattens `trophies` trophy groups, returning a 2D array of all trophies. */
 	get allTrophies() {
@@ -119,5 +120,6 @@ export class PsnpGameStandardDoc extends PsnpGameStandard implements IGameDoc {
 		this.metaData = data.metaData;
 		this.createdAt = data.createdAt;
 		this.updatedAt = data.updatedAt;
+		this.stackIds = data.stackIds;
 	}
 }

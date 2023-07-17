@@ -100,10 +100,14 @@ interface IGamePageData {
     trophyGroups: ITrophyGroup[];
     /** List of {@link IGamePartialTrophyList} */
     stacks: IGamePartialTrophyList[];
+    /** Array of "Other Platforms and Regions" game IDs */
+    stackIds?: number[] | undefined;
     /** Aggregate stats; see {@link IHeaderStats} */
     headerStats: IHeaderStats;
     /** Game metadata like `developer`, `genres`, etc. */
     metaData: IMetadataFields;
+    /** Array of series IDs that the game belongs to. */
+    seriesIds?: number[] | undefined;
 }
 /** Only the essential stack-related properties to properly label stacks. */
 export interface IGameStack extends IPlatforms, IStackLabel {
@@ -140,7 +144,7 @@ export interface IGamePlayable extends IGameBaseFull, IRarity, IUserProgress {
 export interface IGamePage extends MakeOptional<IGameStandard, '_imagePath'>, IRarity, IGamePageData {
 }
 /** All *relevant* trophy list-specific game properties that supplement game listing data. */
-interface IPageSupplement extends Pick<IGamePageData, 'forumId' | 'trophyGroups' | 'metaData'> {
+interface IPageSupplement extends Pick<IGamePageData, 'forumId' | 'trophyGroups' | 'metaData' | 'seriesIds' | 'stackIds'> {
 }
 /** Recommended MongoDB schema for standard games. */
 export interface IGameDoc extends IGameStandard, IRarity, IPageSupplement, Partial<IMongoTimestamps> {

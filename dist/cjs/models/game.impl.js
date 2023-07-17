@@ -89,6 +89,7 @@ class PsnpGameStandardDoc extends PsnpGameStandard {
     metaData;
     createdAt;
     updatedAt;
+    stackIds;
     /** Flattens `trophies` trophy groups, returning a 2D array of all trophies. */
     get allTrophies() {
         return this.trophyGroups.flatMap(s => s.trophies);
@@ -102,6 +103,7 @@ class PsnpGameStandardDoc extends PsnpGameStandard {
         this.metaData = data.metaData;
         this.createdAt = data.createdAt;
         this.updatedAt = data.updatedAt;
+        this.stackIds = data.stackIds;
     }
 }
 exports.PsnpGameStandardDoc = PsnpGameStandardDoc;

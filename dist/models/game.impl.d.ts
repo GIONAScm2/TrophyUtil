@@ -51,6 +51,7 @@ export declare class PsnpGameStandardDoc extends PsnpGameStandard implements IGa
     metaData: IMetadataFields;
     createdAt?: MongoDateField | undefined;
     updatedAt?: MongoDateField | undefined;
+    stackIds?: number[] | undefined;
     /** Flattens `trophies` trophy groups, returning a 2D array of all trophies. */
     get allTrophies(): import("./trophy.interface.js").ITrophy[];
     constructor(data: IGameDoc);
