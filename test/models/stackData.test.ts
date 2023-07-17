@@ -1,4 +1,4 @@
-import {StackData} from '../../src/models/stackData';
+import {StackAssociation} from '../../src/models/stackData';
 import {IGameStack} from '../../src/models/game.interface';
 
 describe('StackData.labelStacks', () => {
@@ -9,7 +9,7 @@ describe('StackData.labelStacks', () => {
 			{stackLabel: 'AS', platforms: ['PS5']},
 			{stackLabel: null, platforms: ['PS4', 'VR']},
 		];
-		const stacks = new StackData(stacks1).stacks.map(stack => stack.stack);
+		const stacks = new StackAssociation(stacks1).stacks.map(stack => stack.stack);
 		expect(stacks).toEqual([`PS4`, `PS5_WW`, `PS5_AS`, `PSVR`]);
 	});
 
@@ -23,7 +23,7 @@ describe('StackData.labelStacks', () => {
 			{stackLabel: 'AS', platforms: ['PS4']},
 			{stackLabel: null, platforms: ['PS4']},
 		];
-		const stacks = new StackData(stacksP4D).stacks.map(stack => stack.stack);
+		const stacks = new StackAssociation(stacksP4D).stacks.map(stack => stack.stack);
 		expect(stacks).toEqual([`Vita_JP`, `Vita_NA`, `Vita_EU`, `Vita_AS`, `PS4_JP`, `PS4_AS`, `PS4_WW`]);
 	});
 
@@ -34,7 +34,7 @@ describe('StackData.labelStacks', () => {
 			{stackLabel: null, platforms: ['PS3', 'PS4']},
 			{stackLabel: 'KR', platforms: ['PS4']},
 		];
-		const stacks = new StackData(stacksP5).stacks.map(stack => stack.stack);
+		const stacks = new StackAssociation(stacksP5).stacks.map(stack => stack.stack);
 		expect(stacks).toEqual([`JP`, `HK`, `WW`, `KR`]);
 	});
 });

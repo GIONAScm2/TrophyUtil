@@ -3,8 +3,41 @@ import {MakeRequired} from '../util/util.js';
 
 interface IGameStackFull extends MakeRequired<IGameStack, 'stack' | 'platformString' | 'stackLabels'> {}
 
-export class StackData {
+enum SaveTransferPotency {
+	Low = 'Low',
+	Med = 'Med',
+	High = 'High',
+	Potential = 'Potent(ial)',
+	Unknown = '?',
+}
+interface SaveTransferInfo {
+	hasST: boolean;
+	hasSST: boolean;
+	/** Whether save transfer was available when the game (or stack) released. */
+	atRelease?: boolean;
+	bidirectional: boolean; // May implement as calculated getter instead?
+	potency: SaveTransferPotency;
+	/** Each game's platforms can be represented as a platformString. This array lists all the unique platformStrings. */
+	platformStrings: string[];
+	/** Array of tuples, each representing a save transfer direction (A -> B). Each tuple element is a `stack` string.
+	 *
+	 * @example
+	 * [["PS4", "PS5_WW"], ["PS5_WW", "PS4"]]
+	 */
+	transferDirections: Array<string[]>; // Could also implement as Record<stack, stack[]>
+}
+interface StackData {
+	/** Unique ID (implementation TBD). */
+	id: number;
+	/** IDs of PSNP games included in the stack group. */
+	psnpIds: number[];
+}
+
+/** Represents a group of stacking games. */
+export class StackAssociation {
 	stacks: IGameStackFull[];
+	// get hasSameNumTrophies() {}
+	// get hasSamePlatCount() {}
 	constructor(stacks: IGameStack[]) {
 		this.stacks = this.labelStacks(stacks);
 	}
@@ -85,7 +118,7 @@ export class StackData {
 	private buildDetailedStacks(stacks: IGameStack[]): IGameStackFull[] {
 		const detailedStacks = stacks.map(stack => ({
 			...stack,
-			platformString: StackData.buildPlatformTag(stack.platforms),
+			platformString: StackAssociation.buildPlatformTag(stack.platforms),
 			stack: '',
 			stackLabels: [],
 		}));
