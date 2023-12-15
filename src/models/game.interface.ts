@@ -1,4 +1,4 @@
-import {IPsnpEntity, ITrophyCount, IMongoTimestamps, MakeOptional, TrophyCount} from '../index.js';
+import {IPsnpEntity, ITrophyCount, IMongoTimestamps, MakeOptional} from '../index.js';
 import {ITrophyGroup} from './trophy.interface.js';
 
 /** Abbreviated stack label that PSNP uses. */
@@ -23,6 +23,7 @@ export const StackLookup = {
 	UK: 'United Kingdom',
 	FR: 'French',
 	ES: 'Spanish',
+	SA: 'Saudi Arabian',
 	// Non-regions:
 	DG: 'Digital',
 	PH: 'Physical',
