@@ -1,20 +1,19 @@
 /** Parses an entity `T` from `E`. */
 export abstract class PsnpParser<T, E> {
-	/** Entity identifier to aid subclass debugging. */
-	protected abstract readonly type: string;
+	protected abstract readonly expectedEntityType: string;
 
-	/** Parses an entity from a DOM target (Document or Element).
-	 *
-	 * @throws If any of the entity's required fields are parsed as `null`.	*/
 	parse(domTarget: E): T {
-		const parsedItem = this._parse(domTarget);
-		if (!parsedItem) {
-			throw new Error(`Failed to parse ${this.type}`);
+		try {
+			const parsedItem = this._parse(domTarget);
+			if (!parsedItem) {
+				throw new Error(`Failed to parse ${this.expectedEntityType}`);
+			}
+			return parsedItem;
+		} catch (err) {
+			throw err;
 		}
-		return parsedItem;
 	}
 
-	/** Method that performs the parsing. */
 	protected abstract _parse(parseTarget: E): T | null;
 
 	/**
@@ -50,5 +49,9 @@ export abstract class PsnpParser<T, E> {
 		const id = +parts[0];
 		const nameSerialized = parts.slice(1).join('-');
 		return [id, nameSerialized];
+	}
+
+	protected throwError(prop: string) {
+		throw new Error(`Failed to parse "${prop}" for ${this.expectedEntityType}`);
 	}
 }
