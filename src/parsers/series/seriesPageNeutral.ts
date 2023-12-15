@@ -4,7 +4,7 @@ import {WindowLike} from '../../util/browserContext.js';
 import {PsnpParser} from '../psnpParser.js';
 
 export class ParserSeriesPageNeutral extends PsnpParser<ISeriesPageNeutral, WindowLike> {
-	protected readonly type = 'Series Page';
+	protected readonly expectedEntityType = 'Series Page';
 
 	protected _parse(_window: WindowLike): ISeriesPageNeutral | null {
 		const name = _window.document.querySelector(`div.series-info div.ellipsis > span`)?.textContent?.trim();

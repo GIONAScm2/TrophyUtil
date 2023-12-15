@@ -3,7 +3,7 @@ import {PlatformTag, StackAbbr, IGamePartialTrophyList} from '../../models/game.
 
 /** Parses a partial game representation from TrophyList pages. */
 export class ParserGamePartialStack extends PsnpParser<IGamePartialTrophyList, HTMLTableRowElement> {
-	protected readonly type = 'Partial Game (TrophyList)';
+	protected readonly expectedEntityType = 'Partial Game (TrophyList)';
 
 	protected _parse(tr: HTMLTableRowElement): IGamePartialTrophyList | null {
 		const titleAnchorEl = tr.querySelector(`td > span > span > a[href^='/trophies/']`);

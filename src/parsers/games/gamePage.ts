@@ -8,7 +8,7 @@ import {ITrophy} from '../../models/trophy.interface.js';
 
 /** Parses a partial game representation from TrophyList pages. */
 export class ParserGamePage extends PsnpParser<IGamePage, Document> {
-	protected readonly type = 'Game Page';
+	protected readonly expectedEntityType = 'Game Page';
 
 	protected _parse(doc: Document): IGamePage | null {
 		const navTabs = [...doc.querySelectorAll<HTMLAnchorElement>(`ul.navigation > li > a[href]`)];

@@ -5,7 +5,7 @@ import {speedStringToMs} from '../../util/psnp/conversions.js';
 
 /** Parses a 'playable' game containing user progress from Profile and Series pages. */
 export class ParserGamePlayable extends PsnpParser<IGamePlayable, HTMLTableRowElement> {
-	protected readonly type = 'Playable Game';
+	protected readonly expectedEntityType = 'Playable Game';
 
 	protected _parse(tr: HTMLTableRowElement): IGamePlayable | null {
 		const titleAnchorEl = tr.querySelector(`a.title`);

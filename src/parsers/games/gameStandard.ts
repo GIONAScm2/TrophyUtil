@@ -5,7 +5,7 @@ import { parseTrophyCount } from '../common/trophyCount.js';
 
 /** Parses a standard game representation from Games and GameSearch pages. */
 export class ParserGameStandard extends PsnpParser<IGameStandard, HTMLTableRowElement> {
-	protected readonly type = 'Standard Game';
+	protected readonly expectedEntityType = 'Standard Game';
 
 	protected _parse(tr: HTMLTableRowElement): IGameStandard | null {
 		const isSearchResult = !!tr.querySelector(`td:nth-of-type(5) > span.separator.left > span.typo-top`);

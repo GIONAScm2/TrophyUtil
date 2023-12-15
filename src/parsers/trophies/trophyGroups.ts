@@ -3,7 +3,7 @@ import {PsnpParser} from '../psnpParser.js';
 import {ParserTrophy} from './trophy.js';
 
 export class ParserTrophyGroups extends PsnpParser<ITrophyGroup[], Document> {
-	protected readonly type = 'Trophy Group';
+	protected readonly expectedEntityType = 'Trophy Group';
 
 	protected _parse(doc: Document): ITrophyGroup[] {
 		const groups = this.getTrophyGroups(doc)

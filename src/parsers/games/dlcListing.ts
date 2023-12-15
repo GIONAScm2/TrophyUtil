@@ -4,7 +4,7 @@ import {calculateTrophyPoints, sumTrophyCount} from '../../models/common.js';
 import {parseTrophyCount} from '../common/trophyCount.js';
 
 export class ParserDlcListing extends PsnpParser<IGameDlc, HTMLTableRowElement> {
-	protected readonly type = 'DLC Listing';
+	protected readonly expectedEntityType = 'DLC Listing';
 
 	protected _parse(tr: HTMLTableRowElement): IGameDlc | null {
 		const titleAnchorEl = tr.querySelector(`td a.title`);
