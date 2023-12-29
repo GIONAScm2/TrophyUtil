@@ -3,6 +3,8 @@ import {MakeRequired} from '../util/util.js';
 
 interface IGameStackFull extends MakeRequired<IGameStack, 'stack' | 'platformString' | 'stackLabels'> {}
 
+type PlatformCount = Partial<Record<PlatformTag, number>>;
+
 enum SaveTransferPotency {
 	Low = 'Low',
 	Med = 'Med',
