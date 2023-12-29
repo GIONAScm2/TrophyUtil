@@ -29,6 +29,7 @@ export const StackLookup = {
 	PH: 'Physical',
 	RR: 'Rereleased',
 	OR: 'Original',
+	BO: 'Bonus/Bundle',
 } as const;
 
 export type PlatformTag = 'Vita' | 'VR' | 'PS3' | 'PS4' | 'PS5';
