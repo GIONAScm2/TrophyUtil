@@ -4,7 +4,7 @@ exports.ParserSeriesPageNeutral = void 0;
 const index_js_1 = require("../../index.js");
 const psnpParser_js_1 = require("../psnpParser.js");
 class ParserSeriesPageNeutral extends psnpParser_js_1.PsnpParser {
-    type = 'Series Page';
+    expectedEntityType = 'Series Page';
     _parse(_window) {
         const name = _window.document.querySelector(`div.series-info div.ellipsis > span`)?.textContent?.trim();
         const hrefIdAndTitle = this._extractIdAndTitleFromPsnpUrl({ url: _window.location.pathname });

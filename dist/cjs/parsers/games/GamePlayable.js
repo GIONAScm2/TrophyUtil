@@ -7,7 +7,7 @@ const trophyCount_js_1 = require("../common/trophyCount.js");
 const conversions_js_1 = require("../../util/psnp/conversions.js");
 /** Parses a 'playable' game containing user progress from Profile and Series pages. */
 class ParserGamePlayable extends psnpParser_js_1.PsnpParser {
-    type = 'Playable Game';
+    expectedEntityType = 'Playable Game';
     _parse(tr) {
         const titleAnchorEl = tr.querySelector(`a.title`);
         const href = titleAnchorEl?.getAttribute('href');

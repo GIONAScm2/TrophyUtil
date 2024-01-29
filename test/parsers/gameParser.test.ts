@@ -12,6 +12,7 @@ import {
 import {Select, isGameStandard, isGameFromStacks, isGamePlayable, isGameDlc, msToSpeedString} from '../../src/util/index';
 import {JSDOM} from 'jsdom';
 import {IGameStandard, IGamePartialTrophyList, IGamePlayable, IGameDlc} from '../../src/models/game.interface';
+import { PsnpTrophy } from '../../src';
 
 beforeAll(() => {
 	const html = fs.readFileSync(resolve(__dirname, '../fixtures/psnpGameVariety.html'), 'utf8');
@@ -498,6 +499,10 @@ describe('Parsing from TROPHY LIST page details', () => {
 
 		const parser = new ParserGamePage();
 		const game = parser.parse(jsdom.window.document);
+		const trophies = game.trophyGroups.flatMap(group => group.trophies.map(trophy => new PsnpTrophy(trophy)));
+		const sampleTrophyElement = trophies[0].getElement(jsdom.window.document)
+
+		expect(sampleTrophyElement).not.toBeNull();
 
 		expect(game._id).toBe(2983);
 		expect(game.name).toBe('The Evil Within');

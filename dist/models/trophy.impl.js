@@ -28,11 +28,13 @@ export class PsnpTrophy {
     get rarityString() {
         return this.rarity.toFixed(2);
     }
+    getElement(doc) {
+        const tableRow = doc.querySelector(`#content a[href*="/${this.urlPath}"]`)?.closest('tr');
+        return tableRow ?? null;
+    }
     /** Parses a trophy element's 'date earned' into a date timestamp (ms). */
     static timestampFromDateEarned(element) {
-        const dateAndTimeNodes = [
-            ...element.querySelectorAll(`td:nth-of-type(3) :is(.typo-top-date, .typo-bottom-date) > nobr`),
-        ];
+        const dateAndTimeNodes = [...element.querySelectorAll(`td:nth-of-type(3) :is(.typo-top-date, .typo-bottom-date) > nobr`)];
         const [dateEl, timeEl] = dateAndTimeNodes;
         const dateText = dateEl.textContent?.replace(/(\d+)(st|nd|rd|th)/, '$1') || '';
         const timeText = timeEl.textContent || '';

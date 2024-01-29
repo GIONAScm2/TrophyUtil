@@ -4,7 +4,7 @@ import { parseTrophyCount } from '../common/trophyCount.js';
 import { speedStringToMs } from '../../util/psnp/conversions.js';
 /** Parses a 'playable' game containing user progress from Profile and Series pages. */
 export class ParserGamePlayable extends PsnpParser {
-    type = 'Playable Game';
+    expectedEntityType = 'Playable Game';
     _parse(tr) {
         const titleAnchorEl = tr.querySelector(`a.title`);
         const href = titleAnchorEl?.getAttribute('href');

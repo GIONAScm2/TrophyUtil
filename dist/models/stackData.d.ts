@@ -2,7 +2,8 @@ import { IGameStack, PlatformTag } from './game.interface.js';
 import { MakeRequired } from '../util/util.js';
 interface IGameStackFull extends MakeRequired<IGameStack, 'stack' | 'platformString' | 'stackLabels'> {
 }
-export declare class StackData {
+/** Represents a group of stacking games. */
+export declare class StackAssociation {
     stacks: IGameStackFull[];
     constructor(stacks: IGameStack[]);
     static buildPlatformTag(platforms: PlatformTag[]): string;

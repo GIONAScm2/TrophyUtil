@@ -21,10 +21,12 @@ export declare const StackLookup: {
     readonly UK: "United Kingdom";
     readonly FR: "French";
     readonly ES: "Spanish";
+    readonly SA: "Saudi Arabian";
     readonly DG: "Digital";
     readonly PH: "Physical";
     readonly RR: "Rereleased";
     readonly OR: "Original";
+    readonly BO: "Bonus/Bundle";
 };
 export type PlatformTag = 'Vita' | 'VR' | 'PS3' | 'PS4' | 'PS5';
 /** `platforms` */

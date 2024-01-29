@@ -5,7 +5,7 @@ import { ParserGamePartialStack } from './gameFromStackPanel.js';
 import { parseNum, getStackAbbr } from '../../util/util.js';
 /** Parses a partial game representation from TrophyList pages. */
 export class ParserGamePage extends PsnpParser {
-    type = 'Game Page';
+    expectedEntityType = 'Game Page';
     _parse(doc) {
         const navTabs = [...doc.querySelectorAll(`ul.navigation > li > a[href]`)];
         const forumLink = navTabs.find(anchor => anchor.textContent?.trim() === 'Forum');

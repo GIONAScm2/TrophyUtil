@@ -4,7 +4,7 @@ exports.ParserTrophy = void 0;
 const index_js_1 = require("../../index.js");
 const psnpParser_js_1 = require("../psnpParser.js");
 class ParserTrophy extends psnpParser_js_1.PsnpParser {
-    type = 'Trophy';
+    expectedEntityType = 'Trophy';
     _parse(tr) {
         const titleAnchorEl = tr.querySelector(`a.title`);
         const href = titleAnchorEl?.getAttribute('href');

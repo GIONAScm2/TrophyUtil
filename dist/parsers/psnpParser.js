@@ -1,14 +1,16 @@
 /** Parses an entity `T` from `E`. */
 export class PsnpParser {
-    /** Parses an entity from a DOM target (Document or Element).
-     *
-     * @throws If any of the entity's required fields are parsed as `null`.	*/
     parse(domTarget) {
-        const parsedItem = this._parse(domTarget);
-        if (!parsedItem) {
-            throw new Error(`Failed to parse ${this.type}`);
+        try {
+            const parsedItem = this._parse(domTarget);
+            if (!parsedItem) {
+                throw new Error(`Failed to parse ${this.expectedEntityType}`);
+            }
+            return parsedItem;
         }
-        return parsedItem;
+        catch (err) {
+            throw err;
+        }
     }
     /**
      * Given a PSNP url (href or pathname), returns a tuple of the entity ID and serialized name.
@@ -34,6 +36,9 @@ export class PsnpParser {
         const id = +parts[0];
         const nameSerialized = parts.slice(1).join('-');
         return [id, nameSerialized];
+    }
+    throwError(prop) {
+        throw new Error(`Failed to parse "${prop}" for ${this.expectedEntityType}`);
     }
 }
 //# sourceMappingURL=psnpParser.js.map

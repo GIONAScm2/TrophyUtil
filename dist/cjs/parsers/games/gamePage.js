@@ -8,7 +8,7 @@ const gameFromStackPanel_js_1 = require("./gameFromStackPanel.js");
 const util_js_1 = require("../../util/util.js");
 /** Parses a partial game representation from TrophyList pages. */
 class ParserGamePage extends psnpParser_js_1.PsnpParser {
-    type = 'Game Page';
+    expectedEntityType = 'Game Page';
     _parse(doc) {
         const navTabs = [...doc.querySelectorAll(`ul.navigation > li > a[href]`)];
         const forumLink = navTabs.find(anchor => anchor.textContent?.trim() === 'Forum');

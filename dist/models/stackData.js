@@ -1,5 +1,16 @@
-export class StackData {
+var SaveTransferPotency;
+(function (SaveTransferPotency) {
+    SaveTransferPotency["Low"] = "Low";
+    SaveTransferPotency["Med"] = "Med";
+    SaveTransferPotency["High"] = "High";
+    SaveTransferPotency["Potential"] = "Potent(ial)";
+    SaveTransferPotency["Unknown"] = "?";
+})(SaveTransferPotency || (SaveTransferPotency = {}));
+/** Represents a group of stacking games. */
+export class StackAssociation {
     stacks;
+    // get hasSameNumTrophies() {}
+    // get hasSamePlatCount() {}
     constructor(stacks) {
         this.stacks = this.labelStacks(stacks);
     }
@@ -73,7 +84,7 @@ export class StackData {
     buildDetailedStacks(stacks) {
         const detailedStacks = stacks.map(stack => ({
             ...stack,
-            platformString: StackData.buildPlatformTag(stack.platforms),
+            platformString: StackAssociation.buildPlatformTag(stack.platforms),
             stack: '',
             stackLabels: [],
         }));

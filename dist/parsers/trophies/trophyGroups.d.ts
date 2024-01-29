@@ -1,7 +1,7 @@
 import { ITrophyGroup } from '../../index.js';
 import { PsnpParser } from '../psnpParser.js';
 export declare class ParserTrophyGroups extends PsnpParser<ITrophyGroup[], Document> {
-    protected readonly type = "Trophy Group";
+    protected readonly expectedEntityType = "Trophy Group";
     protected _parse(doc: Document): ITrophyGroup[];
     /** Returns an array of nodes representing the trophy list's trophy groups. */
     protected getTrophyGroups(doc: Document): HTMLDivElement[];

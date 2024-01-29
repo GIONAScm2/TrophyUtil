@@ -2,7 +2,7 @@ import { Select } from '../../index.js';
 import { PsnpParser } from '../psnpParser.js';
 import { ParserTrophy } from './trophy.js';
 export class ParserTrophyGroups extends PsnpParser {
-    type = 'Trophy Group';
+    expectedEntityType = 'Trophy Group';
     _parse(doc) {
         const groups = this.getTrophyGroups(doc)
             .map(groupNode => {

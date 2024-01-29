@@ -1,12 +1,7 @@
 /** Parses an entity `T` from `E`. */
 export declare abstract class PsnpParser<T, E> {
-    /** Entity identifier to aid subclass debugging. */
-    protected abstract readonly type: string;
-    /** Parses an entity from a DOM target (Document or Element).
-     *
-     * @throws If any of the entity's required fields are parsed as `null`.	*/
+    protected abstract readonly expectedEntityType: string;
     parse(domTarget: E): T;
-    /** Method that performs the parsing. */
     protected abstract _parse(parseTarget: E): T | null;
     /**
      * Given a PSNP url (href or pathname), returns a tuple of the entity ID and serialized name.
@@ -27,5 +22,6 @@ export declare abstract class PsnpParser<T, E> {
         /** Index of the `.split("/")` pathname where the ID and serialized name are expected */
         index?: 2 | 3;
     }): [number, string] | undefined;
+    protected throwError(prop: string): void;
 }
 //# sourceMappingURL=psnpParser.d.ts.map

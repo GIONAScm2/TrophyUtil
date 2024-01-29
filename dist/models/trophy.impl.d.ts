@@ -15,6 +15,7 @@ export declare class PsnpTrophy implements ITrophy {
     get src(): string;
     /** Trophy rarity formatted with two decimal places. */
     get rarityString(): string;
+    getElement(doc: Document): HTMLTableRowElement | null;
     /** Parses a trophy element's 'date earned' into a date timestamp (ms). */
     static timestampFromDateEarned(element: HTMLElement): number;
 }

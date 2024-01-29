@@ -5,7 +5,7 @@ const index_js_1 = require("../../index.js");
 const psnpParser_js_1 = require("../psnpParser.js");
 const trophy_js_1 = require("./trophy.js");
 class ParserTrophyGroups extends psnpParser_js_1.PsnpParser {
-    type = 'Trophy Group';
+    expectedEntityType = 'Trophy Group';
     _parse(doc) {
         const groups = this.getTrophyGroups(doc)
             .map(groupNode => {

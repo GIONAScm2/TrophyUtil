@@ -4,7 +4,7 @@ import { parseNum } from '../../util/util.js';
 import { parseTrophyCount } from '../common/trophyCount.js';
 /** Parses a standard game representation from Games and GameSearch pages. */
 export class ParserGameStandard extends PsnpParser {
-    type = 'Standard Game';
+    expectedEntityType = 'Standard Game';
     _parse(tr) {
         const isSearchResult = !!tr.querySelector(`td:nth-of-type(5) > span.separator.left > span.typo-top`);
         const titleAnchorEl = tr.querySelector(`a.title`);

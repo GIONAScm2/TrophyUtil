@@ -1,7 +1,7 @@
 import { parseNum } from '../../index.js';
 import { PsnpParser } from '../psnpParser.js';
 export class ParserTrophy extends PsnpParser {
-    type = 'Trophy';
+    expectedEntityType = 'Trophy';
     _parse(tr) {
         const titleAnchorEl = tr.querySelector(`a.title`);
         const href = titleAnchorEl?.getAttribute('href');

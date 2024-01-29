@@ -1,8 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.StackData = void 0;
-class StackData {
+exports.StackAssociation = void 0;
+var SaveTransferPotency;
+(function (SaveTransferPotency) {
+    SaveTransferPotency["Low"] = "Low";
+    SaveTransferPotency["Med"] = "Med";
+    SaveTransferPotency["High"] = "High";
+    SaveTransferPotency["Potential"] = "Potent(ial)";
+    SaveTransferPotency["Unknown"] = "?";
+})(SaveTransferPotency || (SaveTransferPotency = {}));
+/** Represents a group of stacking games. */
+class StackAssociation {
     stacks;
+    // get hasSameNumTrophies() {}
+    // get hasSamePlatCount() {}
     constructor(stacks) {
         this.stacks = this.labelStacks(stacks);
     }
@@ -76,7 +87,7 @@ class StackData {
     buildDetailedStacks(stacks) {
         const detailedStacks = stacks.map(stack => ({
             ...stack,
-            platformString: StackData.buildPlatformTag(stack.platforms),
+            platformString: StackAssociation.buildPlatformTag(stack.platforms),
             stack: '',
             stackLabels: [],
         }));
@@ -108,7 +119,7 @@ class StackData {
         return gamesByPlatform;
     }
 }
-exports.StackData = StackData;
+exports.StackAssociation = StackAssociation;
 // async function updateStacks({
 // 	_settings,
 // 	_page,

@@ -1,7 +1,7 @@
 import { PsnpParser } from '../psnpParser.js';
 /** Parses a partial game representation from TrophyList pages. */
 export class ParserGamePartialStack extends PsnpParser {
-    type = 'Partial Game (TrophyList)';
+    expectedEntityType = 'Partial Game (TrophyList)';
     _parse(tr) {
         const titleAnchorEl = tr.querySelector(`td > span > span > a[href^='/trophies/']`);
         const href = titleAnchorEl?.getAttribute('href');

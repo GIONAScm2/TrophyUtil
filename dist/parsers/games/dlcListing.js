@@ -2,7 +2,7 @@ import { PsnpParser } from '../psnpParser.js';
 import { calculateTrophyPoints, sumTrophyCount } from '../../models/common.js';
 import { parseTrophyCount } from '../common/trophyCount.js';
 export class ParserDlcListing extends PsnpParser {
-    type = 'DLC Listing';
+    expectedEntityType = 'DLC Listing';
     _parse(tr) {
         const titleAnchorEl = tr.querySelector(`td a.title`);
         const href = titleAnchorEl?.getAttribute('href');

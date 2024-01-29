@@ -2,7 +2,7 @@ import { calculateTrophyPoints, parseNum, sumTrophyCount } from '../../index.js'
 import { parseTrophyCount } from '../common/trophyCount.js';
 import { PsnpParser } from '../psnpParser.js';
 export class ParserSeriesListing extends PsnpParser {
-    type = 'Series Listing';
+    expectedEntityType = 'Series Listing';
     _parse(tr) {
         const titleAnchorEl = tr.querySelector(`a.title`);
         const href = titleAnchorEl?.getAttribute('href');

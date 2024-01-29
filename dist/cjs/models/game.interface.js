@@ -18,10 +18,12 @@ exports.StackLookup = {
     UK: 'United Kingdom',
     FR: 'French',
     ES: 'Spanish',
+    SA: 'Saudi Arabian',
     // Non-regions:
     DG: 'Digital',
     PH: 'Physical',
     RR: 'Rereleased',
     OR: 'Original',
+    BO: 'Bonus/Bundle',
 };
 //# sourceMappingURL=game.interface.js.map

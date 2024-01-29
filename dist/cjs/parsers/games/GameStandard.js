@@ -7,7 +7,7 @@ const util_js_1 = require("../../util/util.js");
 const trophyCount_js_1 = require("../common/trophyCount.js");
 /** Parses a standard game representation from Games and GameSearch pages. */
 class ParserGameStandard extends psnpParser_js_1.PsnpParser {
-    type = 'Standard Game';
+    expectedEntityType = 'Standard Game';
     _parse(tr) {
         const isSearchResult = !!tr.querySelector(`td:nth-of-type(5) > span.separator.left > span.typo-top`);
         const titleAnchorEl = tr.querySelector(`a.title`);

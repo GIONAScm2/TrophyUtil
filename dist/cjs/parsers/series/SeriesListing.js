@@ -5,7 +5,7 @@ const index_js_1 = require("../../index.js");
 const trophyCount_js_1 = require("../common/trophyCount.js");
 const psnpParser_js_1 = require("../psnpParser.js");
 class ParserSeriesListing extends psnpParser_js_1.PsnpParser {
-    type = 'Series Listing';
+    expectedEntityType = 'Series Listing';
     _parse(tr) {
         const titleAnchorEl = tr.querySelector(`a.title`);
         const href = titleAnchorEl?.getAttribute('href');

@@ -1,7 +1,7 @@
 import { ParserGamePlayable, calculateTrophyPoints, sumTrophyCount } from '../../index.js';
 import { PsnpParser } from '../psnpParser.js';
 export class ParserSeriesPageNeutral extends PsnpParser {
-    type = 'Series Page';
+    expectedEntityType = 'Series Page';
     _parse(_window) {
         const name = _window.document.querySelector(`div.series-info div.ellipsis > span`)?.textContent?.trim();
         const hrefIdAndTitle = this._extractIdAndTitleFromPsnpUrl({ url: _window.location.pathname });

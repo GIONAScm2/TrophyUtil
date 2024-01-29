@@ -5,7 +5,7 @@ const psnpParser_js_1 = require("../psnpParser.js");
 const common_js_1 = require("../../models/common.js");
 const trophyCount_js_1 = require("../common/trophyCount.js");
 class ParserDlcListing extends psnpParser_js_1.PsnpParser {
-    type = 'DLC Listing';
+    expectedEntityType = 'DLC Listing';
     _parse(tr) {
         const titleAnchorEl = tr.querySelector(`td a.title`);
         const href = titleAnchorEl?.getAttribute('href');
