@@ -4,4 +4,3 @@ export const TROPHY_GRADE_POINTS = {
     Gold: 90,
     Platinum: 300,
 };
-//# sourceMappingURL=trophy.interface.js.map

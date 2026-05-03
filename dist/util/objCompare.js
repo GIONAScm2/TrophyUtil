@@ -115,4 +115,3 @@ export function pruneExtraneousProperties(exemplar, target) {
     });
     return result;
 }
-//# sourceMappingURL=objCompare.js.map

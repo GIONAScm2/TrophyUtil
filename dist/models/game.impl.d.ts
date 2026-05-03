@@ -1,6 +1,6 @@
 import { PsnpEntity } from './psnpEntity.js';
 import { type MongoDateField, type TrophyCount } from './common.js';
-import type { ITrophyGroup } from '../index.js';
+import type { ITrophyGroup } from './trophy.interface.js';
 import type { StackAbbr, PlatformTag, IGameDoc, IGamePlayable, IGameStandard, IMetadataFields, IGameBase } from './game.interface.js';
 import { PsnpPageType } from '../util/psnp/pageType.js';
 /** Class containing properties and methods applicable to all PSNP game types. */
@@ -56,4 +56,3 @@ export declare class PsnpGameStandardDoc extends PsnpGameStandard implements IGa
     get allTrophies(): import("./trophy.interface.js").ITrophy[];
     constructor(data: IGameDoc);
 }
-//# sourceMappingURL=game.impl.d.ts.map

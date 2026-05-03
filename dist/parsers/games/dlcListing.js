@@ -41,4 +41,3 @@ export class ParserDlcListing extends PsnpParser {
         };
     }
 }
-//# sourceMappingURL=dlcListing.js.map

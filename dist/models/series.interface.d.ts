@@ -33,4 +33,3 @@ export interface ISeriesPagePersonal extends ISeriesBase, IStages, Partial<ITrop
 export interface ISeriesDoc extends ISeriesPageNeutral, Partial<IMongoTimestamps> {
 }
 export {};
-//# sourceMappingURL=series.interface.d.ts.map

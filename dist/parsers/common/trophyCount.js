@@ -22,4 +22,3 @@ export function parseTrophyCount(tr, isHomeOrGameSearch = false) {
     platCount = Number.isNaN(platCount) ? 0 : platCount;
     return { bronze, silver, gold, platinum: platCount };
 }
-//# sourceMappingURL=trophyCount.js.map

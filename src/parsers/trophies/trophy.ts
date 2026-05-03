@@ -1,5 +1,6 @@
-import {ITrophy, TrophyGrade, parseNum} from '../../index.js';
+import {type ITrophy, type TrophyGrade} from '../../models/trophy.interface.js';
 import {PsnpParser} from '../psnpParser.js';
+import {parseNum} from '../../util/util.js';
 
 export class ParserTrophy extends PsnpParser<ITrophy, HTMLTableRowElement> {
 	protected readonly expectedEntityType = 'Trophy';

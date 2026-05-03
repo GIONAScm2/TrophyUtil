@@ -146,4 +146,3 @@ function calculatePercent(dividend, divisor) {
     const percentRounded = Math.round(percent * 100) / 100;
     return percentRounded;
 }
-//# sourceMappingURL=gamePage.js.map

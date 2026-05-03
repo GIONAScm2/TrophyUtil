@@ -1,7 +1,9 @@
 import {PsnpParser} from '../psnpParser.js';
-import {IGamePlayable, PlatformTag, StackAbbr, parseNum, sumTrophyCount, calculateTrophyPoints} from '../../index.js';
+import {calculateTrophyPoints, sumTrophyCount} from '../../models/common.js';
+import {type IGamePlayable, type PlatformTag, type StackAbbr} from '../../models/game.interface.js';
 import {parseTrophyCount} from '../common/trophyCount.js';
 import {speedStringToMs} from '../../util/psnp/conversions.js';
+import {parseNum} from '../../util/util.js';
 
 /** Parses a 'playable' game containing user progress from Profile and Series pages. */
 export class ParserGamePlayable extends PsnpParser<IGamePlayable, HTMLTableRowElement> {

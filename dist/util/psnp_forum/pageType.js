@@ -14,4 +14,3 @@ export function getPsnpForumPageType(url) {
     else
         throw new Error(`Unable to determine page type of '${url.href}'`);
 }
-//# sourceMappingURL=pageType.js.map

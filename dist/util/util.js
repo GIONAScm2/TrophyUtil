@@ -30,4 +30,3 @@ export function getStackAbbr(fullRegionName) {
     }
     return null;
 }
-//# sourceMappingURL=util.js.map

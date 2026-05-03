@@ -18,4 +18,3 @@ export declare class SeriesDoc extends PsnpSeriesListing implements ISeriesDoc {
     get allGames(): number[];
     constructor(data: ISeriesDoc);
 }
-//# sourceMappingURL=series.impl.d.ts.map

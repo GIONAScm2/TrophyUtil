@@ -24,4 +24,3 @@ export declare abstract class PsnpEntity implements IPsnpEntity {
     constructor(data: IPsnpEntity);
     toString(): string;
 }
-//# sourceMappingURL=psnpEntity.d.ts.map

@@ -9,4 +9,3 @@ export declare class ParserGamePage extends PsnpParser<IGamePage, Document> {
     /** Parses `stats` to return {@link IHeaderStats} or `null`. */
     protected parseHeaderStats(stats: HTMLSpanElement[]): IHeaderStats | null;
 }
-//# sourceMappingURL=gamePage.d.ts.map

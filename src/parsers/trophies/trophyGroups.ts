@@ -1,4 +1,5 @@
-import {ITrophyGroup, Select} from '../../index.js';
+import {type ITrophyGroup} from '../../models/trophy.interface.js';
+import {Select} from '../../util/psnp/select.js';
 import {PsnpParser} from '../psnpParser.js';
 import {ParserTrophy} from './trophy.js';
 

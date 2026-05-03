@@ -24,4 +24,3 @@ export declare class StackAssociation {
     private mapGamesToPlatform;
 }
 export {};
-//# sourceMappingURL=stackData.d.ts.map

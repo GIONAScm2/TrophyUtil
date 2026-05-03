@@ -1,5 +1,7 @@
-import {IPsnpEntity, ITrophyCount, IMongoTimestamps, MakeOptional} from '../index.js';
+import type {ITrophyCount, IMongoTimestamps} from './common.js';
+import type {IPsnpEntity} from './psnpEntity.js';
 import {ITrophyGroup} from './trophy.interface.js';
+import type {MakeOptional} from '../util/util.js';
 
 /** Abbreviated stack label that PSNP uses. */
 export type StackAbbr = keyof typeof StackLookup;

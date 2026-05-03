@@ -1,4 +1,4 @@
-import { ITrophyGroup } from '../../index.js';
+import { type ITrophyGroup } from '../../models/trophy.interface.js';
 import { PsnpParser } from '../psnpParser.js';
 export declare class ParserTrophyGroups extends PsnpParser<ITrophyGroup[], Document> {
     protected readonly expectedEntityType = "Trophy Group";
@@ -10,4 +10,3 @@ export declare class ParserTrophyGroups extends PsnpParser<ITrophyGroup[], Docum
     /** Given a trophy group node, returns the `HTMLTableElement` containing the group's trophy nodes. */
     protected trophyGroupTrophyTable(trophyGroup: HTMLDivElement): HTMLTableElement | null;
 }
-//# sourceMappingURL=trophyGroups.d.ts.map

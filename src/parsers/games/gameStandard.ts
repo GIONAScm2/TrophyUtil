@@ -1,5 +1,6 @@
 import {PsnpParser} from '../psnpParser.js';
-import {PlatformTag, StackAbbr, IGameStandard, calculateTrophyPoints, sumTrophyCount} from '../../models/index.js';
+import {calculateTrophyPoints, sumTrophyCount} from '../../models/common.js';
+import {type IGameStandard, type PlatformTag, type StackAbbr} from '../../models/game.interface.js';
 import {parseNum} from '../../util/util.js';
 import { parseTrophyCount } from '../common/trophyCount.js';
 

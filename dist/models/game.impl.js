@@ -1,5 +1,5 @@
 import { PsnpEntity } from './psnpEntity.js';
-import { Select } from '../index.js';
+import { Select } from '../util/psnp/select.js';
 /** Class containing properties and methods applicable to all PSNP game types. */
 export class PsnpGameBase extends PsnpEntity {
     platforms;
@@ -100,4 +100,3 @@ export class PsnpGameStandardDoc extends PsnpGameStandard {
         this.stackIds = data.stackIds;
     }
 }
-//# sourceMappingURL=game.impl.js.map

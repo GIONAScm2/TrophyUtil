@@ -41,4 +41,3 @@ export class PsnpParser {
         throw new Error(`Failed to parse "${prop}" for ${this.expectedEntityType}`);
     }
 }
-//# sourceMappingURL=psnpParser.js.map

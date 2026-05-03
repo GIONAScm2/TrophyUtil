@@ -13,4 +13,3 @@ export function sumTrophyCount(tc) {
  */ export function calculateTrophyPoints(tc) {
     return tc.bronze * 15 + tc.silver * 30 + tc.gold * 90 + tc.platinum * 300;
 }
-//# sourceMappingURL=common.js.map

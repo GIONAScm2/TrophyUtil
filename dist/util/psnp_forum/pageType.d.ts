@@ -5,4 +5,3 @@ export declare enum PsnpForumPageType {
 }
 /** Identifies the PSNProfiles page type of a given URL. */
 export declare function getPsnpForumPageType(url: URL): PsnpForumPageType;
-//# sourceMappingURL=pageType.d.ts.map

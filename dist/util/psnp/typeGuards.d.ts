@@ -12,4 +12,3 @@ export declare function isGameDlc(game: unknown): game is IGameDlc;
 export declare function isGameStandard(game: unknown): game is IGameStandard;
 /** Verifies whether `game` implements {@link IGamePlayable} */
 export declare function isGamePlayable(game: unknown): game is IGamePlayable;
-//# sourceMappingURL=typeGuards.d.ts.map

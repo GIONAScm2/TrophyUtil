@@ -1,6 +1,7 @@
-import { calculateTrophyPoints, parseNum, sumTrophyCount } from '../../index.js';
+import { calculateTrophyPoints, sumTrophyCount } from '../../models/common.js';
 import { parseTrophyCount } from '../common/trophyCount.js';
 import { PsnpParser } from '../psnpParser.js';
+import { parseNum } from '../../util/util.js';
 export class ParserSeriesListing extends PsnpParser {
     expectedEntityType = 'Series Listing';
     _parse(tr) {
@@ -33,4 +34,3 @@ export class ParserSeriesListing extends PsnpParser {
         };
     }
 }
-//# sourceMappingURL=seriesListing.js.map

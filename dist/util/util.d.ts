@@ -26,4 +26,3 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>
  */
 export declare function parseNum(input: string | Node | null | undefined): number;
 export declare function getStackAbbr(fullRegionName: string): StackAbbr | null;
-//# sourceMappingURL=util.d.ts.map

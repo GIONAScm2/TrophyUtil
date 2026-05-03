@@ -7,7 +7,7 @@ export function msToSpeedString(ms) {
     let seconds = ms / 1000;
     const timeUnits = [
         { unit: 'year', value: 31536000 },
-        { unit: 'month', value: 2626560 },
+        { unit: 'month', value: 2626560 }, // seconds in 30.4 days
         { unit: 'week', value: 604800 },
         { unit: 'day', value: 86400 },
         { unit: 'hour', value: 3600 },
@@ -40,7 +40,7 @@ export function speedStringToMs(speedString) {
         hou: 3600,
         day: 86400,
         wee: 604800,
-        mon: 2626560,
+        mon: 2626560, // PSNP calculates a month as 30.4 days (https://forum.psnprofiles.com/topic/61709-bug-in-calculating-time-between-trophies/)
         yea: 31536000,
     };
     const speeds = speedString.split(', ');
@@ -66,4 +66,3 @@ export function timestampFromDatePlayed(element) {
     const cleanedDateText = dateText.replace(/(\d+)(st|nd|rd|th)/, '$1').trim();
     return new Date(cleanedDateText).valueOf();
 }
-//# sourceMappingURL=conversions.js.map

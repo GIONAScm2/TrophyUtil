@@ -36,4 +36,3 @@ export interface IMongoTimestamps {
     createdAt: MongoDateField;
     updatedAt: MongoDateField;
 }
-//# sourceMappingURL=common.d.ts.map

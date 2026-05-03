@@ -1,3 +1,4 @@
+import { PsnpPageWithGames } from './pageType.js';
 export declare class Select {
     /** Selects all valid table rows. */
     static readonly TR = "tr:not(:empty, [id*='load'])";
@@ -10,13 +11,5 @@ export declare class Select {
     /** Game node selectors based on the page.
      *
      * **Note:** Array values are necessary to replace pseudo-class `:is()` since it's not currently supported by JSDOM. */
-    static gameNodes: {
-        SeriesCatalog: string[];
-        SeriesPage: string[];
-        Games: string[];
-        GameSearch: string[];
-        GameTrophyList: string[];
-        Profile: string[];
-    };
+    static gameNodes: { [key in PsnpPageWithGames]: string[]; };
 }
-//# sourceMappingURL=select.d.ts.map

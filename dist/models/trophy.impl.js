@@ -42,4 +42,3 @@ export class PsnpTrophy {
         return new Date(dateString).valueOf();
     }
 }
-//# sourceMappingURL=trophy.impl.js.map

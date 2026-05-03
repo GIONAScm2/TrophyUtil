@@ -4,4 +4,3 @@ export declare class ParserDlcListing extends PsnpParser<IGameDlc, HTMLTableRowE
     protected readonly expectedEntityType = "DLC Listing";
     protected _parse(tr: HTMLTableRowElement): IGameDlc | null;
 }
-//# sourceMappingURL=dlcListing.d.ts.map

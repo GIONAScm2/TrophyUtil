@@ -1,5 +1,5 @@
-import { parseNum } from '../../index.js';
 import { PsnpParser } from '../psnpParser.js';
+import { parseNum } from '../../util/util.js';
 export class ParserTrophy extends PsnpParser {
     expectedEntityType = 'Trophy';
     _parse(tr) {
@@ -30,4 +30,3 @@ export class ParserTrophy extends PsnpParser {
         };
     }
 }
-//# sourceMappingURL=trophy.js.map

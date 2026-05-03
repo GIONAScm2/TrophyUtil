@@ -5,4 +5,3 @@ export declare class ParserSeriesPageNeutral extends PsnpParser<ISeriesPageNeutr
     protected readonly expectedEntityType = "Series Page";
     protected _parse(_window: WindowLike): ISeriesPageNeutral | null;
 }
-//# sourceMappingURL=seriesPageNeutral.d.ts.map

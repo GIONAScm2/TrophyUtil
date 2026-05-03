@@ -26,4 +26,3 @@ export class Select {
         [Page.GameTrophyList]: [`${Select.SUFFIX}`],
     };
 }
-//# sourceMappingURL=select.js.map

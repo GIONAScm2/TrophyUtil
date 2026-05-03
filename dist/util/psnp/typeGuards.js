@@ -40,4 +40,3 @@ export function isGameStandard(game) {
 export function isGamePlayable(game) {
     return isPsnpEntity(game) && gamePlayableKeys.every(key => key in game);
 }
-//# sourceMappingURL=typeGuards.js.map

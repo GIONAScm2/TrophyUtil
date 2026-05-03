@@ -44,4 +44,3 @@ export declare enum PsnpPageType {
 /** Identifies the PSNProfiles page type of a given URL. */
 export declare function getPsnpPageType(url: URL): PsnpPageType;
 export type PsnpPageWithGames = PsnpPageType.Games | PsnpPageType.SeriesCatalog | PsnpPageType.GameSearch | PsnpPageType.Profile | PsnpPageType.SeriesPage | PsnpPageType.GameTrophyList;
-//# sourceMappingURL=pageType.d.ts.map

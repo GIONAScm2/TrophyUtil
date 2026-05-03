@@ -19,4 +19,3 @@ export declare class PsnpTrophy implements ITrophy {
     /** Parses a trophy element's 'date earned' into a date timestamp (ms). */
     static timestampFromDateEarned(element: HTMLElement): number;
 }
-//# sourceMappingURL=trophy.impl.d.ts.map

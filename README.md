@@ -61,10 +61,6 @@ const speedString = PsnpGameStandard.secondsToSpeedString(speed); // "1 hour, 1 
 -   Share a consistent set of domain types between scraping, persistence, and UI layers.
 -   Make HTML ingestion safer by validating and normalizing the most important entity fields early.
 
-## Contributing
-
-Contributions are welcome! Submit a pull request or create an issue to contribute to this project.
-
 ## License
 
 This project is licensed under the GPLv3 License - see `COPYING.txt` for details.

@@ -33,4 +33,3 @@ export class SeriesDoc extends PsnpSeriesListing {
         this.updatedAt = data.updatedAt;
     }
 }
-//# sourceMappingURL=series.impl.js.map

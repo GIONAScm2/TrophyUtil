@@ -6,4 +6,3 @@ export declare enum TTAPageType {
 }
 /** Identifies the PSNProfiles page type of a given URL. */
 export declare function getTTAPageType(url: URL): TTAPageType;
-//# sourceMappingURL=pageType.d.ts.map

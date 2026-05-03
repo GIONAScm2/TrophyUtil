@@ -28,4 +28,3 @@ export class ParserGamePartialStack extends PsnpParser {
         };
     }
 }
-//# sourceMappingURL=gameFromStackPanel.js.map

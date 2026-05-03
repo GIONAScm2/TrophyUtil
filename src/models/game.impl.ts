@@ -1,7 +1,7 @@
 import {PsnpEntity} from './psnpEntity.js';
 import {type MongoDateField, type TrophyCount} from './common.js';
-import type {ITrophyGroup} from '../index.js';
-import {Select} from '../index.js';
+import type {ITrophyGroup} from './trophy.interface.js';
+import {Select} from '../util/psnp/select.js';
 import type {
 	StackAbbr,
 	PlatformTag,

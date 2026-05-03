@@ -32,4 +32,3 @@ export interface ITrophy {
     /** Timestamp at which trophy was earned. */
     dateEarned?: number;
 }
-//# sourceMappingURL=trophy.interface.d.ts.map

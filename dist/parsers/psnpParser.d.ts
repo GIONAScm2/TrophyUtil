@@ -24,4 +24,3 @@ export declare abstract class PsnpParser<T, E> {
     }): [number, string] | undefined;
     protected throwError(prop: string): void;
 }
-//# sourceMappingURL=psnpParser.d.ts.map

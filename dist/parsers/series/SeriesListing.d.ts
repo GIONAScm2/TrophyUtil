@@ -4,4 +4,3 @@ export declare class ParserSeriesListing extends PsnpParser<ISeriesListing, HTML
     protected readonly expectedEntityType = "Series Listing";
     protected _parse(tr: HTMLTableRowElement): ISeriesListing | null;
 }
-//# sourceMappingURL=seriesListing.d.ts.map

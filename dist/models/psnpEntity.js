@@ -14,4 +14,3 @@ export class PsnpEntity {
         return `${this.name} (${this._id})`;
     }
 }
-//# sourceMappingURL=psnpEntity.js.map

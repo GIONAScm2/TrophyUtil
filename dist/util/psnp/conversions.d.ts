@@ -5,4 +5,3 @@ export declare function msToSpeedString(ms: number): string;
 export declare function speedStringToMs(speedString: string): number;
 /** Takes in a 'date played' element: \<div class="small-info" [...] */
 export declare function timestampFromDatePlayed(element: HTMLElement): number | null;
-//# sourceMappingURL=conversions.d.ts.map

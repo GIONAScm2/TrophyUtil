@@ -1,5 +1,5 @@
 import { PsnpParser } from '../psnpParser.js';
-import { calculateTrophyPoints, sumTrophyCount } from '../../models/index.js';
+import { calculateTrophyPoints, sumTrophyCount } from '../../models/common.js';
 import { parseNum } from '../../util/util.js';
 import { parseTrophyCount } from '../common/trophyCount.js';
 /** Parses a standard game representation from Games and GameSearch pages. */
@@ -49,4 +49,3 @@ function parseNumOwners(tr, isSearchResult = false) {
     const numOwners = parseNum(tr.querySelector(selector));
     return Number.isNaN(numOwners) ? null : numOwners;
 }
-//# sourceMappingURL=gameStandard.js.map

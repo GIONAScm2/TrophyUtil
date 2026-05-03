@@ -10,11 +10,10 @@ export function getTTAPageType(url) {
     const path = url.pathname;
     if (/^\/game\/[^\/]+?\/(achievements|trophies)$/.test(path))
         return TTAPageType.GameAchievements;
-    else if (/^\/(a|t)\d+?\/.+?-(achievement|trophy)$/)
+    else if (/^\/(a|t)\d+?\/.+?-(achievement|trophy)$/.test(path))
         return TTAPageType.GameAchievementSolutions;
     else if (/^\/game\/[^\/]+?\/walkthrough(\/\d*)?$/.test(path))
         return TTAPageType.Walkthrough;
     else
         throw new Error(`Unable to determine page type of '${url.href}'`);
 }
-//# sourceMappingURL=pageType.js.map

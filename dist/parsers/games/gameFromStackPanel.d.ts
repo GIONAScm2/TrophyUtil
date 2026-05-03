@@ -5,4 +5,3 @@ export declare class ParserGamePartialStack extends PsnpParser<IGamePartialTroph
     protected readonly expectedEntityType = "Partial Game (TrophyList)";
     protected _parse(tr: HTMLTableRowElement): IGamePartialTrophyList | null;
 }
-//# sourceMappingURL=gameFromStackPanel.d.ts.map

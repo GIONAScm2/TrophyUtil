@@ -45,4 +45,3 @@ export declare function diffUpdate<E extends IPsnpEntity>(oldEntity: E | null | 
  * @returns {Record<string, unknown> | null} - The pruned object, or null if the target wasn't an object.
  */
 export declare function pruneExtraneousProperties(exemplar: Record<string, unknown>, target: unknown): Record<string, unknown> | null;
-//# sourceMappingURL=objCompare.d.ts.map

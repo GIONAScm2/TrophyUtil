@@ -1,4 +1,4 @@
-import { Select } from '../../index.js';
+import { Select } from '../../util/psnp/select.js';
 import { PsnpParser } from '../psnpParser.js';
 import { ParserTrophy } from './trophy.js';
 export class ParserTrophyGroups extends PsnpParser {
@@ -39,4 +39,3 @@ export class ParserTrophyGroups extends PsnpParser {
         return trophyGroup.querySelector(`table:last-of-type`);
     }
 }
-//# sourceMappingURL=trophyGroups.js.map
