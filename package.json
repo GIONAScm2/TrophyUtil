@@ -1,6 +1,6 @@
 {
 	"name": "trophyutil",
-	"description": "Isomorphic library of specialized trophy utilities",
+	"description": "ESM-only TypeScript parsers and domain models for PSNProfiles trophy data",
 	"author": {
 		"name": "Matthew Gionas",
 		"url": "https://github.com/GIONAScm2"
@@ -9,42 +9,81 @@
 		"type": "git",
 		"url": "https://github.com/GIONAScm2/TrophyUtil"
 	},
+	"homepage": "https://github.com/GIONAScm2/TrophyUtil#readme",
+	"bugs": {
+		"url": "https://github.com/GIONAScm2/TrophyUtil/issues"
+	},
 	"keywords": [
 		"PSN",
 		"PSNProfiles",
-		"Trophy hunting"
+		"trophy-hunting",
+		"typescript",
+		"dom-parser",
+		"esm"
 	],
-	"version": "7.6.0",
+	"version": "8.0.0",
 	"type": "module",
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.js"
+		},
+		"./models": {
+			"types": "./dist/models/index.d.ts",
+			"import": "./dist/models/index.js"
+		},
+		"./parsers": {
+			"types": "./dist/parsers/index.d.ts",
+			"import": "./dist/parsers/index.js"
+		},
+		"./util": {
+			"types": "./dist/util/index.d.ts",
+			"import": "./dist/util/index.js"
+		},
+		"./adapters": {
+			"types": "./dist/adapters/index.d.ts",
+			"import": "./dist/adapters/index.js"
 		}
 	},
 	"types": "./dist/index.d.ts",
+	"engines": {
+		"node": ">=20.19"
+	},
+	"packageManager": "npm@11.7.0",
+	"publishConfig": {
+		"access": "public"
+	},
 	"files": [
 		"dist",
 		"README.md",
-		"COPYING.txt"
+		"LICENSE"
 	],
 	"sideEffects": false,
 	"scripts": {
-		"test": "vitest run --root . --environment jsdom --globals --pool threads test",
-		"test:watch": "vitest --root . --environment jsdom --globals --pool threads test",
-		"test:file": "vitest run --root . --environment jsdom --globals --pool threads test/util/objCompare.test.ts",
+		"clean": "node scripts/clean.mjs",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:file": "vitest run test/util/objCompare.test.ts",
+		"lint": "eslint .",
+		"format": "prettier . --write",
+		"format:check": "prettier . --check",
 		"typecheck": "tsc --noEmit -p tsconfig.test.json",
-		"build": "tsc",
-		"build:release": "tsc -p tsconfig.release.json",
+		"build": "npm run clean && tsc -p tsconfig.json",
+		"build:release": "npm run clean && tsc -p tsconfig.release.json",
+		"package:smoke": "node scripts/smoke-package.mjs",
 		"prepack": "npm run build:release",
-		"prepublishOnly": "npm test && npm run typecheck"
+		"prepublishOnly": "npm run lint && npm test && npm run typecheck && npm run build:release && npm run package:smoke"
 	},
-	"license": "GPL-3.0-or-later",
+	"license": "MIT",
 	"devDependencies": {
+		"@eslint/js": "^10.0.1",
 		"@types/jsdom": "^28.0.1",
 		"@types/node": "^25.6.0",
+		"eslint": "^10.3.0",
 		"jsdom": "^29.1.1",
+		"prettier": "^3.8.3",
 		"typescript": "^6.0.3",
+		"typescript-eslint": "^8.59.1",
 		"vitest": "^4.1.5"
 	}
 }

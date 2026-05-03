@@ -1,48 +1,65 @@
-import {PsnpParser} from '../psnpParser.js';
-import {calculateTrophyPoints, sumTrophyCount} from '../../models/common.js';
-import {type IGamePlayable, type PlatformTag, type StackAbbr} from '../../models/game.interface.js';
-import {parseTrophyCount} from '../common/trophyCount.js';
-import {speedStringToMs} from '../../util/psnp/conversions.js';
-import {parseNum} from '../../util/util.js';
+import { PsnpParser } from '../psnpParser.js';
+import { calculateTrophyPoints, sumTrophyCount } from '../../models/common.js';
+import type { CompletionStatus, PlayableGame } from '../../models/game.interface.js';
+import { parseTrophyCount } from '../common/trophyCount.js';
+import { parsePsnpDateToTimestamp, speedStringToMs } from '../../util/psnp/conversions.js';
+import { isStackAbbr, parseNumber, parsePlatformTags } from '../../util/util.js';
 
-/** Parses a 'playable' game containing user progress from Profile and Series pages. */
-export class ParserGamePlayable extends PsnpParser<IGamePlayable, HTMLTableRowElement> {
+/** Parses a playable game containing user progress from Profile and Series pages. */
+export class PlayableGameParser extends PsnpParser<PlayableGame, HTMLTableRowElement> {
 	protected readonly expectedEntityType = 'Playable Game';
 
-	protected _parse(tr: HTMLTableRowElement): IGamePlayable | null {
+	protected _parse(tr: HTMLTableRowElement): PlayableGame | null {
 		const titleAnchorEl = tr.querySelector(`a.title`);
 		const href = titleAnchorEl?.getAttribute('href');
-		const hrefIdAndTitle = this._extractIdAndTitleFromPsnpUrl({url: href});
+		const hrefIdAndTitle = this._extractIdAndTitleFromPsnpUrl({ url: href });
 		const imageSrc = tr.querySelector('img[src]')?.getAttribute('src');
 		const rarityBaseEl = tr.querySelector(`td > span.separator.completion-status > span:first-of-type`);
 
+		if (!titleAnchorEl?.textContent)
+			this.addIssue({ field: 'name', selector: 'a.title', message: 'Missing game title' });
+		if (!hrefIdAndTitle)
+			this.addIssue({ field: 'url', selector: 'a.title[href]', message: 'Missing or invalid game URL' });
+		if (!imageSrc) this.addIssue({ field: 'imagePath', selector: 'img[src]', message: 'Missing game image' });
+		if (!rarityBaseEl)
+			this.addIssue({ field: 'rarityBase', selector: 'span.completion-status', message: 'Missing rarity' });
+		if (this.hasIssues()) {
+			return null;
+		}
 		if (!titleAnchorEl?.textContent || !hrefIdAndTitle || !imageSrc || !rarityBaseEl) {
 			return null;
 		}
 
-		const _imagePath = /\w+\/\w+(?=\.[A-z]{3}$)/.exec(imageSrc)?.at(0);
+		const imagePath = /\w+\/\w+(?=\.[A-z]{3}$)/.exec(imageSrc)?.at(0);
 		const name = titleAnchorEl.textContent.trim();
-		const platforms = [...tr.querySelectorAll('span.tag.platform')].map(tag => tag.textContent).sort() as PlatformTag[];
+		const platforms = parsePlatformTags(tr);
 
-		if (!_imagePath || !name || !platforms.length) {
+		if (!imagePath)
+			this.addIssue({ field: 'imagePath', selector: 'img[src]', message: 'Unable to extract image path' });
+		if (!name) this.addIssue({ field: 'name', selector: 'a.title', message: 'Missing game title text' });
+		if (!platforms.length)
+			this.addIssue({ field: 'platforms', selector: 'span.tag.platform', message: 'Missing platform tags' });
+		if (this.hasIssues() || !imagePath) {
 			return null;
 		}
 
-		const [_id, _nameSerialized] = hrefIdAndTitle;
-		const stackLabel =
-			(titleAnchorEl.parentElement?.querySelector('bullet')?.nextSibling?.textContent?.trim() as StackAbbr) ?? null;
+		const [id, slug] = hrefIdAndTitle;
+		const stackLabelText = titleAnchorEl.parentElement?.querySelector('bullet')?.nextSibling?.textContent?.trim();
+		const stackLabel = isStackAbbr(stackLabelText) ? stackLabelText : null;
 
 		const trophyCount = parseTrophyCount(tr);
 
-		const progressPercent = parseNum(tr.querySelector(`div.progress-bar > span`));
+		const progressPercent = parseNumber(tr.querySelector(`div.progress-bar > span`));
 		const percent = Number.isNaN(progressPercent) ? undefined : progressPercent;
 
-		const rarityBase = parseNum(rarityBaseEl);
+		const rarityBase = parseNumber(rarityBaseEl);
 		if (Number.isNaN(rarityBase) || !trophyCount) {
+			if (Number.isNaN(rarityBase)) this.addIssue({ field: 'rarityBase', message: 'Unable to parse rarity' });
+			if (!trophyCount) this.addIssue({ field: 'trophyCount', message: 'Unable to parse trophy count' });
 			return null;
 		}
 		const rarityDlcEl = tr.querySelector('td > span.separator.completion-status > span:nth-of-type(2)');
-		const rarityDlc = rarityDlcEl ? parseNum(rarityDlcEl) : undefined;
+		const rarityDlc = rarityDlcEl ? parseNumber(rarityDlcEl) : undefined;
 
 		const completionStatus = isCompletionStatus(tr.className) ? tr.className : undefined;
 
@@ -54,7 +71,7 @@ export class ParserGamePlayable extends PsnpParser<IGamePlayable, HTMLTableRowEl
 
 			const day = dateHolder.childNodes[0]?.textContent?.trim();
 			const monthYear = dateHolder.childNodes[2]?.textContent?.trim();
-			latestTrophyTimestamp = day && monthYear ? new Date(`${day} ${monthYear}`).valueOf() : undefined;
+			latestTrophyTimestamp = day && monthYear ? parsePsnpDateToTimestamp(`${day} ${monthYear}`) : undefined;
 		}
 
 		let completionRank: string | undefined;
@@ -67,10 +84,10 @@ export class ParserGamePlayable extends PsnpParser<IGamePlayable, HTMLTableRowEl
 		const points = calculateTrophyPoints(trophyCount);
 
 		return {
-			_id,
-			_nameSerialized,
+			id,
+			slug,
 			name,
-			_imagePath,
+			imagePath,
 			stackLabel,
 			trophyCount,
 			numTrophies,
@@ -87,6 +104,6 @@ export class ParserGamePlayable extends PsnpParser<IGamePlayable, HTMLTableRowEl
 	}
 }
 
-function isCompletionStatus(status: string): status is 'platinum' | 'completed' {
-	return status === ('platinum' as const) || status === ('completed' as const);
+function isCompletionStatus(status: string): status is CompletionStatus {
+	return status === 'platinum' || status === 'completed';
 }

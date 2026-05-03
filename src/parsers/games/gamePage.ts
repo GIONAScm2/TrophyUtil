@@ -1,38 +1,40 @@
-import {PsnpParser} from '../psnpParser.js';
-import {TrophyCount, calculateTrophyPoints} from '../../models/common.js';
-import {ParserTrophyGroups} from '../trophies/trophyGroups.js';
-import {ParserGamePartialStack} from './gameFromStackPanel.js';
-import {PlatformTag, IGamePage, IMetadataFields, IGamePartialTrophyList, IHeaderStats} from '../../models/game.interface.js';
-import {parseNum, getStackAbbr} from '../../util/util.js';
-import {ITrophy} from '../../models/trophy.interface.js';
+import { PsnpParser } from '../psnpParser.js';
+import { calculateTrophyPoints, createEmptyTrophyCount, type TrophyCount } from '../../models/common.js';
+import { TrophyGroupsParser } from '../trophies/trophyGroups.js';
+import { GameStackEntryParser } from './gameFromStackPanel.js';
+import type { GamePage, MetadataFields, GameStackEntry, HeaderStats } from '../../models/game.interface.js';
+import { getStackAbbr, isPlatformTag, parseNumber } from '../../util/util.js';
+import type { Trophy } from '../../models/trophy.interface.js';
 
-/** Parses a partial game representation from TrophyList pages. */
-export class ParserGamePage extends PsnpParser<IGamePage, Document> {
+/** Parses a full game trophy-list page. */
+export class GamePageParser extends PsnpParser<GamePage, Document> {
 	protected readonly expectedEntityType = 'Game Page';
 
-	protected _parse(doc: Document): IGamePage | null {
+	protected _parse(doc: Document): GamePage | null {
 		const navTabs = [...doc.querySelectorAll<HTMLAnchorElement>(`ul.navigation > li > a[href]`)];
 
 		const forumLink = navTabs.find(anchor => anchor.textContent?.trim() === 'Forum');
-		const forumIdAndGameName = this._extractIdAndTitleFromPsnpUrl({url: forumLink?.href});
+		const forumIdAndGameName = this._extractIdAndTitleFromPsnpUrl({ url: forumLink?.href });
 
 		const trophyListLink = navTabs.find(anchor => anchor.textContent?.trim() === 'Trophies');
-		const hrefIdAndTitle = this._extractIdAndTitleFromPsnpUrl({url: trophyListLink?.href});
+		const hrefIdAndTitle = this._extractIdAndTitleFromPsnpUrl({ url: trophyListLink?.href });
 
 		if (!hrefIdAndTitle) {
+			this.addIssue({ field: 'url', selector: 'ul.navigation a', message: 'Missing trophy-list URL' });
 			return null;
 		}
-		const [_id, _nameSerialized] = hrefIdAndTitle;
+		const [id, slug] = hrefIdAndTitle;
 		const forumId = (forumIdAndGameName?.at(0) as number) || null;
 
 		const name = doc
 			.querySelector(`#banner > div.banner-overlay > div > div.title-bar.flex.v-align > div.grow > h3 > span`)
 			?.nextSibling?.textContent?.trim();
 		if (!name) {
+			this.addIssue({ field: 'name', selector: '#banner h3 span', message: 'Missing game page title' });
 			return null;
 		}
 
-		const trophyGroupsParser = new ParserTrophyGroups();
+		const trophyGroupsParser = new TrophyGroupsParser();
 		const trophyGroups = trophyGroupsParser.parse(doc);
 
 		const trophies = trophyGroups.flatMap(group => group.trophies);
@@ -40,14 +42,14 @@ export class ParserGamePage extends PsnpParser<IGamePage, Document> {
 		const numTrophies = trophies.length;
 		const points = calculateTrophyPoints(trophyCount);
 
-		const metaData = this.parseMetadata(doc);
+		const metadata = this.parseMetadata(doc);
 
-		const stacks: IGamePartialTrophyList[] = [];
+		const stacks: GameStackEntry[] = [];
 		const sideDivHeaders = [...doc.querySelectorAll('div.col-xs-4 >  div.title.flex.v-align > div.grow > h3')];
 		const stackDivHeader = sideDivHeaders.find(h3 => h3.textContent?.trim() === 'Other Platforms and Regions');
 		const stackTable = stackDivHeader?.closest(`div.title.flex.v-align`)?.nextElementSibling;
 		if (stackTable) {
-			const gameParser = new ParserGamePartialStack();
+			const gameParser = new GameStackEntryParser();
 			const games = [...stackTable.querySelectorAll('tr')].map(tr => gameParser.parse(tr));
 			stacks.push(...games);
 		}
@@ -57,13 +59,18 @@ export class ParserGamePage extends PsnpParser<IGamePage, Document> {
 		if (seriesElements.length) {
 			seriesIds = seriesElements.map(el => {
 				const match = el.href.match(/series\/(\d+)/) ?? [];
-				return +match[1];
+				return Number.parseInt(match[1] ?? '', 10);
 			});
 		}
 
 		const headerStatElements = [...doc.querySelectorAll<HTMLSpanElement>(`div.stats.flex > span.stat`)];
 		const stats = this.parseHeaderStats(headerStatElements);
 		if (!stats) {
+			this.addIssue({
+				field: 'headerStats',
+				selector: 'div.stats span.stat',
+				message: 'Unable to parse header stats',
+			});
 			return null;
 		}
 
@@ -74,9 +81,15 @@ export class ParserGamePage extends PsnpParser<IGamePage, Document> {
 			rarityDlc = calculatePercent(stats.num100Percented, stats.gameOwners);
 		}
 
-		const platformTags = [...doc.querySelectorAll<HTMLSpanElement>(`div.no-top-border div.platforms > span`)];
-		const platforms = platformTags.map(span => span.textContent!.trim() as PlatformTag).sort();
+		const platformContainer = doc.querySelector<HTMLDivElement>('div.no-top-border div.platforms');
+		const platforms = platformContainer
+			? [...platformContainer.querySelectorAll('span')]
+					.map(span => span.textContent?.trim())
+					.filter(isPlatformTag)
+					.sort()
+			: [];
 		if (!platforms.length) {
+			this.addIssue({ field: 'platforms', selector: 'div.platforms > span', message: 'Missing platform tags' });
 			return null;
 		}
 
@@ -85,9 +98,9 @@ export class ParserGamePage extends PsnpParser<IGamePage, Document> {
 		const stackLabel = getStackAbbr(stackText);
 
 		return {
-			_id,
+			id,
 			name,
-			_nameSerialized,
+			slug,
 			forumId,
 			platforms,
 			stackLabel,
@@ -96,18 +109,18 @@ export class ParserGamePage extends PsnpParser<IGamePage, Document> {
 			points,
 			numOwners: stats.gameOwners,
 			stacks,
-			stackIds: stacks.map(s => s._id),
+			stackIds: stacks.map(s => s.id),
 			trophyGroups: trophyGroups,
 			headerStats: stats,
 			rarityBase,
 			rarityDlc,
-			metaData,
+			metadata,
 			seriesIds,
 		};
 	}
 
-	/** Parses {@link IMetadataFields} from the trophy list. */
-	protected parseMetadata(doc: Document): IMetadataFields {
+	/** Parses metadata from the trophy list. */
+	protected parseMetadata(doc: Document): MetadataFields {
 		const metadataRows = [...doc.querySelectorAll<HTMLTableRowElement>(`table.gameInfo tr`)].filter(
 			tr => tr.cells.length > 1
 		);
@@ -119,7 +132,7 @@ export class ParserGamePage extends PsnpParser<IGamePage, Document> {
 			const row = metadataRows.find(row => row.cells[0]?.textContent?.trim()?.includes(propName));
 			if (!row) return;
 
-			const valueString = row.cells[1].textContent?.trim() ?? '';
+			const valueString = row.cells[1]?.textContent?.trim() ?? '';
 			if (!valueString) return;
 
 			const values = valueString.split(', ').map(val => val.trim());
@@ -140,25 +153,28 @@ export class ParserGamePage extends PsnpParser<IGamePage, Document> {
 		return metadata;
 	}
 
-	/** Parses `stats` to return {@link IHeaderStats} or `null`. */
-	protected parseHeaderStats(stats: HTMLSpanElement[]): IHeaderStats | null {
+	protected parseHeaderStats(stats: HTMLSpanElement[]): HeaderStats | null {
 		const findStat = (statName: string) => stats.find(span => span.textContent?.includes(statName));
 
-		const gameOwners = parseNum(findStat('Game Owner')?.firstChild);
-		const recentPlayers = parseNum(findStat('Recent Player')?.firstChild);
-		const avgCompletion = parseNum(findStat('Average Completion')?.firstChild);
-		const trophiesEarned = parseNum(findStat('Earned')?.firstChild);
-		const num100Percented = parseNum(findStat('100% Completed')?.firstChild);
+		const gameOwners = parseNumber(findStat('Game Owner')?.firstChild);
+		const recentPlayers = parseNumber(findStat('Recent Player')?.firstChild);
+		const avgCompletion = parseNumber(findStat('Average Completion')?.firstChild);
+		const trophiesEarned = parseNumber(findStat('Earned')?.firstChild);
+		const num100Percented = parseNumber(findStat('100% Completed')?.firstChild);
 
-		const platAchievers = parseNum(findStat('Platinum Achiever')?.firstChild);
+		const platAchievers = parseNumber(findStat('Platinum Achiever')?.firstChild);
 		const numPlatted = Number.isNaN(platAchievers) ? undefined : platAchievers;
 
-		return {gameOwners, recentPlayers, numPlatted, avgCompletion, trophiesEarned, num100Percented};
+		if ([gameOwners, recentPlayers, avgCompletion, trophiesEarned, num100Percented].some(Number.isNaN)) {
+			return null;
+		}
+
+		return { gameOwners, recentPlayers, numPlatted, avgCompletion, trophiesEarned, num100Percented };
 	}
 }
 
-function trophiesToTrophyCount(trophies: ITrophy[], trophyCount?: TrophyCount): TrophyCount {
-	let tc: TrophyCount = trophyCount ?? {bronze: 0, silver: 0, gold: 0, platinum: 0};
+function trophiesToTrophyCount(trophies: Trophy[], trophyCount?: TrophyCount): TrophyCount {
+	const tc: TrophyCount = trophyCount ?? createEmptyTrophyCount();
 
 	for (const trophy of trophies) {
 		if (trophy.grade === 'Bronze') tc.bronze++;

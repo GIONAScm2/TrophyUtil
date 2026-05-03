@@ -1,39 +1,39 @@
-import {type TrophyCount, calculateTrophyPoints, sumTrophyCount} from '../../models/common.js';
-import {ISeriesPageNeutral, IStage} from '../../models/series.interface.js';
-import {WindowLike} from '../../util/browserContext.js';
-import {ParserGamePlayable} from '../games/gamePlayable.js';
-import {PsnpParser} from '../psnpParser.js';
+import { type TrophyCount, calculateTrophyPoints, sumTrophyCount } from '../../models/common.js';
+import type { SeriesPage, Stage } from '../../models/series.interface.js';
+import type { WindowLike } from '../../util/browserContext.js';
+import { PlayableGameParser } from '../games/gamePlayable.js';
+import { PsnpParser } from '../psnpParser.js';
 
-export class ParserSeriesPageNeutral extends PsnpParser<ISeriesPageNeutral, WindowLike> {
+export class SeriesPageParser extends PsnpParser<SeriesPage, WindowLike> {
 	protected readonly expectedEntityType = 'Series Page';
 
-	protected _parse(_window: WindowLike): ISeriesPageNeutral | null {
+	protected _parse(_window: WindowLike): SeriesPage | null {
 		const name = _window.document.querySelector(`div.series-info div.ellipsis > span`)?.textContent?.trim();
-		const hrefIdAndTitle = this._extractIdAndTitleFromPsnpUrl({url: _window.location.pathname});
+		const hrefIdAndTitle = this._extractIdAndTitleFromPsnpUrl({ url: _window.location.pathname });
 		const imageSrc = _window.document.querySelector('div.series-info picture img[src]')?.getAttribute('src');
 
 		if (!name || !hrefIdAndTitle || !imageSrc) {
 			return null;
 		}
 
-		const [_id, _nameSerialized] = hrefIdAndTitle;
-		const _imagePath = /\/series\/(.+?)\.S\.png/.exec(imageSrc)?.at(1);
+		const [id, slug] = hrefIdAndTitle;
+		const imagePath = /\/series\/(.+?)\.S\.png/.exec(imageSrc)?.at(1);
 
-		const gameParser = new ParserGamePlayable();
+		const gameParser = new PlayableGameParser();
 		const stageElements = [..._window.document.querySelectorAll<HTMLTableElement>(`table.box.zebra.series`)];
-		const stages: IStage[] = stageElements.map(el => {
+		const stages: Stage[] = stageElements.map(el => {
 			const stageNumString =
 				el.querySelector(`tr:first-of-type > td:first-of-type span.typo-top`)?.textContent?.trim() ?? '';
-			const stageNum = stageNumString === 'NO' ? 0 : +stageNumString;
+			const stageNum = stageNumString === 'NO' ? 0 : Number.parseInt(stageNumString, 10);
 
 			const games = [...el.querySelectorAll('tr')].map(tr => gameParser.parse(tr));
-			const gameIds = games.map(g => g._id);
+			const gameIds = games.map(g => g.id);
 
-			return {stageNum, gameIds};
+			return { stageNum, gameIds, games };
 		});
 		const trophyCount = aggregateSeriesTrophyCount(stages);
 
-		if (!_imagePath || !stages.length || !trophyCount) {
+		if (!imagePath || !stages.length || !trophyCount) {
 			return null;
 		}
 
@@ -42,10 +42,10 @@ export class ParserSeriesPageNeutral extends PsnpParser<ISeriesPageNeutral, Wind
 		const numGames = stages.reduce((acc, stage) => acc + stage.gameIds.length, 0);
 
 		return {
-			_id,
-			_nameSerialized,
+			id,
+			slug,
 			name,
-			_imagePath,
+			imagePath,
 			stages,
 			trophyCount,
 			points,
@@ -55,7 +55,7 @@ export class ParserSeriesPageNeutral extends PsnpParser<ISeriesPageNeutral, Wind
 	}
 }
 
-function aggregateSeriesTrophyCount(stages: IStage[]): TrophyCount | undefined {
+function aggregateSeriesTrophyCount(stages: Stage[]): TrophyCount | undefined {
 	const aggregateTrophyCount: TrophyCount = {
 		bronze: 0,
 		silver: 0,

@@ -1,26 +1,36 @@
-import {type ITrophy, type TrophyGrade} from '../../models/trophy.interface.js';
-import {PsnpParser} from '../psnpParser.js';
-import {parseNum} from '../../util/util.js';
+import { TROPHY_GRADES, type Trophy, type TrophyGrade } from '../../models/trophy.interface.js';
+import { PsnpParser } from '../psnpParser.js';
+import { parseNumber } from '../../util/util.js';
 
-export class ParserTrophy extends PsnpParser<ITrophy, HTMLTableRowElement> {
+export class TrophyParser extends PsnpParser<Trophy, HTMLTableRowElement> {
 	protected readonly expectedEntityType = 'Trophy';
 
-	protected _parse(tr: HTMLTableRowElement): ITrophy | null {
+	protected _parse(tr: HTMLTableRowElement): Trophy | null {
 		const titleAnchorEl = tr.querySelector(`a.title`);
 		const href = titleAnchorEl?.getAttribute('href');
-		const hrefTrophyIdAndName = this._extractIdAndTitleFromPsnpUrl({url: href, index: 3});
+		const hrefTrophyIdAndName = this._extractIdAndTitleFromPsnpUrl({ url: href, index: 3 });
 		const imageSrc = tr.querySelector('picture img[src]')?.getAttribute('src');
 
 		if (!titleAnchorEl?.textContent || !hrefTrophyIdAndName || !imageSrc) {
 			return null;
 		}
 
-		const _imagePath = /\/trophies\/(.+?)\.png/.exec(imageSrc)?.at(1);
+		const imagePath = /\/trophies\/(.+?)\.png/.exec(imageSrc)?.at(1);
 		const desc = titleAnchorEl.parentElement?.querySelector('br')?.nextSibling?.textContent?.trim() ?? '';
-		const grade = tr.querySelector('td > span > img[title]')?.getAttribute('title')?.trim() as TrophyGrade;
-		const rarity = parseNum(tr.querySelector('td.hover-hide span.typo-top'));
+		const gradeText = tr.querySelector('td > span > img[title]')?.getAttribute('title')?.trim();
+		const grade = isTrophyGrade(gradeText) ? gradeText : undefined;
+		const rarity = parseNumber(tr.querySelector('td.hover-hide span.typo-top'));
 
-		if (!_imagePath || !grade || Number.isNaN(rarity)) {
+		if (!imagePath || !grade || Number.isNaN(rarity)) {
+			if (!imagePath)
+				this.addIssue({
+					field: 'imagePath',
+					selector: 'picture img[src]',
+					message: 'Unable to extract image path',
+				});
+			if (!grade)
+				this.addIssue({ field: 'grade', selector: 'img[title]', message: 'Missing or invalid trophy grade' });
+			if (Number.isNaN(rarity)) this.addIssue({ field: 'rarity', message: 'Unable to parse trophy rarity' });
 			return null;
 		}
 
@@ -29,12 +39,16 @@ export class ParserTrophy extends PsnpParser<ITrophy, HTMLTableRowElement> {
 
 		return {
 			id: trophyId,
-			_nameSerialized: trophyNameSerialized,
+			slug: trophyNameSerialized,
 			name,
 			desc,
 			grade,
 			rarity: +rarity,
-			_imagePath,
+			imagePath,
 		};
 	}
+}
+
+function isTrophyGrade(value: string | undefined): value is TrophyGrade {
+	return !!value && TROPHY_GRADES.includes(value as TrophyGrade);
 }

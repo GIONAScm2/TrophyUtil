@@ -1,66 +1,90 @@
 # TrophyUtil
 
-TrophyUtil is a published TypeScript library for parsing, modelling, and transforming core [PSNProfiles](https://psnprofiles.com/) (PSNP) entities such as trophies, games, and game series.
+TrophyUtil is a TypeScript library for parsing, modeling, and transforming [PSNProfiles](https://psnprofiles.com/) ("PSNP") trophy data.
 
-It was built as a shared domain layer for a larger trophy-data ecosystem, powering both browser-side features and backend scraping jobs. The package focuses on turning brittle site HTML into reusable, strongly-typed application models.
-
-## What It Does
-
-- Parses PSNProfiles HTML into typed trophy, game, and series entities.
-- Provides reusable classes and interfaces for working with parsed data across frontend and backend codebases.
-- Supports browser and server environments, including [jsdom](https://github.com/jsdom/jsdom)-based scraping workflows.
-- Includes helper utilities for entity diffing, page-type detection, formatted number parsing, and trophy-specific transformations.
-- Exposes document shapes that map cleanly into MongoDB / Mongoose persistence layers.
+It was built as a shared domain layer for a trophy-data ecosystem: browser extensions/userscripts that enhance PSNP pages, and backend scraping jobs that normalize site HTML for storage and analysis. The package keeps brittle DOM selectors and PSNP types and logic in one tested place.
 
 ## Features
 
--   Isomorphic, working in both frontend and backend environments.
--   ESM-first (`import`) package with bundled TypeScript declarations.
--   Parsers for core PSNP entities including trophies, games, DLC listings, profiles, and series.
--   Domain models with computed helpers for trophy counts, completion speed, rarity, URLs, and other derived values.
--   Utilities for comparing parsed entities against stored records and applying targeted updates.
--   Fixture-driven test coverage for parsers and domain models.
-
-## Used In
-
-- Browser userscripts that augment PSNProfiles pages with richer tables, caching, and workflow helpers.
-- Backend scraping services that fetch PSNP pages, normalize the data, and persist it to MongoDB.
+- ESM-only npm package with generated TypeScript declarations and explicit subpath exports.
+- Dependency-free runtime: browser callers provide the real DOM, Node callers provide a DOM implementation such as `jsdom`.
+- Parsers for games, DLCs, trophy lists, trophies, and series pages.
+- Strong domain types for PSNP entities, like: `GameListing`, `PlayableGame`, `GamePage`, `SeriesListing`, `SeriesPage`, `Trophy`, and `TrophyGroup`.
+- Utility coverage for PSNProfiles page detection, URL parsing, trophy counts, rarity/speed conversions, UTC-safe dates, and stack labeling.
+- Optional adapter types for persistence concerns such as Mongo/Mongoose document timestamps.
 
 ## Installation
 
-Install TrophyUtil using npm:
-
-```
+```bash
 npm install trophyutil
+```
+
+TrophyUtil has no runtime dependencies. If you parse HTML in Node.js, install a DOM implementation in your application:
+
+```bash
+npm install jsdom
 ```
 
 ## Usage
 
-Here is a simple example that parses standard game rows from a PSNP page:
+### Browser DOM
 
-```typescript
-import {getPsnpPageType, PsnpGameStandard, ParserGameStandard} from 'trophyutil';
+```ts
+import { GameListingParser, PsnpGameBase, getPsnpPageType } from 'trophyutil';
 
-// Select nodes based on page type
-const pageType = getPsnpPageType(window.location);
-const gameNodes = PsnpGameStandard.getGameNodes(pageType, window.document);
+const pageType = getPsnpPageType(new URL(window.location.href));
+const nodes = PsnpGameBase.getGameNodes(pageType, window.document);
 
-// Parse nodes into richly-interfaced data
-const parser = new ParserGameStandard();
-const gameData = gameNodes.map(node => parser.parse(node));
-const speed = gameData[0].completionSpeed; // 3661
+const parser = new GameListingParser();
+const games = nodes.map(node => parser.parse(node));
 
-// Classes wrap data with utility methods
-const games = gameData.map(data => new PsnpGameStandard(data));
-const speedString = PsnpGameStandard.secondsToSpeedString(speed); // "1 hour, 1 minute"
+console.log(games[0]?.id);
+console.log(games[0]?.slug);
+console.log(games[0]?.trophyCount);
 ```
 
-## Design Goals
+### Node.js With jsdom
 
--   Keep site-specific parsing logic in one place instead of scattering selectors across multiple apps.
--   Share a consistent set of domain types between scraping, persistence, and UI layers.
--   Make HTML ingestion safer by validating and normalizing the most important entity fields early.
+```ts
+import { JSDOM } from 'jsdom';
+import { GamePageParser } from 'trophyutil/parsers';
+
+const html = await fetch('https://psnprofiles.com/trophies/2983-the-evil-within').then(response => response.text());
+const dom = new JSDOM(html, { url: 'https://psnprofiles.com/trophies/2983-the-evil-within' });
+
+const game = new GamePageParser().parse(dom.window.document);
+
+console.log(game.name);
+console.log(game.trophyGroups.flatMap(group => group.trophies).length);
+```
+
+### Typed Parse Results
+
+Use the `tryParse` parsing method if you don't want to catch errors manually:
+
+```ts
+import { GameListingParser } from 'trophyutil';
+
+const result = new GameListingParser().tryParse(row);
+
+if (!result.ok) {
+	console.error(result.error.issues);
+} else {
+	console.log(result.data.name);
+}
+```
+
+## Package Exports
+
+Several subpath exports are available:
+
+```ts
+import { GameListingParser } from 'trophyutil';
+import type { GameListing } from 'trophyutil/models';
+import { parseNumber, labelStacks } from 'trophyutil/util';
+import type { GameDocument } from 'trophyutil/adapters';
+```
 
 ## License
 
-This project is licensed under the GPLv3 License - see `COPYING.txt` for details.
+MIT

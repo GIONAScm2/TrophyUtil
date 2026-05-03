@@ -1,63 +1,59 @@
-import {PsnpEntity} from './psnpEntity.js';
-import {type MongoDateField, type TrophyCount} from './common.js';
-import type {ITrophyGroup} from './trophy.interface.js';
-import {Select} from '../util/psnp/select.js';
+import { PsnpEntity } from './psnpEntity.js';
+import type { TrophyCount } from './common.js';
+import { Select } from '../util/psnp/select.js';
 import type {
 	StackAbbr,
 	PlatformTag,
-	IGameDoc,
-	IGamePlayable,
-	IGameStandard,
-	IMetadataFields,
-	IGameBase,
+	PlayableGame,
+	GameListing,
+	GameBase,
+	CompletionStatus,
 } from './game.interface.js';
-import {PsnpPageType, PsnpPageWithGames} from '../util/psnp/pageType.js';
+import { isPsnpPageWithGames, type PsnpPageType } from '../util/psnp/pageType.js';
 
-/** Class containing properties and methods applicable to all PSNP game types. */
-export class PsnpGameBase extends PsnpEntity implements IGameBase {
+export class PsnpGameBase extends PsnpEntity implements GameBase {
 	platforms: PlatformTag[];
-	stackLabel?: StackAbbr | null | undefined;
-	trophyCount?: TrophyCount | undefined;
-	numTrophies?: number | undefined;
-	points?: number | undefined;
+	stackLabel?: StackAbbr | null;
+	trophyCount?: TrophyCount;
+	numTrophies?: number;
+	points?: number;
 
-	get url() {
-		return `https://psnprofiles.com/trophies/${this._id}-${this._nameSerialized}`;
+	override get url(): string {
+		return `https://psnprofiles.com/trophies/${this.id}-${this.slug}`;
 	}
-	get src() {
-		return `https://i.psnprofiles.com/games/${this._imagePath}.png`;
+	override get src(): string {
+		return `https://i.psnprofiles.com/games/${this.imagePath}.png`;
 	}
 
-	constructor(data: IGameBase) {
+	constructor(data: GameBase) {
 		super(data);
 		this.platforms = data.platforms;
-		this.stackLabel = data.stackLabel;
-		this.trophyCount = data.trophyCount;
-		this.numTrophies = data.numTrophies;
-		this.points = data.points;
+		if ('stackLabel' in data) this.stackLabel = data.stackLabel;
+		if (data.trophyCount !== undefined) this.trophyCount = data.trophyCount;
+		if (data.numTrophies !== undefined) this.numTrophies = data.numTrophies;
+		if (data.points !== undefined) this.points = data.points;
 	}
 
 	/**
-	 * Given a {@link PsnpPageType} and document, parses and returns an array of game nodes.
+	 * Given a PSNProfiles page type and document, returns matching game table rows.
 	 * @param pageType Type of PSNProfiles page
 	 * @param doc Document to parse nodes from
 	 */
 	static getGameNodes(pageType: PsnpPageType, doc: Document): HTMLTableRowElement[] {
-		const selectors = Select.gameNodes[pageType as PsnpPageWithGames] ?? '';
+		const selectors = isPsnpPageWithGames(pageType) ? Select.gameNodes[pageType] : [];
 		const nodes = selectors.flatMap(selector => [...doc.querySelectorAll<HTMLTableRowElement>(selector)]);
 		return nodes;
 	}
 }
 
-/** Class representing a standard PSNP game from `Games` or `GameSearch` */
-export class PsnpGameStandard extends PsnpGameBase implements IGameStandard {
-	stackLabel: StackAbbr | null;
-	trophyCount: TrophyCount;
-	numTrophies: number;
-	points: number;
+export class PsnpGameListing extends PsnpGameBase implements GameListing {
+	override stackLabel: StackAbbr | null;
+	override trophyCount: TrophyCount;
+	override numTrophies: number;
+	override points: number;
 	numOwners: number;
 
-	constructor(data: IGameStandard) {
+	constructor(data: GameListing) {
 		super(data);
 		this.stackLabel = data.stackLabel;
 		this.trophyCount = data.trophyCount;
@@ -67,20 +63,20 @@ export class PsnpGameStandard extends PsnpGameBase implements IGameStandard {
 	}
 }
 
-export class PsnpGamePlayable extends PsnpGameBase implements IGamePlayable {
-	stackLabel: StackAbbr | null;
-	trophyCount: TrophyCount;
-	numTrophies: number;
-	points: number;
+export class PsnpPlayableGame extends PsnpGameBase implements PlayableGame {
+	override stackLabel: StackAbbr | null;
+	override trophyCount: TrophyCount;
+	override numTrophies: number;
+	override points: number;
 	rarityBase: number;
 	rarityDlc?: number | undefined;
 	percent?: number | undefined;
-	completionStatus?: 'platinum' | 'completed' | undefined;
+	completionStatus?: CompletionStatus | undefined;
 	completionSpeed?: number | undefined;
 	completionRank?: string | undefined;
-	latestTrophy: number | undefined;
+	latestTrophy?: number | undefined;
 
-	constructor(data: IGamePlayable) {
+	constructor(data: PlayableGame) {
 		super(data);
 		this.stackLabel = data.stackLabel;
 		this.trophyCount = data.trophyCount;
@@ -93,33 +89,5 @@ export class PsnpGamePlayable extends PsnpGameBase implements IGamePlayable {
 		this.completionSpeed = data.completionSpeed;
 		this.completionRank = data.completionRank;
 		this.latestTrophy = data.latestTrophy;
-	}
-}
-
-export class PsnpGameStandardDoc extends PsnpGameStandard implements IGameDoc {
-	trophyGroups: ITrophyGroup[];
-	rarityBase: number;
-	rarityDlc?: number | undefined;
-	forumId: number | null;
-	metaData: IMetadataFields;
-	createdAt?: MongoDateField | undefined;
-	updatedAt?: MongoDateField | undefined;
-	stackIds?: number[] | undefined;
-
-	/** Flattens `trophies` trophy groups, returning a 2D array of all trophies. */
-	get allTrophies() {
-		return this.trophyGroups.flatMap(s => s.trophies);
-	}
-
-	constructor(data: IGameDoc) {
-		super(data);
-		this.trophyGroups = data.trophyGroups;
-		this.rarityBase = data.rarityBase;
-		this.rarityDlc = data.rarityDlc;
-		this.forumId = data.forumId;
-		this.metaData = data.metaData;
-		this.createdAt = data.createdAt;
-		this.updatedAt = data.updatedAt;
-		this.stackIds = data.stackIds;
 	}
 }

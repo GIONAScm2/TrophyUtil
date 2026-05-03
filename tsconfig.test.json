@@ -5,6 +5,7 @@
 		"module": "ESNext",
 		"moduleResolution": "bundler",
 		"rootDir": ".",
+		"verbatimModuleSyntax": true,
 		"types": ["node", "vitest/globals", "vitest/jsdom"],
 		"noEmit": true
 	}
