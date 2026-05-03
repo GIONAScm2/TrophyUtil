@@ -1,15 +1,30 @@
 # TrophyUtil
 
-TrophyUtil is a specialized utility library designed for parsing, modelling, and manipulating core [PSNProfiles](https://psnprofiles.com/) (PSNP) entities like trophies, games, and game series.
+TrophyUtil is a published TypeScript library for parsing, modelling, and transforming core [PSNProfiles](https://psnprofiles.com/) (PSNP) entities such as trophies, games, and game series.
+
+It was built as a shared domain layer for a larger trophy-data ecosystem, powering both browser-side features and backend scraping jobs. The package focuses on turning brittle site HTML into reusable, strongly-typed application models.
+
+## What It Does
+
+- Parses PSNProfiles HTML into typed trophy, game, and series entities.
+- Provides reusable classes and interfaces for working with parsed data across frontend and backend codebases.
+- Supports browser and server environments, including [jsdom](https://github.com/jsdom/jsdom)-based scraping workflows.
+- Includes helper utilities for entity diffing, page-type detection, formatted number parsing, and trophy-specific transformations.
+- Exposes document shapes that map cleanly into MongoDB / Mongoose persistence layers.
 
 ## Features
 
--   Isomorphic, working seamlessly in both frontend and backend (via [jsdom](https://github.com/jsdom/jsdom)) projects.
--   Compatible with both CommonJS and ESM.
--   HTML parsers for core PSNP entities like trophies, games, and game series.
--   Richly-annotated interfaces and classes that provide helpful methods, like transforming a completion time into a timestamp and vice versa.
--   Additional interfaces for MongoDB/Mongoose provide smoother database integration with properties like `createdAt` and `updatedAt`.
--   Specialized utility functions for trophy-specific use cases like parsing formatted numbers and checking for relative equality between entities.
+-   Isomorphic, working in both frontend and backend environments.
+-   ESM-first (`import`) package with bundled TypeScript declarations.
+-   Parsers for core PSNP entities including trophies, games, DLC listings, profiles, and series.
+-   Domain models with computed helpers for trophy counts, completion speed, rarity, URLs, and other derived values.
+-   Utilities for comparing parsed entities against stored records and applying targeted updates.
+-   Fixture-driven test coverage for parsers and domain models.
+
+## Used In
+
+- Browser userscripts that augment PSNProfiles pages with richer tables, caching, and workflow helpers.
+- Backend scraping services that fetch PSNP pages, normalize the data, and persist it to MongoDB.
 
 ## Installation
 
@@ -21,7 +36,7 @@ npm install trophyutil
 
 ## Usage
 
-Here's how you might use this library to parse games, for example:
+Here is a simple example that parses standard game rows from a PSNP page:
 
 ```typescript
 import {getPsnpPageType, PsnpGameStandard, ParserGameStandard} from 'trophyutil';
@@ -39,6 +54,12 @@ const speed = gameData[0].completionSpeed; // 3661
 const games = gameData.map(data => new PsnpGameStandard(data));
 const speedString = PsnpGameStandard.secondsToSpeedString(speed); // "1 hour, 1 minute"
 ```
+
+## Design Goals
+
+-   Keep site-specific parsing logic in one place instead of scattering selectors across multiple apps.
+-   Share a consistent set of domain types between scraping, persistence, and UI layers.
+-   Make HTML ingestion safer by validating and normalizing the most important entity fields early.
 
 ## Contributing
 

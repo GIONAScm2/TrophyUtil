@@ -5,20 +5,22 @@
 		"baseUrl": ".",
 		"allowJs": true,
 		"checkJs": true,
-		"target": "es2022",
-		"lib": ["es2022"],
-		"module": "ES2022",
+		"target": "ES2022",
+		"lib": ["ES2022", "DOM"],
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
 		"strict": true,
 		"strictNullChecks": true,
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
 		"resolveJsonModule": true,
-		"moduleResolution": "node",
+		"noEmitOnError": true,
 		"outDir": "dist",
 		"declaration": true,
 		"declarationMap": true,
 		"sourceMap": true,
-		"declarationDir": "dist"
+		"declarationDir": "dist",
+		"rootDir": "src"
 	}
 }
