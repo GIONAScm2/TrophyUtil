@@ -1,11 +1,12 @@
-import {ITrophyGroup, Select} from '../../index.js';
-import {PsnpParser} from '../psnpParser.js';
-import {ParserTrophy} from './trophy.js';
+import type { TrophyGroup } from '../../models/trophy.interface.js';
+import { Select } from '../../util/psnp/select.js';
+import { PsnpParser } from '../psnpParser.js';
+import { TrophyParser } from './trophy.js';
 
-export class ParserTrophyGroups extends PsnpParser<ITrophyGroup[], Document> {
+export class TrophyGroupsParser extends PsnpParser<TrophyGroup[], Document> {
 	protected readonly expectedEntityType = 'Trophy Group';
 
-	protected _parse(doc: Document): ITrophyGroup[] {
+	protected _parse(doc: Document): TrophyGroup[] {
 		const groups = this.getTrophyGroups(doc)
 			.map(groupNode => {
 				const trophyTable = this.trophyGroupTrophyTable(groupNode);
@@ -17,9 +18,9 @@ export class ParserTrophyGroups extends PsnpParser<ITrophyGroup[], Document> {
 				}
 
 				const match = groupHeader.id.match(/^DLC-(\d+)$/);
-				const groupNum = match ? +match[1] : 0;
+				const groupNum = match ? Number.parseInt(match[1] ?? '', 10) : 0;
 
-				const trophyParser = new ParserTrophy();
+				const trophyParser = new TrophyParser();
 				const trophies = Select.tr(trophyTable).map(tr => trophyParser.parse(tr));
 
 				return {
@@ -28,7 +29,7 @@ export class ParserTrophyGroups extends PsnpParser<ITrophyGroup[], Document> {
 					trophies,
 				};
 			})
-			.filter(group => group !== null) as ITrophyGroup[];
+			.filter(group => group !== null) as TrophyGroup[];
 
 		return groups;
 	}
@@ -39,7 +40,7 @@ export class ParserTrophyGroups extends PsnpParser<ITrophyGroup[], Document> {
 	}
 
 	/** Given a trophy group node, returns the name of the group. */
-	protected trophyGroupName(trophyGroup: HTMLDivElement): 'Base Game' | string {
+	protected trophyGroupName(trophyGroup: HTMLDivElement): string {
 		const nameHolder = trophyGroup.querySelector<HTMLSpanElement>(`table tr > td > span.title`);
 		return nameHolder?.textContent?.trim() ?? 'Base Game';
 	}

@@ -1,4 +1,4 @@
-import {type IPsnpEntity} from '../models/psnpEntity.js';
+import type { PsnpEntityData } from '../models/psnpEntity.js';
 
 /** Returns `true` if `x` is a standard POJO (or class instance), otherwise `false` if it's a primitive/null/array/function/Map/Set/etc. */
 export function isStandardObj(x: unknown): x is Record<string, unknown> {
@@ -104,15 +104,21 @@ export function diffAndUpdateSharedProps<T extends object>(
  * The `update` flag will also update `oldEntity` with any differing shared property values.
  *
  * **Note:** "new" operations return an empty `changes` array. */
-export function diffUpdate<E extends IPsnpEntity>(oldEntity: E | null | undefined, newEntity: E, update: boolean): ChangeData {
-	const commonChanges = {id: newEntity._id, changes: []};
+export function diffUpdate<E extends PsnpEntityData>(
+	oldEntity: E | null | undefined,
+	newEntity: E,
+	update: boolean
+): ChangeData {
+	const commonChanges = { id: newEntity.id, changes: [] };
 
 	if (!oldEntity) {
-		return {...commonChanges, operation: 'add'};
+		return { ...commonChanges, operation: 'add' };
 	}
 
-	if (oldEntity._id !== newEntity._id) {
-		throw new Error(`ID mismatch: Cannot update entity '${oldEntity.toString()}' using entity '${newEntity.toString()}'`);
+	if (oldEntity.id !== newEntity.id) {
+		throw new Error(
+			`ID mismatch: Cannot update entity '${oldEntity.toString()}' using entity '${newEntity.toString()}'`
+		);
 	}
 
 	const changes = diffAndUpdateSharedProps(oldEntity, newEntity, update);
@@ -127,13 +133,16 @@ export function diffUpdate<E extends IPsnpEntity>(oldEntity: E | null | undefine
 /**
  * Removes extraneous properties from `target` that don't exist on `exemplar`.
  * This includes properties nested within objects.
- * Outputs log for every omitted property.
  *
  * @param {Record<string, unknown>} exemplar - The object that holds the desired structure.
  * @param {unknown} target - The object from which extraneous properties are to be pruned.
  * @returns {Record<string, unknown> | null} - The pruned object, or null if the target wasn't an object.
  */
-export function pruneExtraneousProperties(exemplar: Record<string, unknown>, target: unknown): Record<string, unknown> | null {
+export function pruneExtraneousProperties(
+	exemplar: Record<string, unknown>,
+	target: unknown,
+	onOmit?: (key: string) => void
+): Record<string, unknown> | null {
 	if (!isStandardObj(target)) {
 		return null;
 	}
@@ -145,12 +154,12 @@ export function pruneExtraneousProperties(exemplar: Record<string, unknown>, tar
 			const exemplarVal = exemplar[key];
 			const targetVal = target[key];
 			if (isStandardObj(targetVal) && isStandardObj(exemplarVal)) {
-				result[key] = pruneExtraneousProperties(exemplarVal, targetVal);
+				result[key] = pruneExtraneousProperties(exemplarVal, targetVal, onOmit);
 			} else {
 				result[key] = targetVal;
 			}
 		} else {
-			console.log(`Omitting deprecated key '${key}'`);
+			onOmit?.(key);
 		}
 	});
 

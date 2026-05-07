@@ -8,10 +8,9 @@ export class BrowserContext {
 	readonly window: WindowLike;
 	readonly url: URL;
 
-	constructor(opts: {window: WindowLike; urlOverride?: string}) {
+	constructor(opts: { window: WindowLike; urlOverride?: string }) {
 		this.window = opts.window;
 		this.url = new this.window.URL(opts.urlOverride ?? opts.window.location.href);
-		
 	}
 
 	get doc() {

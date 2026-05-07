@@ -1,21 +1,21 @@
-import {PsnpEntity} from './psnpEntity.js';
-import {MongoDateField, TrophyCount} from './common.js';
-import {ISeriesDoc, ISeriesListing, IStage} from './series.interface.js';
+import { PsnpEntity } from './psnpEntity.js';
+import type { TrophyCount } from './common.js';
+import type { SeriesPage, SeriesListing, Stage } from './series.interface.js';
 
-export class PsnpSeriesListing extends PsnpEntity implements ISeriesListing {
+export class PsnpSeriesListing extends PsnpEntity implements SeriesListing {
 	trophyCount: TrophyCount;
 	numTrophies: number;
 	numGames: number;
 	points: number;
 
-	get url() {
-		return `https://psnprofiles.com/series/${this._id}-${this._nameSerialized}`;
+	override get url(): string {
+		return `https://psnprofiles.com/series/${this.id}-${this.slug}`;
 	}
-	get src() {
-		return `https://i.psnprofiles.com/series/${this._imagePath}.S.png`;
+	override get src(): string {
+		return `https://i.psnprofiles.com/series/${this.imagePath}.S.png`;
 	}
 
-	constructor(data: ISeriesListing) {
+	constructor(data: SeriesListing) {
 		super(data);
 		this.trophyCount = data.trophyCount;
 		this.points = data.points;
@@ -24,20 +24,15 @@ export class PsnpSeriesListing extends PsnpEntity implements ISeriesListing {
 	}
 }
 
-export class SeriesDoc extends PsnpSeriesListing implements ISeriesDoc {
-	stages: IStage[];
-	createdAt?: MongoDateField | undefined;
-	updatedAt?: MongoDateField | undefined;
+export class PsnpSeriesPage extends PsnpSeriesListing implements SeriesPage {
+	stages: Stage[];
 
-	/** Flattens `stages` series stages, returning a 2D array of all games. */
-	get allGames() {
+	get allGames(): number[] {
 		return this.stages.flatMap(s => s.gameIds);
 	}
 
-	constructor(data: ISeriesDoc) {
+	constructor(data: SeriesPage) {
 		super(data);
 		this.stages = data.stages;
-		this.createdAt = data.createdAt;
-		this.updatedAt = data.updatedAt;
 	}
 }

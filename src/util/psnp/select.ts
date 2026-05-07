@@ -1,9 +1,9 @@
-import {PsnpPageType as Page, PsnpPageWithGames} from './pageType.js';
+import { PsnpPageType as Page, type PsnpPageWithGames } from './pageType.js';
 
 export class Select {
 	/** Selects all valid table rows. */
 	static readonly TR = `tr:not(:empty, [id*='load'])`;
-	static tr(parent: Document | HTMLElement) {
+	static tr(parent: Document | HTMLElement): HTMLTableRowElement[] {
 		return [...parent.querySelectorAll<HTMLTableRowElement>(Select.TR)];
 	}
 	/** HTMLElement containing max page number. */
@@ -28,5 +28,5 @@ export class Select {
 		[Page.SeriesPage]: [`table.series:not(.legend) ${Select.SUFFIX}`],
 		/** Cannot select game nodes on its own; must be used after finding the "OTHER PLATFORMS AND REGIONS" section. */
 		[Page.GameTrophyList]: [`${Select.SUFFIX}`],
-	} as {[key in PsnpPageWithGames]: string[]};
+	} satisfies Record<PsnpPageWithGames, string[]>;
 }

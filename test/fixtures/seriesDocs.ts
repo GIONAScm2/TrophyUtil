@@ -1,5 +1,5 @@
 export const oldSeries = {
-	_id: 1121,
+	id: 1121,
 	trophyCount: {
 		bronze: 96,
 		silver: 46,
@@ -10,14 +10,14 @@ export const oldSeries = {
 		{
 			stageNum: 1,
 			gameIds: [14439, 14446],
-			_id: {
+			id: {
 				$oid: '640d5e44e5aa96a352bce7fa',
 			},
 		},
 		{
 			stageNum: 2,
 			gameIds: [21312, 21320],
-			_id: {
+			id: {
 				$oid: '640d5e44e5aa96a352bce7fb',
 			},
 		},
@@ -30,12 +30,12 @@ export const oldSeries = {
 	},
 	__v: 0,
 	name: 'Fatal Fram',
-	_imagePath: '1121/0ecf4b',
-	_nameSerialized: 'fatal-frame',
+	imagePath: '1121/0ecf4b',
+	slug: 'fatal-frame',
 };
 
 export const newSeries = {
-	_id: 1121,
+	id: 1121,
 	trophyCount: {
 		bronze: 96,
 		silver: 46,
@@ -46,21 +46,21 @@ export const newSeries = {
 		{
 			stageNum: 1,
 			gameIds: [14439, 14446],
-			_id: {
+			id: {
 				$oid: '640d5e44e5aa96a352bce7fa',
 			},
 		},
 		{
 			stageNum: 2,
 			gameIds: [21312, 21320],
-			_id: {
+			id: {
 				$oid: '640d5e44e5aa96a352bce7fb',
 			},
 		},
 		{
 			stageNum: 3,
 			gameIds: [22000],
-			_id: {
+			id: {
 				$oid: '640d5e44e5aa96a352bce7fc',
 			},
 		},
@@ -73,6 +73,6 @@ export const newSeries = {
 	},
 	__v: 0,
 	name: 'Fatal Frame',
-	_imagePath: '1121/0ecf4b',
-	_nameSerialized: 'fatal-frame',
+	imagePath: '1121/0ecf4b',
+	slug: 'fatal-frame',
 };

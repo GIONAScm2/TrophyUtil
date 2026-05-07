@@ -1,38 +1,39 @@
-import {calculateTrophyPoints, parseNum, sumTrophyCount} from '../../index.js';
-import {ISeriesListing} from '../../models/series.interface.js';
+import { calculateTrophyPoints, sumTrophyCount } from '../../models/common.js';
+import type { SeriesListing } from '../../models/series.interface.js';
 import { parseTrophyCount } from '../common/trophyCount.js';
-import {PsnpParser} from '../psnpParser.js';
+import { PsnpParser } from '../psnpParser.js';
+import { parseNumber } from '../../util/util.js';
 
-export class ParserSeriesListing extends PsnpParser<ISeriesListing, HTMLTableRowElement> {
+export class SeriesListingParser extends PsnpParser<SeriesListing, HTMLTableRowElement> {
 	protected readonly expectedEntityType = 'Series Listing';
 
-	protected _parse(tr: HTMLTableRowElement): ISeriesListing | null {
+	protected _parse(tr: HTMLTableRowElement): SeriesListing | null {
 		const titleAnchorEl = tr.querySelector(`a.title`);
 		const href = titleAnchorEl?.getAttribute('href');
-		const hrefIdAndTitle = this._extractIdAndTitleFromPsnpUrl({url: href});
+		const hrefIdAndTitle = this._extractIdAndTitleFromPsnpUrl({ url: href });
 		const imageSrc = tr.querySelector('img[src]')?.getAttribute('src');
 
 		if (!titleAnchorEl?.textContent || !hrefIdAndTitle || !imageSrc) {
 			return null;
 		}
 
-		const _imagePath = /\/series\/(.+?)\.S\.png/.exec(imageSrc)?.at(1);
-		const [_id, _nameSerialized] = hrefIdAndTitle;
+		const imagePath = /\/series\/(.+?)\.S\.png/.exec(imageSrc)?.at(1);
+		const [id, slug] = hrefIdAndTitle;
 		const name = titleAnchorEl.textContent.trim();
-		const numGames = parseNum(tr.querySelector(`td > span.small-info > b`));
+		const numGames = parseNumber(tr.querySelector(`td > span.small-info > b`));
 		const trophyCount = parseTrophyCount(tr);
 
-		if (!_imagePath || !name || Number.isNaN(numGames) || !trophyCount) {
+		if (!imagePath || !name || Number.isNaN(numGames) || !trophyCount) {
 			return null;
 		}
 		const numTrophies = sumTrophyCount(trophyCount);
 		const points = calculateTrophyPoints(trophyCount);
 
 		return {
-			_id,
-			_nameSerialized,
+			id,
+			slug,
 			name,
-			_imagePath,
+			imagePath,
 			trophyCount,
 			numGames,
 			numTrophies,

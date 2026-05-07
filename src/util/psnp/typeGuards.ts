@@ -1,47 +1,43 @@
-import {isStandardObj} from '../objCompare.js';
-import {IPsnpEntity} from '../../models/psnpEntity.js';
-import {IGamePartialTrophyList, IGamePartialHome, IGameStandard, IGamePlayable, IGameDlc} from '../../models/game.interface.js';
+import { isStandardObj } from '../objCompare.js';
+import type { PsnpEntityData } from '../../models/psnpEntity.js';
+import type {
+	GameStackEntry,
+	GameHomeListing,
+	GameListing,
+	PlayableGame,
+	GameDlc,
+} from '../../models/game.interface.js';
 
-/** Verifies whether `entity` implements {@link IPsnpEntity} */
-export function isPsnpEntity(entity: unknown): entity is IPsnpEntity {
-	const keys: (keyof IPsnpEntity)[] = ['_id', 'name', '_nameSerialized', '_imagePath'];
+export function isPsnpEntity(entity: unknown): entity is PsnpEntityData {
+	const keys = ['id', 'name', 'slug', 'imagePath'] satisfies Array<keyof PsnpEntityData>;
 	return isStandardObj(entity) && keys.every(key => key in entity);
 }
 
 // These variables protect type predicates by throwing errors if the property names ever change.
-const gameStackKeys: (keyof IGamePartialTrophyList)[] = ['platforms', 'stackLabel'];
-const gameHomeKeys: (keyof IGamePartialHome)[] = ['numTrophies', 'platforms', 'points', 'trophyCount'];
-const gameDlcKeys: (keyof IGameDlc)[] = ['dlcName', 'groupNum', 'trophyCount', 'points', 'platforms', 'numTrophies'];
-const gameStandardKeys: (keyof IGameStandard)[] = [...gameHomeKeys, 'numOwners', 'stackLabel'];
-const gamePlayableKeys: (keyof IGamePlayable)[] = [
-	...gameHomeKeys,
-	'completionSpeed',
-	'completionStatus',
-	'completionRank',
-	'latestTrophy',
-	'percent',
-	'rarityBase',
-	'rarityDlc',
-	'stackLabel',
-];
+const gameStackKeys = ['platforms', 'stackLabel'] satisfies Array<keyof GameStackEntry>;
+const gameHomeKeys = ['numTrophies', 'platforms', 'points', 'trophyCount'] satisfies Array<keyof GameHomeListing>;
+const gameDlcKeys = ['dlcName', 'groupNum', 'trophyCount', 'points', 'platforms', 'numTrophies'] satisfies Array<
+	keyof GameDlc
+>;
+const gameListingKeys = [...gameHomeKeys, 'numOwners', 'stackLabel'] satisfies Array<keyof GameListing>;
+const playableGameKeys = [...gameHomeKeys, 'rarityBase', 'stackLabel'] satisfies Array<keyof PlayableGame>;
 
-/** Verifies whether `game` implements {@link IGamePartialTrophyList} */
-export function isGameFromStacks(game: unknown): game is IGamePartialTrophyList {
+export function isGameStackEntry(game: unknown): game is GameStackEntry {
 	return isPsnpEntity(game) && gameStackKeys.every(key => key in game);
 }
-/** Verifies whether `game` implements {@link IGamePartialHome} */
-export function isGameFromHome(game: unknown): game is IGamePartialHome {
+
+export function isGameHomeListing(game: unknown): game is GameHomeListing {
 	return isPsnpEntity(game) && gameHomeKeys.every(key => key in game);
 }
-/** Verifies whether `game` implements {@link IGameDlc} */
-export function isGameDlc(game: unknown): game is IGameDlc {
+
+export function isGameDlc(game: unknown): game is GameDlc {
 	return isPsnpEntity(game) && gameDlcKeys.every(key => key in game);
 }
-/** Verifies whether `game` implements {@link IGameStandard} */
-export function isGameStandard(game: unknown): game is IGameStandard {
-	return isPsnpEntity(game) && gameStandardKeys.every(key => key in game);
+
+export function isGameListing(game: unknown): game is GameListing {
+	return isPsnpEntity(game) && gameListingKeys.every(key => key in game);
 }
-/** Verifies whether `game` implements {@link IGamePlayable} */
-export function isGamePlayable(game: unknown): game is IGamePlayable {
-	return isPsnpEntity(game) && gamePlayableKeys.every(key => key in game);
+
+export function isPlayableGame(game: unknown): game is PlayableGame {
+	return isPsnpEntity(game) && playableGameKeys.every(key => key in game);
 }

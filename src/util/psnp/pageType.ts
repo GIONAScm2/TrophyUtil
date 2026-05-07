@@ -64,7 +64,7 @@ export function getPsnpPageType(url: URL): PsnpPageType {
 	else if (path === '/trophies') return PsnpPageType.Trophies;
 	else if (path === '/search/trophies') return PsnpPageType.TrophySearch;
 	else if (path === '/sessions') return PsnpPageType.Sessions;
-	else if (/^\/[^\/]+$/.test(path) && url.hash === '') return PsnpPageType.Profile;
+	else if (/^\/[^/]+$/.test(path) && url.hash === '') return PsnpPageType.Profile;
 	else throw new Error(`Unable to determine page type of '${url.href}'`);
 }
 
@@ -75,3 +75,14 @@ export type PsnpPageWithGames =
 	| PsnpPageType.Profile
 	| PsnpPageType.SeriesPage
 	| PsnpPageType.GameTrophyList;
+
+export function isPsnpPageWithGames(pageType: PsnpPageType): pageType is PsnpPageWithGames {
+	return [
+		PsnpPageType.Games,
+		PsnpPageType.SeriesCatalog,
+		PsnpPageType.GameSearch,
+		PsnpPageType.Profile,
+		PsnpPageType.SeriesPage,
+		PsnpPageType.GameTrophyList,
+	].includes(pageType);
+}

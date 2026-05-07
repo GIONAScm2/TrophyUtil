@@ -6,32 +6,25 @@ export const TROPHY_GRADE_POINTS = {
 } as const;
 export type TrophyGrade = keyof typeof TROPHY_GRADE_POINTS;
 
-/** Represents a PSNP trophy list group. Each list contains at least 1 group (base game), plus one for each DLC pack. */
-export interface ITrophyGroup {
+export const TROPHY_GRADES = Object.keys(TROPHY_GRADE_POINTS) as TrophyGrade[];
+
+/** Represents a PSNProfiles trophy list group. */
+export interface TrophyGroup {
 	/** Base game is group `0`; this number is incremented for each DLC group. */
 	groupNum: number;
-	/** Name of trophy group. */
 	name: string;
-	/** Array of the group's trophies. */
-	trophies: ITrophy[];
+	trophies: Trophy[];
 }
 
-export interface ITrophy {
-	/** Number that uniquely identifies a trophy within a PSNP trophy list, ranging from 1 to [number of trophies] */
+export interface Trophy {
+	/** Number that identifies a trophy within a PSNProfiles trophy list. */
 	id: number;
-	/** URL-serialized trophy name (e.g. `julius-caesar`) used to construct trophy page URL. */
-	_nameSerialized: string;
-	/** Trophy name */
+	slug: string;
 	name: string;
-	/** Trophy description */
 	desc: string;
-	/** Grade (type/tier) of trophy. */
 	grade: TrophyGrade;
-	/** Number (float) of the trophy's rarity. */
 	rarity: number;
-
-	/** URL fragment used to construct the full `src` URL of the trophy image. */
-	_imagePath: string;
-	/** Timestamp at which trophy was earned. */
-	dateEarned?: number;
+	imagePath: string;
+	/** UTC timestamp in milliseconds. */
+	dateEarned?: number | undefined;
 }

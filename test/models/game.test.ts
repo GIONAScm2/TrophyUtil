@@ -1,22 +1,22 @@
-import {PsnpGameBase, PsnpGamePlayable} from '../../src/models/game.impl';
-import {IGamePartialTrophyList, IGamePlayable} from '../../src/models/game.interface';
+import { PsnpGameBase, PsnpPlayableGame } from '../../src/models/game.impl';
+import type { GameStackEntry, PlayableGame } from '../../src/models/game.interface';
 import { msToSpeedString, speedStringToMs } from '../../src/util/psnp';
 
-const mockPsnpGame: IGamePartialTrophyList = {
-	_id: 1,
+const mockPsnpGame: GameStackEntry = {
+	id: 1,
 	name: 'Test Game',
-	_nameSerialized: 'test-game',
-	_imagePath: 'ABCD1234',
+	slug: 'test-game',
+	imagePath: 'ABCD1234',
 	platforms: ['PS4'],
 	stackLabel: null,
 };
 
-const mockPsnpGamePlayable: IGamePlayable = {
+const mockPsnpPlayableGame: PlayableGame = {
 	...mockPsnpGame,
 	percent: 50,
 	rarityBase: 10,
 	completionSpeed: 3600,
-	trophyCount: {bronze: 5, silver: 5, gold: 5, platinum: 1},
+	trophyCount: { bronze: 5, silver: 5, gold: 5, platinum: 1 },
 	numTrophies: 16,
 	points: 975,
 };
@@ -38,10 +38,10 @@ describe('PsnpGame', () => {
 	});
 });
 
-describe('PsnpGamePlayable', () => {
-	it('should create a PsnpGamePlayable instance', () => {
-		const game = new PsnpGamePlayable(mockPsnpGamePlayable);
-		expect(game).toBeInstanceOf(PsnpGamePlayable);
+describe('PsnpPlayableGame', () => {
+	it('should create a PsnpPlayableGame instance', () => {
+		const game = new PsnpPlayableGame(mockPsnpPlayableGame);
+		expect(game).toBeInstanceOf(PsnpPlayableGame);
 	});
 
 	it('should convert ms to speed string', () => {

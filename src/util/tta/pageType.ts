@@ -9,8 +9,8 @@ export enum TTAPageType {
 export function getTTAPageType(url: URL): TTAPageType {
 	const path = url.pathname;
 
-	if (/^\/game\/[^\/]+?\/(achievements|trophies)$/.test(path)) return TTAPageType.GameAchievements;
-	else if (/^\/(a|t)\d+?\/.+?-(achievement|trophy)$/) return TTAPageType.GameAchievementSolutions;
-	else if (/^\/game\/[^\/]+?\/walkthrough(\/\d*)?$/.test(path)) return TTAPageType.Walkthrough;
+	if (/^\/game\/[^/]+?\/(achievements|trophies)$/.test(path)) return TTAPageType.GameAchievements;
+	else if (/^\/(a|t)\d+?\/.+?-(achievement|trophy)$/.test(path)) return TTAPageType.GameAchievementSolutions;
+	else if (/^\/game\/[^/]+?\/walkthrough(\/\d*)?$/.test(path)) return TTAPageType.Walkthrough;
 	else throw new Error(`Unable to determine page type of '${url.href}'`);
 }

@@ -1,49 +1,90 @@
 # TrophyUtil
 
-TrophyUtil is a specialized utility library designed for parsing, modelling, and manipulating core [PSNProfiles](https://psnprofiles.com/) (PSNP) entities like trophies, games, and game series.
+TrophyUtil is a TypeScript library for parsing, modeling, and transforming [PSNProfiles](https://psnprofiles.com/) ("PSNP") trophy data.
+
+It was built as a shared domain layer for a trophy-data ecosystem: browser extensions/userscripts that enhance PSNP pages, and backend scraping jobs that normalize site HTML for storage and analysis. The package keeps brittle DOM selectors and PSNP types and logic in one tested place.
 
 ## Features
 
--   Isomorphic, working seamlessly in both frontend and backend (via [jsdom](https://github.com/jsdom/jsdom)) projects.
--   Compatible with both CommonJS and ESM.
--   HTML parsers for core PSNP entities like trophies, games, and game series.
--   Richly-annotated interfaces and classes that provide helpful methods, like transforming a completion time into a timestamp and vice versa.
--   Additional interfaces for MongoDB/Mongoose provide smoother database integration with properties like `createdAt` and `updatedAt`.
--   Specialized utility functions for trophy-specific use cases like parsing formatted numbers and checking for relative equality between entities.
+- ESM-only npm package with generated TypeScript declarations and explicit subpath exports.
+- Dependency-free runtime: browser callers provide the real DOM, Node callers provide a DOM implementation such as `jsdom`.
+- Parsers for games, DLCs, trophy lists, trophies, and series pages.
+- Strong domain types for PSNP entities, like: `GameListing`, `PlayableGame`, `GamePage`, `SeriesListing`, `SeriesPage`, `Trophy`, and `TrophyGroup`.
+- Utility coverage for PSNProfiles page detection, URL parsing, trophy counts, rarity/speed conversions, UTC-safe dates, and stack labeling.
+- Optional adapter types for persistence concerns such as Mongo/Mongoose document timestamps.
 
 ## Installation
 
-Install TrophyUtil using npm:
-
-```
+```bash
 npm install trophyutil
+```
+
+TrophyUtil has no runtime dependencies. If you parse HTML in Node.js, install a DOM implementation in your application:
+
+```bash
+npm install jsdom
 ```
 
 ## Usage
 
-Here's how you might use this library to parse games, for example:
+### Browser DOM
 
-```typescript
-import {getPsnpPageType, PsnpGameStandard, ParserGameStandard} from 'trophyutil';
+```ts
+import { GameListingParser, PsnpGameBase, getPsnpPageType } from 'trophyutil';
 
-// Select nodes based on page type
-const pageType = getPsnpPageType(window.location);
-const gameNodes = PsnpGameStandard.getGameNodes(pageType, window.document);
+const pageType = getPsnpPageType(new URL(window.location.href));
+const nodes = PsnpGameBase.getGameNodes(pageType, window.document);
 
-// Parse nodes into richly-interfaced data
-const parser = new ParserGameStandard();
-const gameData = gameNodes.map(node => parser.parse(node));
-const speed = gameData[0].completionSpeed; // 3661
+const parser = new GameListingParser();
+const games = nodes.map(node => parser.parse(node));
 
-// Classes wrap data with utility methods
-const games = gameData.map(data => new PsnpGameStandard(data));
-const speedString = PsnpGameStandard.secondsToSpeedString(speed); // "1 hour, 1 minute"
+console.log(games[0]?.id);
+console.log(games[0]?.slug);
+console.log(games[0]?.trophyCount);
 ```
 
-## Contributing
+### Node.js With jsdom
 
-Contributions are welcome! Submit a pull request or create an issue to contribute to this project.
+```ts
+import { JSDOM } from 'jsdom';
+import { GamePageParser } from 'trophyutil/parsers';
+
+const html = await fetch('https://psnprofiles.com/trophies/2983-the-evil-within').then(response => response.text());
+const dom = new JSDOM(html, { url: 'https://psnprofiles.com/trophies/2983-the-evil-within' });
+
+const game = new GamePageParser().parse(dom.window.document);
+
+console.log(game.name);
+console.log(game.trophyGroups.flatMap(group => group.trophies).length);
+```
+
+### Typed Parse Results
+
+Use the `tryParse` parsing method if you don't want to catch errors manually:
+
+```ts
+import { GameListingParser } from 'trophyutil';
+
+const result = new GameListingParser().tryParse(row);
+
+if (!result.ok) {
+	console.error(result.error.issues);
+} else {
+	console.log(result.data.name);
+}
+```
+
+## Package Exports
+
+Several subpath exports are available:
+
+```ts
+import { GameListingParser } from 'trophyutil';
+import type { GameListing } from 'trophyutil/models';
+import { parseNumber, labelStacks } from 'trophyutil/util';
+import type { GameDocument } from 'trophyutil/adapters';
+```
 
 ## License
 
-This project is licensed under the GPLv3 License - see `COPYING.txt` for details.
+MIT

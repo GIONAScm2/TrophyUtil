@@ -1,52 +1,49 @@
-import {ITrophy, TrophyGrade} from './trophy.interface.js';
+import { parsePsnpDateTimeToTimestamp } from '../util/psnp/conversions.js';
+import type { Trophy, TrophyGrade } from './trophy.interface.js';
 
-export class PsnpTrophy implements ITrophy {
+export class PsnpTrophy implements Trophy {
 	id: number;
 	name: string;
 	desc: string;
 	grade: TrophyGrade;
 	rarity: number;
-	_nameSerialized: string;
-	_imagePath: string;
+	slug: string;
+	imagePath: string;
 	dateEarned?: number | undefined;
 
-	constructor(trophy: ITrophy) {
+	constructor(trophy: Trophy) {
 		this.id = trophy.id;
 		this.name = trophy.name;
 		this.desc = trophy.desc;
 		this.grade = trophy.grade;
 		this.rarity = trophy.rarity;
-		this._nameSerialized = trophy._nameSerialized;
-		this._imagePath = trophy._imagePath;
+		this.slug = trophy.slug;
+		this.imagePath = trophy.imagePath;
+		this.dateEarned = trophy.dateEarned;
 	}
 
-	/** (Getter) Constructs and returns trophy list URL fragment (e.g. `50-abstergo-employee-of-the-month`). */
-	get urlPath() {
-		return `${this.id}-${this._nameSerialized}`;
+	get urlPath(): string {
+		return `${this.id}-${this.slug}`;
 	}
-	/** (Getter) Constructs and returns trophy icon URL fragment (e.g. `trophies/33S08e7cc.png`). */
-	get src() {
-		return `trophies/${this._imagePath}.png`;
+	get src(): string {
+		return `trophies/${this.imagePath}.png`;
 	}
-	/** Trophy rarity formatted with two decimal places. */
-	get rarityString() {
+	get rarityString(): string {
 		return this.rarity.toFixed(2);
 	}
 
-	getElement(doc: Document) {
+	getElement(doc: Document): HTMLTableRowElement | null {
 		const tableRow = doc.querySelector(`#content a[href*="/${this.urlPath}"]`)?.closest('tr');
 		return tableRow ?? null;
 	}
 
-	/** Parses a trophy element's 'date earned' into a date timestamp (ms). */
+	/** Parses a trophy element's earned date into a UTC timestamp in milliseconds. */
 	static timestampFromDateEarned(element: HTMLElement): number {
-		const dateAndTimeNodes = [...element.querySelectorAll(`td:nth-of-type(3) :is(.typo-top-date, .typo-bottom-date) > nobr`)];
+		const dateAndTimeNodes = [
+			...element.querySelectorAll(`td:nth-of-type(3) :is(.typo-top-date, .typo-bottom-date) > nobr`),
+		];
 		const [dateEl, timeEl] = dateAndTimeNodes;
 
-		const dateText = dateEl.textContent?.replace(/(\d+)(st|nd|rd|th)/, '$1') || '';
-		const timeText = timeEl.textContent || '';
-		const dateString = `${dateText.trim()} ${timeText.trim()}`;
-
-		return new Date(dateString).valueOf();
+		return parsePsnpDateTimeToTimestamp(dateEl?.textContent ?? '', timeEl?.textContent ?? '');
 	}
 }
