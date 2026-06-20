@@ -2,6 +2,7 @@ import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 import fs from 'fs';
+import { describe, expect, test } from 'vitest';
 import { SeriesListingParser, SeriesPageParser } from '../../src/parsers/index';
 import { PsnpGameBase } from '../../src/models/game.impl';
 import { PsnpPageType } from '../../src/util/psnp/pageType';

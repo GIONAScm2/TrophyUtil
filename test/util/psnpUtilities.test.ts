@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { GameListingParser, ParseError } from '../../src/parsers/index';
 import {
 	getPsnpPageType,

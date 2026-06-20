@@ -2,6 +2,7 @@ import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 import fs from 'fs';
+import { beforeAll, beforeEach, describe, expect, test } from 'vitest';
 import {
 	GameListingParser,
 	PlayableGameParser,

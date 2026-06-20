@@ -2,6 +2,7 @@ import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 import fs from 'fs';
+import { describe, expect, test } from 'vitest';
 import { TrophyGroupsParser } from '../../src/parsers/index';
 import { JSDOM } from 'jsdom';
 

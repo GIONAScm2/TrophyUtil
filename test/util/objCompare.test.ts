@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { isStandardObj, sharedPropsAreEqual, diffAndUpdateSharedProps } from '../../src/util/index';
 import { oldSeries, newSeries } from '../fixtures/seriesDocs';
 

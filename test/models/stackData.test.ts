@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { labelStacks } from '../../src/models/stackData';
 import type { GameStack } from '../../src/models/game.interface';
 

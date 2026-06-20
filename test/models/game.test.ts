@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { PsnpGameBase, PsnpPlayableGame } from '../../src/models/game.impl';
 import type { GameStackEntry, PlayableGame } from '../../src/models/game.interface';
 import { msToSpeedString, speedStringToMs } from '../../src/util/psnp';
